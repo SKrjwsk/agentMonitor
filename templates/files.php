@@ -18,6 +18,9 @@ $rows = $changed ? $view['changed'] : $view['read'];
 $sort = $p['sort'] !== '' ? $p['sort'] : ($changed && !$all ? 'path' : 'count');
 $cwd = $all ? null : $view['session']->cwd;
 $multi = !$all && count($view['session']->agents) > 1;
+// koszt treści w kontekście — tylko odczyty jednej sesji z transkryptu (hook nie zna usage)
+$costs = !$all && !$changed && $view['session']->usage !== [];
+$sessionUsd = $costs ? max($view['sessionTokens']['usd'], 1e-9) : 1.0;
 $total = count($rows);
 $rows = array_slice($rows, 0, $view['rowLimit']);
 $th = static function (string $key, string $label, string $title = '') use ($view, $sort): string {
@@ -47,6 +50,7 @@ $th = static function (string $key, string $label, string $title = '') use ($vie
             <tr>
                 <?= $th('path', 'file') ?>
                 <?= $changed ? $th('count', 'changes', 'edits + writes') : $th('count', 'reads', 'reads by tools + injections by the harness') ?>
+                <?= $costs ? $th('cost', 'cost', 'what reading it cost: written to the context once, then read again on every later model call of the agent (estimate, API prices; a command reading several files splits its cost)') : '' ?>
                 <th>how</th>
                 <?= $multi ? $th('agents', 'agents') : '' ?>
                 <?= $all ? $th('sessions', 'sessions') : $th('first', 'first') ?>
@@ -95,6 +99,9 @@ $th = static function (string $key, string $label, string $title = '') use ($vie
                     title="<?= h($f['path']) ?>">
                     <td class="path"><span class="dir"><?= h($dir) ?></span><span class="base"><?= h($slash !== false ? substr($short, $slash + 1) : $short) ?></span></td>
                     <td class="num"><?= h($changed ? $f['mods'] : $f['reads']) ?></td>
+                    <?php if ($costs): ?>
+                        <td class="num cost" <?= $f['usd'] >= 0.01 * $sessionUsd ? 'viz-high' : '' ?> title="<?= h(round(100 * $f['usd'] / $sessionUsd, 1) . '% of the session cost') ?>"><?= $f['usd'] >= 0.005 ? h(App::usd($f['usd'])) : '' ?></td>
+                    <?php endif ?>
                     <td class="tags">
                         <?php foreach ($tags as [$kind, $label, $title]): ?>
                             <span class="tag" viz-tag="<?= h($kind) ?>" <?= $title !== '' ? 'title="' . h($title) . '"' : '' ?>><?= h($label) ?></span>

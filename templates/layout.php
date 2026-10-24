@@ -2,6 +2,8 @@
 /**
  * @var list<array{id: string, path: string, mtime: int, title: string, subtitle: string, empty: bool, cwd: string, hook: bool}> $sessions
  * @var ?array $view
+ * @var array<string, array{usd: ?float, output: int, partial: bool, upTo: ?string}> $sidebarTokens
+ * @var ?array $overview strona startowa, gdy nie wybrano sesji
  */
 
 use Viz\Clock;
@@ -33,6 +35,8 @@ $projects = App::sidebarProjects($sessions);
 <div class="app">
     <aside class="sessions">
         <?php /* zakres „wszystkie sesje” to ten sam widok co sesja (s=all), z danymi z archiwum agregatów */ ?>
+        <a class="summary-link" href="/" <?= $overview !== null ? 'viz-current' : '' ?>
+           title="<?= th('what is fine and what needs attention: cost, security, agents') ?>">◎ <?= th('Overview') ?></a>
         <a class="summary-link" href="/?s=all" <?= $currentId === App::ALL ? 'viz-current' : '' ?>
            title="<?= th('files, commands and blocked calls across all sessions — the same tabs as a single session') ?>">Σ <?= th('All sessions') ?></a>
         <div class="sessions-head">
@@ -59,6 +63,14 @@ $projects = App::sidebarProjects($sessions);
                         <span class="s-meta">
                             <?= h(basename($s['cwd'])) ?> ·
                             <?= h(Clock::local(date('c', $s['mtime']), 'd.m H:i')) ?>
+                            <?php if (isset($sidebarTokens[$s['id']])): ?>
+                                <?php $st = $sidebarTokens[$s['id']] ?>
+                                · <?php if ($st['usd'] !== null): ?>
+                                    <span class="s-tok" title="<?= th('cost of all agents at API prices') ?><?= $st['upTo'] !== null ? h(' · ' . t('counted up to {time}', ['time' => Clock::local($st['upTo'], 'd.m H:i')])) : '' ?>"><?= h(App::usd($st['usd'])) ?></span>
+                                <?php else: ?>
+                                    <span class="s-tok" title="<?= th('output tokens of all agents — no cost in this older summary') ?><?= $st['upTo'] !== null ? h(' · ' . t('counted up to {time}', ['time' => Clock::local($st['upTo'], 'd.m H:i')])) : '' ?>"><?= h(($st['partial'] ? '≥' : '') . App::tokenCount($st['output']) . ' out') ?></span>
+                                <?php endif ?>
+                            <?php endif ?>
                             <?php if (time() - $s['mtime'] < 120): ?><span class="badge live"><?= th('active') ?></span><?php endif ?>
                             <?php if ($s['hook']): ?><span class="badge">hook</span><?php endif ?>
                         </span>
@@ -70,7 +82,7 @@ $projects = App::sidebarProjects($sessions);
     </aside>
     <main>
         <?php if ($view === null): ?>
-            <p class="empty"><?= th('Pick a session from the list or turn on “follow latest”.') ?></p>
+            <?php require __DIR__ . '/overview.php' ?>
         <?php else: ?>
             <?php require __DIR__ . '/session.php' ?>
         <?php endif ?>

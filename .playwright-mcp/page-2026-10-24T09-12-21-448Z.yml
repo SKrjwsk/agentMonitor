@@ -1,0 +1,2348 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Σ All sessions" [ref=e4] [cursor=pointer]:
+      - /url: /?s=all
+    - generic [ref=e5]:
+      - strong [ref=e6]: Sessions
+      - link "● follow latest" [ref=e7] [cursor=pointer]:
+        - /url: /?follow=1
+      - button "EN" [ref=e8] [cursor=pointer]
+      - button "◐" [ref=e9] [cursor=pointer]
+    - combobox "show sessions of one project (working directory of the session)" [ref=e11]:
+      - option "all projects (116)" [selected]
+      - option "REPO_agent_vizualization · 4"
+      - option "THE_MASTER_PLAN · 9"
+      - option "PROJECT_PRISMA_GROUP/PROJECT_PRISMA_DH_2 · 14"
+      - option "workbox9 · 9"
+      - option "PROJECT_GROUP_PRISMA/PROJECT_PRISMA_DH_2 · 4"
+      - option "eduBombel · 18"
+      - option "yodai · 11"
+      - option "v2026-stanmet-ropczyce-pl · 4"
+      - option "workbox9_prgrm · 2"
+      - option "stanmet-ropczyce-pl · 1"
+      - option "agent_vizualization · 10"
+      - option "m3/proj · 2"
+      - option "PROJECT_GROUP_PRISMA · 11"
+      - option "m0/proj · 1"
+      - option "open-mercato · 1"
+      - option "progremo_ksiegowosc · 3"
+      - option "REPO_PRISMA_DH_2 · 1"
+      - option "LLM_CONTEXT · 1"
+      - option "? · 1"
+      - option "PROJECT_FP_ADAPTER · 6"
+      - option "workbox9_swzk · 2"
+      - option ".claude · 1"
+    - list [ref=e12]:
+      - listitem [ref=e13]:
+        - link "Wizualizacja zużycia tokenów REPO_agent_vizualization · 24.10 11:12 · 16k out active" [ref=e14] [cursor=pointer]:
+          - /url: /?s=39f1c150-f79e-49f8-a275-24e39711fc44
+          - generic [ref=e15]: Wizualizacja zużycia tokenów
+          - generic [ref=e16]:
+            - text: REPO_agent_vizualization · 24.10 11:12 · 16k out
+            - generic [ref=e17]: active
+      - listitem [ref=e18]:
+        - link "Lewy panel sesji per projekt REPO_agent_vizualization · 24.10 11:07 · 53k out" [ref=e19] [cursor=pointer]:
+          - /url: /?s=af6af37b-470e-4ce7-87c7-07237997f09f
+          - generic [ref=e20]: Lewy panel sesji per projekt
+          - generic [ref=e21]: REPO_agent_vizualization · 24.10 11:07 · 53k out
+      - listitem [ref=e22]:
+        - link "Pogoda Kraków THE_MASTER_PLAN · 24.10 09:09 · 2k out" [ref=e23] [cursor=pointer]:
+          - /url: /?s=4a715cad-c362-4770-9234-a79f2ca6457b
+          - generic [ref=e24]: Pogoda Kraków
+          - generic [ref=e25]: THE_MASTER_PLAN · 24.10 09:09 · 2k out
+      - listitem [ref=e26]:
+        - link "Uproszczenie GUI i nowe widoki REPO_agent_vizualization · 23.10 17:23 · 243k out" [ref=e27] [cursor=pointer]:
+          - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e
+          - generic [ref=e28]: Uproszczenie GUI i nowe widoki
+          - generic [ref=e29]: REPO_agent_vizualization · 23.10 17:23 · 243k out
+      - listitem [ref=e30]:
+        - link "Komendy agent-viz w CSV REPO_agent_vizualization · 23.10 16:44 · 7k out" [ref=e31] [cursor=pointer]:
+          - /url: /?s=cfa1830e-a7a2-4db1-83df-a53f31e8390e
+          - generic [ref=e32]: Komendy agent-viz w CSV
+          - generic [ref=e33]: REPO_agent_vizualization · 23.10 16:44 · 7k out
+      - listitem [ref=e34]:
+        - link "mediapress_api_switch_dh2_supervisor Mediapress_api_switch_dh2 linear i VOD stage3 PROJECT_PRISMA_DH_2 · 23.10 16:38 · 713k out" [ref=e35] [cursor=pointer]:
+          - /url: /?s=3ba958d8-5938-427a-b87a-dca7ecd01e5e
+          - generic [ref=e36]: mediapress_api_switch_dh2_supervisor
+          - generic [ref=e37]: Mediapress_api_switch_dh2 linear i VOD stage3
+          - generic [ref=e38]: PROJECT_PRISMA_DH_2 · 23.10 16:38 · 713k out
+      - listitem [ref=e39]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 15:46 · 172k out" [ref=e40] [cursor=pointer]:
+          - /url: /?s=f22fe3e8-1f31-4bd3-96e4-ed0c7400a3e2
+          - generic [ref=e41]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e42]: PROJECT_PRISMA_DH_2 · 23.10 15:46 · 172k out
+      - listitem [ref=e43]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 15:46 · 168k out" [ref=e44] [cursor=pointer]:
+          - /url: /?s=0169c462-7277-41b2-9005-f427b900dc5b
+          - generic [ref=e45]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e46]: PROJECT_PRISMA_DH_2 · 23.10 15:46 · 168k out
+      - listitem [ref=e47]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 14:22 · 130k out" [ref=e48] [cursor=pointer]:
+          - /url: /?s=c5a02743-170a-4524-b881-3150e451453e
+          - generic [ref=e49]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e50]: PROJECT_PRISMA_DH_2 · 23.10 14:22 · 130k out
+      - listitem [ref=e51]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 14:22 · 153k out" [ref=e52] [cursor=pointer]:
+          - /url: /?s=71f4e1b1-92db-4ff0-91cf-516e67b8ff8e
+          - generic [ref=e53]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e54]: PROJECT_PRISMA_DH_2 · 23.10 14:22 · 153k out
+      - listitem [ref=e55]:
+        - link "preperPlan_dev Plan MAIN.MD vs ebook EMP THE_MASTER_PLAN · 23.10 14:03 · ≥266k out" [ref=e56] [cursor=pointer]:
+          - /url: /?s=0f3e67b8-7c7f-4966-9290-e44e99375883
+          - generic [ref=e57]: preperPlan_dev
+          - generic [ref=e58]: Plan MAIN.MD vs ebook EMP
+          - generic [ref=e59]: THE_MASTER_PLAN · 23.10 14:03 · ≥266k out
+      - listitem [ref=e60]:
+        - link "no conversation /model THE_MASTER_PLAN · 23.10 13:59" [ref=e61] [cursor=pointer]:
+          - /url: /?s=a6c0bf64-a05f-4b91-8b32-8149f4e00713
+          - generic [ref=e62]: no conversation /model
+          - text: THE_MASTER_PLAN · 23.10 13:59
+      - listitem [ref=e63]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:52 · 288k out" [ref=e64] [cursor=pointer]:
+          - /url: /?s=6449290d-6734-46d0-a766-0d2e6d2d4f81
+          - generic [ref=e65]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e66]: PROJECT_PRISMA_DH_2 · 23.10 12:52 · 288k out
+      - listitem [ref=e67]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:52 · 184k out" [ref=e68] [cursor=pointer]:
+          - /url: /?s=11355268-9898-4a7e-b5d0-988f6ba7bdac
+          - generic [ref=e69]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e70]: PROJECT_PRISMA_DH_2 · 23.10 12:52 · 184k out
+      - listitem [ref=e71]:
+        - link "no conversation /exit THE_MASTER_PLAN · 23.10 12:03" [ref=e72] [cursor=pointer]:
+          - /url: /?s=0e8ff333-8197-4820-9dcd-4331dd167ea4
+          - generic [ref=e73]: no conversation /exit
+          - text: THE_MASTER_PLAN · 23.10 12:03
+      - listitem [ref=e74]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:01 · 1k out" [ref=e75] [cursor=pointer]:
+          - /url: /?s=7334190d-aae4-4283-975b-546994f8da3a
+          - generic [ref=e76]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e77]: PROJECT_PRISMA_DH_2 · 23.10 12:01 · 1k out
+      - listitem [ref=e78]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:58 · 13k out" [ref=e79] [cursor=pointer]:
+          - /url: /?s=f946810b-c04e-4a5b-a4a9-7174686788f6
+          - generic [ref=e80]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e81]: PROJECT_PRISMA_DH_2 · 23.10 11:58 · 13k out
+      - listitem [ref=e82]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:40 · 184k out" [ref=e83] [cursor=pointer]:
+          - /url: /?s=6911e279-ce8e-4d84-b0d8-24c24d70e227
+          - generic [ref=e84]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e85]: PROJECT_PRISMA_DH_2 · 23.10 11:40 · 184k out
+      - listitem [ref=e86]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:40 · ≥188k out" [ref=e87] [cursor=pointer]:
+          - /url: /?s=69574883-90c6-43e7-a42d-66733781f434
+          - generic [ref=e88]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e89]: PROJECT_PRISMA_DH_2 · 23.10 11:40 · ≥188k out
+      - listitem [ref=e90]:
+        - link "test_collection_porcess Mediapress API switch – kolejka tekstów PROJECT_PRISMA_DH_2 · 23.10 10:25 · 133k out" [ref=e91] [cursor=pointer]:
+          - /url: /?s=5aa84bef-726e-469c-afb2-4b64dc9a638f
+          - generic [ref=e92]: test_collection_porcess
+          - generic [ref=e93]: Mediapress API switch – kolejka tekstów
+          - generic [ref=e94]: PROJECT_PRISMA_DH_2 · 23.10 10:25 · 133k out
+      - listitem [ref=e95]:
+        - link "mediapress_api_switch_dh2_linear_stage3 PROJECT_PRISMA_DH_2 · 23.10 10:02 · ≥540k out" [ref=e96] [cursor=pointer]:
+          - /url: /?s=f9d5c603-270a-4b5a-bb3f-5b860fcf523a
+          - generic [ref=e97]: mediapress_api_switch_dh2_linear_stage3
+          - generic [ref=e98]: PROJECT_PRISMA_DH_2 · 23.10 10:02 · ≥540k out
+      - listitem [ref=e99]:
+        - link "mediapress_api_switch_dh2_vod_stage3 PROJECT_PRISMA_DH_2 · 23.10 09:59 · ≥654k out" [ref=e100] [cursor=pointer]:
+          - /url: /?s=b682122e-2d5a-4a34-80fc-e4f0a36f13fa
+          - generic [ref=e101]: mediapress_api_switch_dh2_vod_stage3
+          - generic [ref=e102]: PROJECT_PRISMA_DH_2 · 23.10 09:59 · ≥654k out
+      - listitem [ref=e103]:
+        - link "preperPlan_hejter Podsumowanie PDF EMP vs Master Plan THE_MASTER_PLAN · 23.10 08:49 · 297k out" [ref=e104] [cursor=pointer]:
+          - /url: /?s=99d52c03-c14c-4000-a36c-520e0737c0ad
+          - generic [ref=e105]: preperPlan_hejter
+          - generic [ref=e106]: Podsumowanie PDF EMP vs Master Plan
+          - generic [ref=e107]: THE_MASTER_PLAN · 23.10 08:49 · 297k out
+      - listitem [ref=e108]:
+        - link "no conversation 7b85fe80 THE_MASTER_PLAN · 22.10 20:50" [ref=e109] [cursor=pointer]:
+          - /url: /?s=7b85fe80-5ff4-4814-b98d-f380afbb59ee
+          - generic [ref=e110]: no conversation 7b85fe80
+          - text: THE_MASTER_PLAN · 22.10 20:50
+      - listitem [ref=e111]:
+        - link "404 w PHP dev server workbox9 · 22.10 14:37 · 521 out" [ref=e112] [cursor=pointer]:
+          - /url: /?s=6a02c431-c16e-4de0-9206-d301931d65fb
+          - generic [ref=e113]: 404 w PHP dev server
+          - generic [ref=e114]: workbox9 · 22.10 14:37 · 521 out
+      - listitem [ref=e115]:
+        - link "Skille superpowers w Claude Code THE_MASTER_PLAN · 22.10 14:31 · 27k out" [ref=e116] [cursor=pointer]:
+          - /url: /?s=77f36aa2-07ff-4f58-8cd7-c0dd40e3a18c
+          - generic [ref=e117]: Skille superpowers w Claude Code
+          - generic [ref=e118]: THE_MASTER_PLAN · 22.10 14:31 · 27k out
+      - listitem [ref=e119]:
+        - link "Faza 3 MediaPress VOD dh2 PROJECT_PRISMA_DH_2 · 22.10 13:58 · 6k out" [ref=e120] [cursor=pointer]:
+          - /url: /?s=4f520e75-fc0c-474b-93f9-dd072da6aa55
+          - generic [ref=e121]: Faza 3 MediaPress VOD dh2
+          - generic [ref=e122]: PROJECT_PRISMA_DH_2 · 22.10 13:58 · 6k out
+      - listitem [ref=e123]:
+        - link "mediapress_api_switch_dh2_linear_stage_3 PROJECT_PRISMA_DH_2 · 22.10 13:58 · 5k out" [ref=e124] [cursor=pointer]:
+          - /url: /?s=5bbffdf7-9d61-47e9-81e0-8138e526a008
+          - generic [ref=e125]: mediapress_api_switch_dh2_linear_stage_3
+          - generic [ref=e126]: PROJECT_PRISMA_DH_2 · 22.10 13:58 · 5k out
+      - listitem [ref=e127]:
+        - link "Koncepcja przebudowy repozytorium workbox9 · 22.10 13:46 · ≥194k out" [ref=e128] [cursor=pointer]:
+          - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372
+          - generic [ref=e129]: Koncepcja przebudowy repozytorium
+          - generic [ref=e130]: workbox9 · 22.10 13:46 · ≥194k out
+      - listitem [ref=e131]:
+        - link "Changelog Claude Code THE_MASTER_PLAN · 22.10 13:44 · 27k out" [ref=e132] [cursor=pointer]:
+          - /url: /?s=784f4ffe-9d81-4538-9184-50df2857a88e
+          - generic [ref=e133]: Changelog Claude Code
+          - generic [ref=e134]: THE_MASTER_PLAN · 22.10 13:44 · 27k out
+      - listitem [ref=e135]:
+        - link "Dyktowanie nie działa THE_MASTER_PLAN · 22.10 13:16 · 778 out" [ref=e136] [cursor=pointer]:
+          - /url: /?s=4196f779-e99a-4645-9677-d5efbd18e814
+          - generic [ref=e137]: Dyktowanie nie działa
+          - generic [ref=e138]: THE_MASTER_PLAN · 22.10 13:16 · 778 out
+      - listitem [ref=e139]:
+        - link "mediapress_api_switch_dh2 part2 Kontroler feedmpcontent i źródło danych PROJECT_PRISMA_DH_2 · 22.10 12:53 · 361k out" [ref=e140] [cursor=pointer]:
+          - /url: /?s=d3b8bfe3-a3f8-44d9-a248-db1f0e05a134
+          - generic [ref=e141]: mediapress_api_switch_dh2 part2
+          - generic [ref=e142]: Kontroler feedmpcontent i źródło danych
+          - generic [ref=e143]: PROJECT_PRISMA_DH_2 · 22.10 12:53 · 361k out
+      - listitem [ref=e144]:
+        - link "mediapress_api_switch_dh2_vod Przełączenie VOD na API Mediapress workbox9 · 22.10 12:50 · ≥259k out" [ref=e145] [cursor=pointer]:
+          - /url: /?s=22dd90e6-c411-4cde-922c-e57b792ecf2f
+          - generic [ref=e146]: mediapress_api_switch_dh2_vod
+          - generic [ref=e147]: Przełączenie VOD na API Mediapress
+          - generic [ref=e148]: workbox9 · 22.10 12:50 · ≥259k out
+      - listitem [ref=e149]:
+        - link "no conversation /clear eduBombel · 22.10 09:19" [ref=e150] [cursor=pointer]:
+          - /url: /?s=8bbc746a-6149-48ce-96a6-79d9b3d6968e
+          - generic [ref=e151]: no conversation /clear
+          - text: eduBombel · 22.10 09:19
+      - listitem [ref=e152]:
+        - link "no conversation /clear eduBombel · 22.10 09:18" [ref=e153] [cursor=pointer]:
+          - /url: /?s=6faa49c9-cce9-46ed-86fa-1a313b8b4eff
+          - generic [ref=e154]: no conversation /clear
+          - text: eduBombel · 22.10 09:18
+      - listitem [ref=e155]:
+        - link "mercato_upgrader_1 Analiza Yodai i Open Mercato yodai · 22.10 09:17 · ≥229k out" [ref=e156] [cursor=pointer]:
+          - /url: /?s=f5d17b95-a199-4c64-a6d7-8446ca9d21e7
+          - generic [ref=e157]: mercato_upgrader_1
+          - generic [ref=e158]: Analiza Yodai i Open Mercato
+          - generic [ref=e159]: yodai · 22.10 09:17 · ≥229k out
+      - listitem [ref=e160]:
+        - link "Błąd 500 na stanmet-ropczyce.pl v2026-stanmet-ropczyce-pl · 21.10 21:55 · 58k out" [ref=e161] [cursor=pointer]:
+          - /url: /?s=f9d69f45-13c4-4f19-b21d-778c7d8fa006
+          - generic [ref=e162]: Błąd 500 na stanmet-ropczyce.pl
+          - generic [ref=e163]: v2026-stanmet-ropczyce-pl · 21.10 21:55 · 58k out
+      - listitem [ref=e164]:
+        - link "Header, footer i menu v2026-stanmet-ropczyce-pl · 21.10 21:34 · 77k out" [ref=e165] [cursor=pointer]:
+          - /url: /?s=9089619b-ee3e-4d35-828f-78260b028eb3
+          - generic [ref=e166]: Header, footer i menu
+          - generic [ref=e167]: v2026-stanmet-ropczyce-pl · 21.10 21:34 · 77k out
+      - listitem [ref=e168]:
+        - link "Poprawki layoutu z ui-polish.md v2026-stanmet-ropczyce-pl · 21.10 21:01 · 91k out" [ref=e169] [cursor=pointer]:
+          - /url: /?s=98e472e1-3ec6-44c8-b5aa-da68f5806ece
+          - generic [ref=e170]: Poprawki layoutu z ui-polish.md
+          - generic [ref=e171]: v2026-stanmet-ropczyce-pl · 21.10 21:01 · 91k out
+      - listitem [ref=e172]:
+        - link "Dokumentacja serwerów webd, mikrus i lh.pl workbox9_prgrm · 21.10 20:57 · 82k out" [ref=e173] [cursor=pointer]:
+          - /url: /?s=9e2d8139-3808-4cd3-8501-ee8b9a867c6c
+          - generic [ref=e174]: Dokumentacja serwerów webd, mikrus i lh.pl
+          - generic [ref=e175]: workbox9_prgrm · 21.10 20:57 · 82k out
+      - listitem [ref=e176]:
+        - link "Ikony kul smoczych po Android 19 eduBombel · 21.10 20:27 · 15k out" [ref=e177] [cursor=pointer]:
+          - /url: /?s=7c499039-c06f-49e6-b6d8-53ae68f825d6
+          - generic [ref=e178]: Ikony kul smoczych po Android 19
+          - generic [ref=e179]: eduBombel · 21.10 20:27 · 15k out
+      - listitem [ref=e180]:
+        - link "Dopieszczenie layoutu UI v2026-stanmet-ropczyce-pl · 21.10 20:24 · 21k out" [ref=e181] [cursor=pointer]:
+          - /url: /?s=14127e84-1e7c-45dd-abb8-1d22278dd8b8
+          - generic [ref=e182]: Dopieszczenie layoutu UI
+          - generic [ref=e183]: v2026-stanmet-ropczyce-pl · 21.10 20:24 · 21k out
+      - listitem [ref=e184]:
+        - link "Kategoria zmiękczeń i baza słownictwa eduBombel · 21.10 20:00 · ≥150k out" [ref=e185] [cursor=pointer]:
+          - /url: /?s=c2ce2485-2abf-44a3-a0ee-b8462e500b45
+          - generic [ref=e186]: Kategoria zmiękczeń i baza słownictwa
+          - generic [ref=e187]: eduBombel · 21.10 20:00 · ≥150k out
+      - listitem [ref=e188]:
+        - link "Zestaw wyjątki ortograficzne eduBombel · 21.10 19:52 · 41k out" [ref=e189] [cursor=pointer]:
+          - /url: /?s=45278834-2ac6-4b0e-a8b0-9950b6ba0a69
+          - generic [ref=e190]: Zestaw wyjątki ortograficzne
+          - generic [ref=e191]: eduBombel · 21.10 19:52 · 41k out
+      - listitem [ref=e192]:
+        - link "Mediapress_api_switch_dh2 w prisma_dh2 PROJECT_PRISMA_DH_2 · 21.10 19:25 · 241k out" [ref=e193] [cursor=pointer]:
+          - /url: /?s=392c93a6-fd10-49ce-99ad-dc701e651121
+          - generic [ref=e194]: Mediapress_api_switch_dh2 w prisma_dh2
+          - generic [ref=e195]: PROJECT_PRISMA_DH_2 · 21.10 19:25 · 241k out
+      - listitem [ref=e196]:
+        - link "Przegląd szaty graficznej aplikacji stanmet-ropczyce-pl · 21.10 19:23 · 5k out" [ref=e197] [cursor=pointer]:
+          - /url: /?s=67731843-de52-4f0d-807e-4384cf0924e0
+          - generic [ref=e198]: Przegląd szaty graficznej aplikacji
+          - generic [ref=e199]: stanmet-ropczyce-pl · 21.10 19:23 · 5k out
+      - listitem [ref=e200]:
+        - link "Stanmet-ropczyce.pl – szablon PHP workbox9_prgrm · 21.10 19:21 · ≥352k out" [ref=e201] [cursor=pointer]:
+          - /url: /?s=7db98e15-7ab6-40a7-b829-19cb3abb4fae
+          - generic [ref=e202]: Stanmet-ropczyce.pl – szablon PHP
+          - generic [ref=e203]: workbox9_prgrm · 21.10 19:21 · ≥352k out
+      - listitem [ref=e204]:
+        - link "clear eduBombel · 21.10 17:53 · 202 out" [ref=e205] [cursor=pointer]:
+          - /url: /?s=79bb973c-b37b-4b1b-85c6-d6acfaf1fd8b
+          - generic [ref=e206]: clear
+          - generic [ref=e207]: eduBombel · 21.10 17:53 · 202 out
+      - listitem [ref=e208]:
+        - link "luka_wyjasnienie Luki bezpieczeństwa w PHP agent_vizualization · 21.10 17:29 · 4k out" [ref=e209] [cursor=pointer]:
+          - /url: /?s=72b54893-44e0-4f12-8053-08f7e715514d
+          - generic [ref=e210]: luka_wyjasnienie
+          - generic [ref=e211]: Luki bezpieczeństwa w PHP
+          - generic [ref=e212]: agent_vizualization · 21.10 17:29 · 4k out
+      - listitem [ref=e213]:
+        - link "luka_wyjasnienie agent_vizualization · 21.10 17:29 · 74 out" [ref=e214] [cursor=pointer]:
+          - /url: /?s=16932dc5-d4be-440b-9be8-15cc814a6a06
+          - generic [ref=e215]: luka_wyjasnienie
+          - generic [ref=e216]: agent_vizualization · 21.10 17:29 · 74 out
+      - listitem [ref=e217]:
+        - link "no conversation /clear agent_vizualization · 21.10 16:45" [ref=e218] [cursor=pointer]:
+          - /url: /?s=77bf48de-33c8-4088-9c5e-17fd566f15eb
+          - generic [ref=e219]: no conversation /clear
+          - text: agent_vizualization · 21.10 16:45
+      - listitem [ref=e220]:
+        - link "no conversation /clear agent_vizualization · 21.10 16:35" [ref=e221] [cursor=pointer]:
+          - /url: /?s=814568f6-b06e-461c-918c-e03e613e69f8
+          - generic [ref=e222]: no conversation /clear
+          - text: agent_vizualization · 21.10 16:35
+      - listitem [ref=e223]:
+        - link "Wizualizacja pracy agentów agent_vizualization · 21.10 15:52 · 527k out" [ref=e224] [cursor=pointer]:
+          - /url: /?s=7928a304-17c4-4a05-b7da-7920e75bf9fc
+          - generic [ref=e225]: Wizualizacja pracy agentów
+          - generic [ref=e226]: agent_vizualization · 21.10 15:52 · 527k out
+      - listitem [ref=e227]:
+        - link "Pogoda w Londynie agent_vizualization · 21.10 15:38 · 2k out" [ref=e228] [cursor=pointer]:
+          - /url: /?s=753966fb-a7a8-45c0-95e5-639d35593676
+          - generic [ref=e229]: Pogoda w Londynie
+          - generic [ref=e230]: agent_vizualization · 21.10 15:38 · 2k out
+      - listitem [ref=e231]:
+        - link "Dostęp do plików .env w workbox9 agent_vizualization · 21.10 14:59 · 3k out" [ref=e232] [cursor=pointer]:
+          - /url: /?s=d026cf8e-ef86-4f4e-9274-6fa26a2b0109
+          - generic [ref=e233]: Dostęp do plików .env w workbox9
+          - generic [ref=e234]: agent_vizualization · 21.10 14:59 · 3k out
+      - listitem [ref=e235]:
+        - link "no conversation /analiza-sesji agent_vizualization · 21.10 14:39 · 8k out" [ref=e236] [cursor=pointer]:
+          - /url: /?s=8399d707-b4e4-412f-9f09-e7c926f027af
+          - generic [ref=e237]: no conversation /analiza-sesji
+          - generic [ref=e238]: agent_vizualization · 21.10 14:39 · 8k out
+      - listitem [ref=e239]:
+        - link "no conversation /analiza-sesji agent_vizualization · 21.10 14:36 · 7k out" [ref=e240] [cursor=pointer]:
+          - /url: /?s=1aff0a19-a171-447b-b28f-73235f25a23f
+          - generic [ref=e241]: no conversation /analiza-sesji
+          - generic [ref=e242]: agent_vizualization · 21.10 14:36 · 7k out
+      - listitem [ref=e243]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 13:56 · 3k out hook" [ref=e244] [cursor=pointer]:
+          - /url: /?s=59a3f329-5cb6-42c9-93d5-48e02202b97d
+          - generic [ref=e245]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e246]:
+            - text: proj · 21.10 13:56 · 3k out
+            - generic [ref=e247]: hook
+      - listitem [ref=e248]:
+        - link "Incydenty bezpieczeństwa spowodowane przez AI agent_vizualization · 21.10 13:56 · 3k out" [ref=e249] [cursor=pointer]:
+          - /url: /?s=8f73abf7-b5fd-4ac8-b647-17982dd803f6
+          - generic [ref=e250]: Incydenty bezpieczeństwa spowodowane przez AI
+          - generic [ref=e251]: agent_vizualization · 21.10 13:56 · 3k out
+      - listitem [ref=e252]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 13:53 · 2k out" [ref=e253] [cursor=pointer]:
+          - /url: /?s=b6038a04-6c32-4c35-b906-f1891d8abcc0
+          - generic [ref=e254]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e255]: proj · 21.10 13:53 · 2k out
+      - listitem [ref=e256]:
+        - link "ZAM-6000_plan_wdrożenia_TV_tipps PROJECT_GROUP_PRISMA · 21.10 12:13 · 315k out" [ref=e257] [cursor=pointer]:
+          - /url: /?s=a13c94ac-669e-4c32-894d-2477934db105
+          - generic [ref=e258]: ZAM-6000_plan_wdrożenia_TV_tipps
+          - generic [ref=e259]: PROJECT_GROUP_PRISMA · 21.10 12:13 · 315k out
+      - listitem [ref=e260]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 12:02 · 2k out" [ref=e261] [cursor=pointer]:
+          - /url: /?s=58900880-d7be-49b5-ad94-982251635e46
+          - generic [ref=e262]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e263]: proj · 21.10 12:02 · 2k out
+      - listitem [ref=e264]:
+        - link "mp_api_switch_prisma2026 PROJECT_GROUP_PRISMA · 21.10 10:31 · ≥308k out" [ref=e265] [cursor=pointer]:
+          - /url: /?s=3b9765dc-c06a-414f-a3a8-4f44c4fa1d56
+          - generic [ref=e266]: mp_api_switch_prisma2026
+          - generic [ref=e267]: PROJECT_GROUP_PRISMA · 21.10 10:31 · ≥308k out
+      - listitem [ref=e268]:
+        - link "Błąd PHP z 2026-10-20 yodai · 21.10 10:21 · 7k out" [ref=e269] [cursor=pointer]:
+          - /url: /?s=8959f8ca-6551-4675-b8f0-80cfe26c3505
+          - generic [ref=e270]: Błąd PHP z 2026-10-20
+          - generic [ref=e271]: yodai · 21.10 10:21 · 7k out
+      - listitem [ref=e272]:
+        - link "Ocena moralności modeli AI yodai · 21.10 10:19 · 4k out" [ref=e273] [cursor=pointer]:
+          - /url: /?s=b12e6266-7d21-4c5d-a332-d64a3ee5cb2a
+          - generic [ref=e274]: Ocena moralności modeli AI
+          - generic [ref=e275]: yodai · 21.10 10:19 · 4k out
+      - listitem [ref=e276]:
+        - link "mercato_upgrader_2 Lista zadań 11_zadania_warte_dodania yodai · 20.10 17:03 · 32k out" [ref=e277] [cursor=pointer]:
+          - /url: /?s=2d9895d1-8719-478a-bb06-2c8f4077d57b
+          - generic [ref=e278]: mercato_upgrader_2
+          - generic [ref=e279]: Lista zadań 11_zadania_warte_dodania
+          - generic [ref=e280]: yodai · 20.10 17:03 · 32k out
+      - listitem [ref=e281]:
+        - link "no conversation /mobile yodai · 20.10 16:34" [ref=e282] [cursor=pointer]:
+          - /url: /?s=38915087-8fcf-4217-8f51-78e1b957d432
+          - generic [ref=e283]: no conversation /mobile
+          - text: yodai · 20.10 16:34
+      - listitem [ref=e284]:
+        - link "Import obrazków w screen PROJECT_GROUP_PRISMA · 20.10 12:03 · 2k out" [ref=e285] [cursor=pointer]:
+          - /url: /?s=ed5da0f9-6ff5-4bed-9955-8e36513c2531
+          - generic [ref=e286]: Import obrazków w screen
+          - generic [ref=e287]: PROJECT_GROUP_PRISMA · 20.10 12:03 · 2k out
+      - listitem [ref=e288]:
+        - link "full_import PROJECT_GROUP_PRISMA · 20.10 12:01" [ref=e289] [cursor=pointer]:
+          - /url: /?s=42f1e206-fe19-49c1-a851-b720a837dc38
+          - generic [ref=e290]: full_import
+          - text: PROJECT_GROUP_PRISMA · 20.10 12:01
+      - listitem [ref=e291]:
+        - link "full_import PROJECT_GROUP_PRISMA · 20.10 12:01 · 15k out" [ref=e292] [cursor=pointer]:
+          - /url: /?s=d355af07-e28f-4367-a58a-f4c3a5cfd8c5
+          - generic [ref=e293]: full_import
+          - generic [ref=e294]: PROJECT_GROUP_PRISMA · 20.10 12:01 · 15k out
+      - listitem [ref=e295]:
+        - link "full_import Full import na produkcji PROJECT_GROUP_PRISMA · 20.10 11:07 · 237k out" [ref=e296] [cursor=pointer]:
+          - /url: /?s=168f1b28-66cd-4710-a534-7deba6577de2
+          - generic [ref=e297]: full_import
+          - generic [ref=e298]: Full import na produkcji
+          - generic [ref=e299]: PROJECT_GROUP_PRISMA · 20.10 11:07 · 237k out
+      - listitem [ref=e300]:
+        - link "Chronologiczne ułożenie pliku Adamella.md yodai · 20.10 09:39 · 2k out" [ref=e301] [cursor=pointer]:
+          - /url: /?s=233cf9b7-3769-4e46-93dc-a949026292cc
+          - generic [ref=e302]: Chronologiczne ułożenie pliku Adamella.md
+          - generic [ref=e303]: yodai · 20.10 09:39 · 2k out
+      - listitem [ref=e304]:
+        - link "Usunięcie core.hooksPath z composer.json yodai · 20.10 00:17 · 59k out" [ref=e305] [cursor=pointer]:
+          - /url: /?s=66ecbbf5-c879-4c26-8acf-845aff14ad53
+          - generic [ref=e306]: Usunięcie core.hooksPath z composer.json
+          - generic [ref=e307]: yodai · 20.10 00:17 · 59k out
+      - listitem [ref=e308]:
+        - link "Orientacja w projekcie i dokumentacji open-mercato · 19.10 23:27 · 8k out" [ref=e309] [cursor=pointer]:
+          - /url: /?s=d3c13a45-27cb-4060-bc93-6281b2cc7660
+          - generic [ref=e310]: Orientacja w projekcie i dokumentacji
+          - generic [ref=e311]: open-mercato · 19.10 23:27 · 8k out
+      - listitem [ref=e312]:
+        - link "Nowy użytkownik yamil i CLI eduBombel · 19.10 23:20 · ≥249k out" [ref=e313] [cursor=pointer]:
+          - /url: /?s=40cac0f5-c5e4-4c72-8373-aa347001eedf
+          - generic [ref=e314]: Nowy użytkownik yamil i CLI
+          - generic [ref=e315]: eduBombel · 19.10 23:20 · ≥249k out
+      - listitem [ref=e316]:
+        - link "Wskaźnik predykcji kierunku ceny Bitcoina yodai · 19.10 23:03 · 12k out" [ref=e317] [cursor=pointer]:
+          - /url: /?s=69b3fb6c-e244-43e9-985c-7e0046d8a2bb
+          - generic [ref=e318]: Wskaźnik predykcji kierunku ceny Bitcoina
+          - generic [ref=e319]: yodai · 19.10 23:03 · 12k out
+      - listitem [ref=e320]:
+        - link "Mechanizm audytów prisma-dh2 w yodai yodai · 19.10 23:02 · 4k out" [ref=e321] [cursor=pointer]:
+          - /url: /?s=2f3b20c5-4128-46d9-b04f-9a421c38178e
+          - generic [ref=e322]: Mechanizm audytów prisma-dh2 w yodai
+          - generic [ref=e323]: yodai · 19.10 23:02 · 4k out
+      - listitem [ref=e324]:
+        - link "Brak faktury z Infkat w systemie progremo_ksiegowosc · 19.10 18:21 · 16k out" [ref=e325] [cursor=pointer]:
+          - /url: /?s=60fd6002-4c4b-4187-a902-cfc33691a7bf
+          - generic [ref=e326]: Brak faktury z Infkat w systemie
+          - generic [ref=e327]: progremo_ksiegowosc · 19.10 18:21 · 16k out
+      - listitem [ref=e328]:
+        - link "Anonimizacja mail1 i mail2 w .env progremo_ksiegowosc · 19.10 17:09 · 83k out" [ref=e329] [cursor=pointer]:
+          - /url: /?s=479865a2-8602-4ee4-a994-eb94c743ec75
+          - generic [ref=e330]: Anonimizacja mail1 i mail2 w .env
+          - generic [ref=e331]: progremo_ksiegowosc · 19.10 17:09 · 83k out
+      - listitem [ref=e332]:
+        - link "Koszty w infakt w tym miesiącu progremo_ksiegowosc · 19.10 17:07 · ≥389k out" [ref=e333] [cursor=pointer]:
+          - /url: /?s=1f13b1db-de60-476e-b15a-1cfdccd66ed1
+          - generic [ref=e334]: Koszty w infakt w tym miesiącu
+          - generic [ref=e335]: progremo_ksiegowosc · 19.10 17:07 · ≥389k out
+      - listitem [ref=e336]:
+        - link "ZAM-6000_plan_wdrożenia_TV_tipps ZAM-6000 plan wdrożenia TV tipps PROJECT_GROUP_PRISMA · 19.10 17:05 · ≥263k out" [ref=e337] [cursor=pointer]:
+          - /url: /?s=2d6eca79-1dd6-4f51-937b-3dd6b5eb5e5f
+          - generic [ref=e338]: ZAM-6000_plan_wdrożenia_TV_tipps
+          - generic [ref=e339]: ZAM-6000 plan wdrożenia TV tipps
+          - generic [ref=e340]: PROJECT_GROUP_PRISMA · 19.10 17:05 · ≥263k out
+      - listitem [ref=e341]:
+        - link "Standardy aplikacji yodai_app_standards.md yodai · 19.10 16:33 · 28k out" [ref=e342] [cursor=pointer]:
+          - /url: /?s=e2e77fc6-f21d-478c-86c1-e029b5d359f3
+          - generic [ref=e343]: Standardy aplikacji yodai_app_standards.md
+          - generic [ref=e344]: yodai · 19.10 16:33 · 28k out
+      - listitem [ref=e345]:
+        - link "Klient mail do bazy i API yodai · 19.10 10:17 · 37k out" [ref=e346] [cursor=pointer]:
+          - /url: /?s=2a03726f-2761-4c91-b9db-278da05ea649
+          - generic [ref=e347]: Klient mail do bazy i API
+          - generic [ref=e348]: yodai · 19.10 10:17 · 37k out
+      - listitem [ref=e349]:
+        - link "Przewijanie ekranu w tmux REPO_PRISMA_DH_2 · 19.10 08:07 · 226 out" [ref=e350] [cursor=pointer]:
+          - /url: /?s=322b708d-d032-48ab-acf8-94e00c02509a
+          - generic [ref=e351]: Przewijanie ekranu w tmux
+          - generic [ref=e352]: REPO_PRISMA_DH_2 · 19.10 08:07 · 226 out
+      - listitem [ref=e353]:
+        - link "Dostęp dziecka do gier eduBombel · 18.10 21:26 · 48k out" [ref=e354] [cursor=pointer]:
+          - /url: /?s=5892fe3e-6c73-4335-85a6-61013b51c86f
+          - generic [ref=e355]: Dostęp dziecka do gier
+          - generic [ref=e356]: eduBombel · 18.10 21:26 · 48k out
+      - listitem [ref=e357]:
+        - link "Zestawy danych gry Ortografia / Gol eduBombel · 18.10 21:25 · ≥84k out" [ref=e358] [cursor=pointer]:
+          - /url: /?s=16ea1c75-ea07-4fff-b061-5717d3badab8
+          - generic [ref=e359]: Zestawy danych gry Ortografia / Gol
+          - generic [ref=e360]: eduBombel · 18.10 21:25 · ≥84k out
+      - listitem [ref=e361]:
+        - link "Skrypt download-missing.py – pobieranie MKV workbox9 · 16.10 23:53 · 63k out" [ref=e362] [cursor=pointer]:
+          - /url: /?s=fc495ad4-c657-4053-bcee-08e8c44e1dca
+          - generic [ref=e363]: Skrypt download-missing.py – pobieranie MKV
+          - generic [ref=e364]: workbox9 · 16.10 23:53 · 63k out
+      - listitem [ref=e365]:
+        - link "Przesyłanie plików na MacBook Mam Krate workbox9 · 16.10 21:01 · 2k out" [ref=e366] [cursor=pointer]:
+          - /url: /?s=392603ee-be16-42f6-a2d4-5e331b4d08d1
+          - generic [ref=e367]: Przesyłanie plików na MacBook Mam Krate
+          - generic [ref=e368]: workbox9 · 16.10 21:01 · 2k out
+      - listitem [ref=e369]:
+        - link "Dump OFFLINE_DATABASE na dysku zewnętrznym workbox9 · 16.10 16:05 · 22k out" [ref=e370] [cursor=pointer]:
+          - /url: /?s=22d323c5-d173-40c3-98b4-48700bf12281
+          - generic [ref=e371]: Dump OFFLINE_DATABASE na dysku zewnętrznym
+          - generic [ref=e372]: workbox9 · 16.10 16:05 · 22k out
+      - listitem [ref=e373]:
+        - link "Nowe instancje gry flagi dla dzieci eduBombel · 16.10 14:18 · 3k out" [ref=e374] [cursor=pointer]:
+          - /url: /?s=10a7a8ed-f007-44e0-8804-62c658c442d2
+          - generic [ref=e375]: Nowe instancje gry flagi dla dzieci
+          - generic [ref=e376]: eduBombel · 16.10 14:18 · 3k out
+      - listitem [ref=e377]:
+        - link "Ticket 18664 w CRM Netzindianer PROJECT_GROUP_PRISMA · 16.10 13:58 · 13k out" [ref=e378] [cursor=pointer]:
+          - /url: /?s=400f67c7-da34-4cc7-9cc9-dc48969c8016
+          - generic [ref=e379]: Ticket 18664 w CRM Netzindianer
+          - generic [ref=e380]: PROJECT_GROUP_PRISMA · 16.10 13:58 · 13k out
+      - listitem [ref=e381]:
+        - link "Dane do gry Dragon Ball eduBombel · 16.10 13:34 · ≥233k out" [ref=e382] [cursor=pointer]:
+          - /url: /?s=787bc754-6cde-4df9-8ed5-594f26462ece
+          - generic [ref=e383]: Dane do gry Dragon Ball
+          - generic [ref=e384]: eduBombel · 16.10 13:34 · ≥233k out
+      - listitem [ref=e385]:
+        - link "ZAM-6000 plan wdrożenia TV tipps PROJECT_GROUP_PRISMA · 16.10 12:06 · 4k out" [ref=e386] [cursor=pointer]:
+          - /url: /?s=d3c8fd5b-524f-4383-9422-5a0e76d80a04
+          - generic [ref=e387]: ZAM-6000 plan wdrożenia TV tipps
+          - generic [ref=e388]: PROJECT_GROUP_PRISMA · 16.10 12:06 · 4k out
+      - listitem [ref=e389]:
+        - link "Import telschau ZAM-6000 PROJECT_GROUP_PRISMA · 16.10 12:01 · 8k out" [ref=e390] [cursor=pointer]:
+          - /url: /?s=6270c0f5-6c4a-4a17-958f-082f6bbfd999
+          - generic [ref=e391]: Import telschau ZAM-6000
+          - generic [ref=e392]: PROJECT_GROUP_PRISMA · 16.10 12:01 · 8k out
+      - listitem [ref=e393]:
+        - link "Zadania TV-Tipp, ticket 6000 PROJECT_GROUP_PRISMA · 16.10 11:48 · ≥110k out" [ref=e394] [cursor=pointer]:
+          - /url: /?s=089c7539-9dde-4b44-b616-c431c20fda58
+          - generic [ref=e395]: Zadania TV-Tipp, ticket 6000
+          - generic [ref=e396]: PROJECT_GROUP_PRISMA · 16.10 11:48 · ≥110k out
+      - listitem [ref=e397]:
+        - link "Kontekst edu bomble dla agentów eduBombel · 16.10 11:48 · 9k out" [ref=e398] [cursor=pointer]:
+          - /url: /?s=cc989d22-ebc2-4460-9e1e-4a4551504ddb
+          - generic [ref=e399]: Kontekst edu bomble dla agentów
+          - generic [ref=e400]: eduBombel · 16.10 11:48 · 9k out
+      - listitem [ref=e401]:
+        - link "Workbox_rebuild.md i naprawa linków LLM_CONTEXT · 16.10 11:30 · ≥39k out" [ref=e402] [cursor=pointer]:
+          - /url: /?s=b0033637-57ff-496c-ad7e-2fccc9b0e6b3
+          - generic [ref=e403]: Workbox_rebuild.md i naprawa linków
+          - generic [ref=e404]: LLM_CONTEXT · 16.10 11:30 · ≥39k out
+      - listitem [ref=e405]:
+        - link "Ortografia Dragon Ball dla Kuby eduBombel · 16.10 11:14 · ≥127k out" [ref=e406] [cursor=pointer]:
+          - /url: /?s=ac4011b1-6a29-4b68-82c9-3fd300ac918d
+          - generic [ref=e407]: Ortografia Dragon Ball dla Kuby
+          - generic [ref=e408]: eduBombel · 16.10 11:14 · ≥127k out
+      - listitem [ref=e409]:
+        - link "Ustawienia z załączonego zrzutu workbox9 · 16.10 11:12 · 8k out" [ref=e410] [cursor=pointer]:
+          - /url: /?s=142e9cdb-16b6-4098-a861-9855eb12bdac
+          - generic [ref=e411]: Ustawienia z załączonego zrzutu
+          - generic [ref=e412]: workbox9 · 16.10 11:12 · 8k out
+      - listitem [ref=e413]:
+        - link "Grafiki piłkarzy Gol za czytanie eduBombel · 16.10 10:33 · 98k out" [ref=e414] [cursor=pointer]:
+          - /url: /?s=c5ef44fd-7ad7-4560-97e2-b52fd0a6b07b
+          - generic [ref=e415]: Grafiki piłkarzy Gol za czytanie
+          - generic [ref=e416]: eduBombel · 16.10 10:33 · 98k out
+      - listitem [ref=e417]:
+        - link "Lokalizacja skilli yoda:* workbox9 · 16.10 09:16 · ≥84k out" [ref=e418] [cursor=pointer]:
+          - /url: /?s=4c3fd2d4-bbce-4606-bb97-171f5f80a6f8
+          - generic [ref=e419]: Lokalizacja skilli yoda:*
+          - generic [ref=e420]: workbox9 · 16.10 09:16 · ≥84k out
+      - listitem [ref=e421]:
+        - link "Repozytorium workbox_rebuild na GitHub · 16.10 09:05" [ref=e422] [cursor=pointer]:
+          - /url: /?s=786e4798-3891-4b27-9ca9-ac77f8e570f7
+          - generic [ref=e423]: Repozytorium workbox_rebuild na GitHub
+          - text: · 16.10 09:05
+      - listitem [ref=e424]:
+        - link "edubombel_archtekt eduBombel · 16.10 08:42" [ref=e425] [cursor=pointer]:
+          - /url: /?s=9a2aaece-9b57-43d1-800e-9cb4bfab2bd2
+          - generic [ref=e426]: edubombel_archtekt
+          - text: eduBombel · 16.10 08:42
+      - listitem [ref=e427]:
+        - link "edubombel_archtekt Przegląd aplikacji z @edubombel_dev eduBombel · 16.10 08:33 · ≥60k out" [ref=e428] [cursor=pointer]:
+          - /url: /?s=43e9c1c4-efd2-433c-8cb3-7be39ed506e8
+          - generic [ref=e429]: edubombel_archtekt
+          - generic [ref=e430]: Przegląd aplikacji z @edubombel_dev
+          - generic [ref=e431]: eduBombel · 16.10 08:33 · ≥60k out
+      - listitem [ref=e432]:
+        - link "edubombel_dev eduBombel · 15.10 17:19 · 109k out" [ref=e433] [cursor=pointer]:
+          - /url: /?s=0ff9bbc3-6012-4e5a-aa3e-891ff5cf3396
+          - generic [ref=e434]: edubombel_dev
+          - generic [ref=e435]: eduBombel · 15.10 17:19 · 109k out
+      - listitem [ref=e436]:
+        - link "no conversation bbe85a31 PROJECT_FP_ADAPTER · 15.10 17:06" [ref=e437] [cursor=pointer]:
+          - /url: /?s=bbe85a31-5572-4352-8ac5-bc62a74f461c
+          - generic [ref=e438]: no conversation bbe85a31
+          - text: PROJECT_FP_ADAPTER · 15.10 17:06
+      - listitem [ref=e439]:
+        - 'link "Jedną linią: czy na liście skilli masz autodeploy, autocommit i mieso? eduBombel · 15.10 16:57 · 307 out" [ref=e440] [cursor=pointer]':
+          - /url: /?s=b7594cdd-c9dd-443a-8b73-65fbfc5f0b06
+          - generic [ref=e441]: "Jedną linią: czy na liście skilli masz autodeploy, autocommit i mieso?"
+          - generic [ref=e442]: eduBombel · 15.10 16:57 · 307 out
+      - listitem [ref=e443]:
+        - 'link "Bez narzędzi: (1) jakie jest hasło testowe reguł projektu? (2) jaki przykład kl… PROJECT_FP_ADAPTER · 15.10 16:31 · 233 out" [ref=e444] [cursor=pointer]':
+          - /url: /?s=e3f794f5-fa42-4ce5-9070-1f2f692984b0
+          - generic [ref=e445]: "Bez narzędzi: (1) jakie jest hasło testowe reguł projektu? (2) jaki przykład kl…"
+          - generic [ref=e446]: PROJECT_FP_ADAPTER · 15.10 16:31 · 233 out
+      - listitem [ref=e447]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref… PROJECT_FP_ADAPTER · 15.10 16:31 · 439 out" [ref=e448] [cursor=pointer]':
+          - /url: /?s=0128260f-7182-47c3-b2fe-06d60cf9450c
+          - generic [ref=e449]: "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref…"
+          - generic [ref=e450]: PROJECT_FP_ADAPTER · 15.10 16:31 · 439 out
+      - listitem [ref=e451]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref… PROJECT_FP_ADAPTER · 15.10 16:30 · 505 out" [ref=e452] [cursor=pointer]':
+          - /url: /?s=952ab064-c3e5-4c67-bfbd-eaf77b21be58
+          - generic [ref=e453]: "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref…"
+          - generic [ref=e454]: PROJECT_FP_ADAPTER · 15.10 16:30 · 505 out
+      - listitem [ref=e455]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: jaki przykład nazwy klasy (z prefiks… PROJECT_FP_ADAPTER · 15.10 16:30 · 411 out" [ref=e456] [cursor=pointer]':
+          - /url: /?s=00f1b354-d0b6-4187-8342-fc6a3fd47997
+          - generic [ref=e457]: "Bez używania narzędzi, tylko z instrukcji: jaki przykład nazwy klasy (z prefiks…"
+          - generic [ref=e458]: PROJECT_FP_ADAPTER · 15.10 16:30 · 411 out
+      - listitem [ref=e459]:
+        - 'link "Jedną linią: czy masz skille flux, zammad, mieso oraz komendę master? Wypisz te… PROJECT_FP_ADAPTER · 15.10 16:25 · 1k out" [ref=e460] [cursor=pointer]':
+          - /url: /?s=f228bda2-d7ac-4f85-bca0-615168bf7edb
+          - generic [ref=e461]: "Jedną linią: czy masz skille flux, zammad, mieso oraz komendę master? Wypisz te…"
+          - generic [ref=e462]: PROJECT_FP_ADAPTER · 15.10 16:25 · 1k out
+      - listitem [ref=e463]:
+        - link "Pasek statusu dizalssz workbox9 · 15.10 16:20 · 316 out" [ref=e464] [cursor=pointer]:
+          - /url: /?s=0ee3357f-ac84-4eae-b419-254d6ae4b738
+          - generic [ref=e465]: Pasek statusu dizalssz
+          - generic [ref=e466]: workbox9 · 15.10 16:20 · 316 out
+      - listitem [ref=e467]:
+        - 'link "Odpowiedz jedną linią: czy widzisz skill ''mieso'' i komendę ''makebyplan''? Jaki m… workbox9_swzk · 15.10 16:19 · 139 out" [ref=e468] [cursor=pointer]':
+          - /url: /?s=2c931a2c-06d9-4075-8fa2-6d9e9be397bb
+          - generic [ref=e469]: "Odpowiedz jedną linią: czy widzisz skill 'mieso' i komendę 'makebyplan'? Jaki m…"
+          - generic [ref=e470]: workbox9_swzk · 15.10 16:19 · 139 out
+      - listitem [ref=e471]:
+        - 'link "Odpowiedz jedną linią: czy widzisz skill ''mieso'' i komendę ''makebyplan'' na liśc… workbox9_swzk · 15.10 16:18 · 117 out" [ref=e472] [cursor=pointer]':
+          - /url: /?s=0e85119c-4a2d-45ad-8c11-ee242d205370
+          - generic [ref=e473]: "Odpowiedz jedną linią: czy widzisz skill 'mieso' i komendę 'makebyplan' na liśc…"
+          - generic [ref=e474]: workbox9_swzk · 15.10 16:18 · 117 out
+      - listitem [ref=e475]:
+        - link "Czyszczenie plików prywatności w Claude .claude · 15.10 15:42 · ≥19k out" [ref=e476] [cursor=pointer]:
+          - /url: /?s=5f2c1456-3db1-4b79-8938-26766d322fdb
+          - generic [ref=e477]: Czyszczenie plików prywatności w Claude
+          - generic [ref=e478]: .claude · 15.10 15:42 · ≥19k out
+  - main [ref=e479]:
+    - generic [ref=e480]:
+      - generic [ref=e481]:
+        - generic [ref=e482]:
+          - heading "Koncepcja przebudowy repozytorium" [level=1] [ref=e483]
+          - generic "4d12c76b-8f7d-4e64-a643-4ee2e799b372" [ref=e484]:
+            - text: ~/SK/workbox9 ·
+            - strong [ref=e485]: transcript
+          - link "⇩ CSV" [ref=e486] [cursor=pointer]:
+            - /url: /export.csv?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372
+          - button "⇩ dump" [ref=e488] [cursor=pointer]
+          - generic [ref=e489] [cursor=pointer]:
+            - checkbox "live" [ref=e490]
+            - text: live
+        - navigation [ref=e491]:
+          - link "Files read 102" [ref=e492] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372
+          - link "Files changed 192" [ref=e493] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&view=changed
+          - link "Commands 243" [ref=e494] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&view=commands
+          - link "Blocked 16" [ref=e495] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&view=blocked
+          - link "Messages 125" [ref=e496] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&view=messages
+          - link "Timeline" [ref=e497] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&view=timeline
+          - link "Graph" [ref=e498] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&view=graph
+          - link "Log" [ref=e499] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&view=log
+        - generic [ref=e500]:
+          - combobox [ref=e503]:
+            - option "all agents (39)" [selected]
+            - option "main · 188k out"
+            - 'option "general-purpose: Przenieś aitrader · ≥76 out"'
+            - 'option "general-purpose: Przenieś REPO_PRICEDROP · ≥93 out"'
+            - 'option "general-purpose: Przenieś agent_vizualization · ≥43 out"'
+            - 'option "general-purpose: Przenieś lesna-wyprawa · ≥140 out"'
+            - 'option "general-purpose: Repo paths: REPOS_NETZI · ≥79 out"'
+            - 'option "general-purpose: Przenieś REPO_BILLINGTOOL · ≥56 out"'
+            - 'option "general-purpose: Przenieś agency-test · ≥64 out"'
+            - 'option "general-purpose: Przenieś REPO_OSC · ≥90 out"'
+            - 'option "general-purpose: Docs paths: A + B · ≥1k out"'
+            - 'option "general-purpose: Przenieś spec-kit · ≥102 out"'
+            - 'option "general-purpose: Przenieś fixit_logitech_promo · ≥73 out"'
+            - 'option "general-purpose: Przenieś REPO_RP-SHOP · ≥43 out"'
+            - 'option "general-purpose: Przenieś wp_mcp · ≥88 out"'
+            - 'option "general-purpose: Przenieś REPO_ADAPTER · ≥56 out"'
+            - 'option "general-purpose: Repo paths: REPOS_PRGRM część 2 · ≥172 out"'
+            - 'option "general-purpose: Przenieś open-mercato · ≥38 out"'
+            - 'option "general-purpose: Przenieś figma-mcp-layout-admina · ≥84 out"'
+            - 'option "general-purpose: Przenieś eduBombel · ≥100 out"'
+            - 'option "general-purpose: Przenieś pm_center · ≥61 out"'
+            - 'option "general-purpose: Przenieś REPO_CONSENT · ≥56 out"'
+            - 'option "general-purpose: Przenieś autonomus_llm_agency_page · ≥47 out"'
+            - 'option "general-purpose: Przenieś REPO_BIGD · ≥58 out"'
+            - 'option "general-purpose: Przenieś kid-game1 · ≥52 out"'
+            - 'option "general-purpose: Przenieś dealfinder · ≥80 out"'
+            - 'option "general-purpose: Przenieś REPO_NISSO · ≥57 out"'
+            - 'option "general-purpose: Przenieś prgrm2 i worktrees · ≥52 out"'
+            - 'option "general-purpose: Docs paths: Prisma group · ≥2k out"'
+            - 'option "general-purpose: Przenieś REPO_IAM · ≥56 out"'
+            - 'option "general-purpose: Przenieś playwright-playground · ≥75 out"'
+            - 'option "general-purpose: Docs paths: C + D · ≥132 out"'
+            - 'option "general-purpose: Przenieś ROMEK · ≥94 out"'
+            - 'option "general-purpose: Repo paths: REPOS_PRGRM część 1 · ≥162 out"'
+            - 'option "general-purpose: Przenieś progremo_ksiegowosc · ≥146 out"'
+            - 'option "general-purpose: Przenieś kubix · ≥62 out"'
+            - 'option "general-purpose: Przenieś REPO_EVENTHUB · ≥72 out"'
+            - 'option "general-purpose: Przenieś yodai · ≥97 out"'
+            - 'option "general-purpose: Przenieś oba REPO_HANS2 · ≥58 out"'
+            - 'option "general-purpose: Przenieś REPO_FP_ADAPTER · ≥57 out"'
+          - combobox "turn = from a user prompt to the next one · out = output tokens of all agents in the turn" [ref=e505]:
+            - option "all turns (39)" [selected]
+            - option "1 · 09:21 · robilismy przebudowe repo opisana w tym pliku zap… · 2k out"
+            - option "2 · 09:25 · ok, dobrze .. niestety teraz musimy zorbic krok w… · 4k out"
+            - option "3 · 09:59 · mi tutaj drzewko katalogów, jakbyś to widział po … · 1k out"
+            - option "4 · 10:03 · Okej, każdy workbox ma swój git, to jest okej, cz… · 1k out"
+            - option "5 · 10:03 · poprawiaj strukturę katalogów i zrób skilla, a na… · 7k out"
+            - option "6 · 10:11 · pokaż mi teraz aktualną wersję drzewka katalogów,… · 4k out"
+            - option "7 · 10:19 · Zastanawiam się jeszcze nad jedną poprawką, żeby … · 1k out"
+            - option "8 · 10:20 · zostawiamy projekt. Jakiego wrapera? Zaczynamy od… · 1k out"
+            - option "9 · 10:22 · Okej, możesz to gdzieś napisać. Ale niekoniecznie… · 2k out"
+            - option "10 · 10:24 · Nie do końca rozumiem ten Claude Wrapper ZSH. To … · 841 out"
+            - option "11 · 10:25 · bo po prostu wyrzucimy, bo chyba nie jest koniecz… · 2k out"
+            - option "12 · 10:27 · Plan jest taki, żeby uruchamiać Claude'a w folder… · 2k out"
+            - option "13 · 10:28 · To jest dobry pomysł, żeby do projektu X, dołożyć… · 978 out"
+            - 'option "14 · 10:31 · # workbox9: środowisko Claude Code source \"$HOME/… · 889 out"'
+            - option "15 · 10:31 · ZSH, także tutaj to nie jest pytanie. · 616 out"
+            - option "16 · 10:32 · jest podłączony ten wrapper, nie rozumiem. W któr… · 504 out"
+            - option "17 · 10:33 · zmieńmy to, bo to jest turbo mylące. Ten CloudWra… · 2k out"
+            - option "18 · 10:35 · przenieść tego Claude Wrappera w ogóle do ZSH, bo… · 836 out"
+            - option "19 · 10:35 · ale można Cloud Wrappera zmienić. Czyli rozumiem,… · 1k out"
+            - option "20 · 10:36 · wykonanie tego, co do czego ma być przyklejone. M… · 4k out"
+            - option "21 · 10:40 · zmieniłem to w ZSH, możesz sobie tutaj zapisać w … · 3k out"
+            - option "22 · 10:49 · pusty folder to szum, no ale mniej więcej jakbyś … · 4k out"
+            - option "23 · 10:50 · jeszcze potrzebuję, no to ten, co będzie w projek… · 5k out"
+            - 'option "24 · 10:52 · \"projects\": { \"/Users/Sebastian/PROJECT-SK/workb… · 2k out"'
+            - option "25 · 10:53 · cały ten obiekt. Możesz go przebudować i dać mi n… · 10k out"
+            - option "26 · 11:23 · Co to się robi strasznie skomplikowane. co się st… · 1k out"
+            - option "27 · 11:24 · Dobra, nie sprzątamy. Zaczynamy, wydziel agentów,… · ≥22k out"
+            - option "28 · 11:27 · ~/SK/workbox9/workbox9_prgrm/agent_vizualization … · ≥64k out"
+            - option "29 · 12:53 · zamkniete okna wszystkie rowniez prisma. -- mozes… · 6k out"
+            - option "30 · 13:14 · ~/.zshrc daj mi tutaj poprawiony skrypt dla tego … · 3k out"
+            - option "31 · 13:17 · OK, to działa i ze stanMet plus serwery do zatrzy… · 3k out"
+            - option "32 · 13:18 · stanmet mozez zatrzymac · 517 out"
+            - option "33 · 13:18 · jakie sa nastpen kroki ? czy mozemy przejsc do ak… · 1k out"
+            - option "34 · 13:19 · ok, dzialaj z tym .. rozpisz sobie progres plan i… · ≥25k out"
+            - option "35 · 13:33 · sprobuj napsrawic zepsute import jesli nie da sie… · 2k out"
+            - option "36 · 13:35 · tak skasu j i usun workbox9_netzi/Restructurisati… · 586 out"
+            - option "37 · 13:36 · sill jest w glwonym workbox9 tak ? · 2k out"
+            - option "38 · 13:41 · dobra czy projekt przebudowy moge uznac za zamkni… · 1k out"
+            - option "39 · 13:45 · ok rob h · 2k out"
+          - combobox "where the file came from" [ref=e506]:
+            - option "all sources" [selected]
+            - option "agent tools only"
+            - option "injected context only"
+          - link "project only" [ref=e507] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&scope=project
+          - combobox "executed = ran (also Bash with exit code ≠ 0) · blocked = stopped by a hook, a permissions.deny rule, auto mode or you · failed = tool error, e.g. file does not exist" [ref=e508]:
+            - option "all calls (334)" [selected]
+            - option "executed (318)"
+            - option "blocked (16)"
+            - option "failed (0)"
+          - group [ref=e509]:
+            - 'generic "tokens: ≥194k out" [active] [ref=e510] [cursor=pointer]'
+            - generic [ref=e1722]:
+              - paragraph [ref=e1723]:
+                - strong [ref=e1724]: whole session
+                - text: · all agents, regardless of the agent and status filters
+              - table [ref=e1725]:
+                - rowgroup [ref=e1726]:
+                  - row "agent calls output new context cache read" [ref=e1727]:
+                    - columnheader "agent" [ref=e1728]
+                    - columnheader "calls" [ref=e1729]
+                    - columnheader "output" [ref=e1730]
+                    - columnheader "new context" [ref=e1731]
+                    - columnheader "cache read" [ref=e1732]
+                - rowgroup [ref=e1733]:
+                  - row "main 162 188k 498k 27.7M" [ref=e1734]:
+                    - cell "main" [ref=e1735]:
+                      - link "main" [ref=e1736] [cursor=pointer]:
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=main
+                        - text: main
+                    - cell "162" [ref=e1738]
+                    - cell "188k" [ref=e1739]
+                    - cell "498k" [ref=e1740]
+                    - cell "27.7M" [ref=e1741]
+                  - 'row "general-purpose: Docs paths: Prisma group 13 ≥2k 103k 966k" [ref=e1742]':
+                    - 'cell "general-purpose: Docs paths: Prisma group" [ref=e1743]':
+                      - 'link "general-purpose: Docs paths: Prisma group" [ref=e1744] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=ac8dbc720ae402051
+                        - text: "general-purpose: Docs paths: Prisma group"
+                    - cell "13" [ref=e1746]
+                    - cell "≥2k" [ref=e1747]
+                    - cell "103k" [ref=e1748]
+                    - cell "966k" [ref=e1749]
+                  - 'row "general-purpose: Docs paths: A + B 14 ≥1k 81k 823k" [ref=e1750]':
+                    - 'cell "general-purpose: Docs paths: A + B" [ref=e1751]':
+                      - 'link "general-purpose: Docs paths: A + B" [ref=e1752] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a4eff8fc936485036
+                        - text: "general-purpose: Docs paths: A + B"
+                    - cell "14" [ref=e1754]
+                    - cell "≥1k" [ref=e1755]
+                    - cell "81k" [ref=e1756]
+                    - cell "823k" [ref=e1757]
+                  - 'row "general-purpose: Repo paths: REPOS_PRGRM cz… 11 ≥172 49k 602k" [ref=e1758]':
+                    - 'cell "general-purpose: Repo paths: REPOS_PRGRM cz…" [ref=e1759]':
+                      - 'link "general-purpose: Repo paths: REPOS_PRGRM cz…" [ref=e1760] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a9343fd728d68163e
+                        - text: "general-purpose: Repo paths: REPOS_PRGRM cz…"
+                    - cell "11" [ref=e1762]
+                    - cell "≥172" [ref=e1763]
+                    - cell "49k" [ref=e1764]
+                    - cell "602k" [ref=e1765]
+                  - 'row "general-purpose: Repo paths: REPOS_PRGRM cz… 11 ≥162 55k 634k" [ref=e1766]':
+                    - 'cell "general-purpose: Repo paths: REPOS_PRGRM cz…" [ref=e1767]':
+                      - 'link "general-purpose: Repo paths: REPOS_PRGRM cz…" [ref=e1768] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=ad297fe30db8a08c2
+                        - text: "general-purpose: Repo paths: REPOS_PRGRM cz…"
+                    - cell "11" [ref=e1770]
+                    - cell "≥162" [ref=e1771]
+                    - cell "55k" [ref=e1772]
+                    - cell "634k" [ref=e1773]
+                  - 'row "general-purpose: Przenieś progremo_ksiegowo… 6 ≥146 34k 257k" [ref=e1774]':
+                    - 'cell "general-purpose: Przenieś progremo_ksiegowo…" [ref=e1775]':
+                      - 'link "general-purpose: Przenieś progremo_ksiegowo…" [ref=e1776] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=ad68c7a5f41680318
+                        - text: "general-purpose: Przenieś progremo_ksiegowo…"
+                    - cell "6" [ref=e1778]
+                    - cell "≥146" [ref=e1779]
+                    - cell "34k" [ref=e1780]
+                    - cell "257k" [ref=e1781]
+                  - 'row "general-purpose: Przenieś lesna-wyprawa 6 ≥140 31k 254k" [ref=e1782]':
+                    - 'cell "general-purpose: Przenieś lesna-wyprawa" [ref=e1783]':
+                      - 'link "general-purpose: Przenieś lesna-wyprawa" [ref=e1784] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a12ecc9be7780ab49
+                        - text: "general-purpose: Przenieś lesna-wyprawa"
+                    - cell "6" [ref=e1786]
+                    - cell "≥140" [ref=e1787]
+                    - cell "31k" [ref=e1788]
+                    - cell "254k" [ref=e1789]
+                  - 'row "general-purpose: Docs paths: C + D 12 ≥132 75k 692k" [ref=e1790]':
+                    - 'cell "general-purpose: Docs paths: C + D" [ref=e1791]':
+                      - 'link "general-purpose: Docs paths: C + D" [ref=e1792] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=acc108f2f9f8e7f9e
+                        - text: "general-purpose: Docs paths: C + D"
+                    - cell "12" [ref=e1794]
+                    - cell "≥132" [ref=e1795]
+                    - cell "75k" [ref=e1796]
+                    - cell "692k" [ref=e1797]
+                  - 'row "general-purpose: Przenieś spec-kit 5 ≥102 32k 206k" [ref=e1798]':
+                    - 'cell "general-purpose: Przenieś spec-kit" [ref=e1799]':
+                      - 'link "general-purpose: Przenieś spec-kit" [ref=e1800] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a584cb48e0070e42f
+                        - text: "general-purpose: Przenieś spec-kit"
+                    - cell "5" [ref=e1802]
+                    - cell "≥102" [ref=e1803]
+                    - cell "32k" [ref=e1804]
+                    - cell "206k" [ref=e1805]
+                  - 'row "general-purpose: Przenieś eduBombel 4 ≥100 31k 156k" [ref=e1806]':
+                    - 'cell "general-purpose: Przenieś eduBombel" [ref=e1807]':
+                      - 'link "general-purpose: Przenieś eduBombel" [ref=e1808] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=aa948e87803a17661
+                        - text: "general-purpose: Przenieś eduBombel"
+                    - cell "4" [ref=e1810]
+                    - cell "≥100" [ref=e1811]
+                    - cell "31k" [ref=e1812]
+                    - cell "156k" [ref=e1813]
+                  - 'row "general-purpose: Przenieś yodai 5 ≥97 32k 207k" [ref=e1814]':
+                    - 'cell "general-purpose: Przenieś yodai" [ref=e1815]':
+                      - 'link "general-purpose: Przenieś yodai" [ref=e1816] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=ae126b72662abf595
+                        - text: "general-purpose: Przenieś yodai"
+                    - cell "5" [ref=e1818]
+                    - cell "≥97" [ref=e1819]
+                    - cell "32k" [ref=e1820]
+                    - cell "207k" [ref=e1821]
+                  - 'row "general-purpose: Przenieś ROMEK 5 ≥94 31k 205k" [ref=e1822]':
+                    - 'cell "general-purpose: Przenieś ROMEK" [ref=e1823]':
+                      - 'link "general-purpose: Przenieś ROMEK" [ref=e1824] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=acc12133ef1359210
+                        - text: "general-purpose: Przenieś ROMEK"
+                    - cell "5" [ref=e1826]
+                    - cell "≥94" [ref=e1827]
+                    - cell "31k" [ref=e1828]
+                    - cell "205k" [ref=e1829]
+                  - 'row "general-purpose: Przenieś REPO_PRICEDROP 3 ≥93 29k 108k" [ref=e1830]':
+                    - 'cell "general-purpose: Przenieś REPO_PRICEDROP" [ref=e1831]':
+                      - 'link "general-purpose: Przenieś REPO_PRICEDROP" [ref=e1832] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a0a0aa35ac4575928
+                        - text: "general-purpose: Przenieś REPO_PRICEDROP"
+                    - cell "3" [ref=e1834]
+                    - cell "≥93" [ref=e1835]
+                    - cell "29k" [ref=e1836]
+                    - cell "108k" [ref=e1837]
+                  - 'row "general-purpose: Przenieś REPO_OSC 5 ≥90 30k 201k" [ref=e1838]':
+                    - 'cell "general-purpose: Przenieś REPO_OSC" [ref=e1839]':
+                      - 'link "general-purpose: Przenieś REPO_OSC" [ref=e1840] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a4a4893472195b833
+                        - text: "general-purpose: Przenieś REPO_OSC"
+                    - cell "5" [ref=e1842]
+                    - cell "≥90" [ref=e1843]
+                    - cell "30k" [ref=e1844]
+                    - cell "201k" [ref=e1845]
+                  - 'row "general-purpose: Przenieś wp_mcp 4 ≥88 30k 155k" [ref=e1846]':
+                    - 'cell "general-purpose: Przenieś wp_mcp" [ref=e1847]':
+                      - 'link "general-purpose: Przenieś wp_mcp" [ref=e1848] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a87035270e7ca0b66
+                        - text: "general-purpose: Przenieś wp_mcp"
+                    - cell "4" [ref=e1850]
+                    - cell "≥88" [ref=e1851]
+                    - cell "30k" [ref=e1852]
+                    - cell "155k" [ref=e1853]
+                  - 'row "general-purpose: Przenieś figma-mcp-layout-… 6 ≥84 31k 251k" [ref=e1854]':
+                    - 'cell "general-purpose: Przenieś figma-mcp-layout-…" [ref=e1855]':
+                      - 'link "general-purpose: Przenieś figma-mcp-layout-…" [ref=e1856] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a9eba9ed96dbc9bc5
+                        - text: "general-purpose: Przenieś figma-mcp-layout-…"
+                    - cell "6" [ref=e1858]
+                    - cell "≥84" [ref=e1859]
+                    - cell "31k" [ref=e1860]
+                    - cell "251k" [ref=e1861]
+                  - 'row "general-purpose: Przenieś dealfinder 5 ≥80 31k 204k" [ref=e1862]':
+                    - 'cell "general-purpose: Przenieś dealfinder" [ref=e1863]':
+                      - 'link "general-purpose: Przenieś dealfinder" [ref=e1864] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=ac16a4fd32f3413b4
+                        - text: "general-purpose: Przenieś dealfinder"
+                    - cell "5" [ref=e1866]
+                    - cell "≥80" [ref=e1867]
+                    - cell "31k" [ref=e1868]
+                    - cell "204k" [ref=e1869]
+                  - 'row "general-purpose: Repo paths: REPOS_NETZI 7 ≥79 45k 369k" [ref=e1870]':
+                    - 'cell "general-purpose: Repo paths: REPOS_NETZI" [ref=e1871]':
+                      - 'link "general-purpose: Repo paths: REPOS_NETZI" [ref=e1872] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a2c3ae59eadb1847a
+                        - text: "general-purpose: Repo paths: REPOS_NETZI"
+                    - cell "7" [ref=e1874]
+                    - cell "≥79" [ref=e1875]
+                    - cell "45k" [ref=e1876]
+                    - cell "369k" [ref=e1877]
+                  - 'row "general-purpose: Przenieś aitrader 4 ≥76 31k 157k" [ref=e1878]':
+                    - 'cell "general-purpose: Przenieś aitrader" [ref=e1879]':
+                      - 'link "general-purpose: Przenieś aitrader" [ref=e1880] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a033d3c7b26cf1a47
+                        - text: "general-purpose: Przenieś aitrader"
+                    - cell "4" [ref=e1882]
+                    - cell "≥76" [ref=e1883]
+                    - cell "31k" [ref=e1884]
+                    - cell "157k" [ref=e1885]
+                  - 'row "general-purpose: Przenieś playwright-playgr… 3 ≥75 29k 108k" [ref=e1886]':
+                    - 'cell "general-purpose: Przenieś playwright-playgr…" [ref=e1887]':
+                      - 'link "general-purpose: Przenieś playwright-playgr…" [ref=e1888] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=acb059ce5328a4b64
+                        - text: "general-purpose: Przenieś playwright-playgr…"
+                    - cell "3" [ref=e1890]
+                    - cell "≥75" [ref=e1891]
+                    - cell "29k" [ref=e1892]
+                    - cell "108k" [ref=e1893]
+                  - 'row "general-purpose: Przenieś fixit_logitech_pr… 6 ≥73 32k 253k" [ref=e1894]':
+                    - 'cell "general-purpose: Przenieś fixit_logitech_pr…" [ref=e1895]':
+                      - 'link "general-purpose: Przenieś fixit_logitech_pr…" [ref=e1896] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a58b175c95c30678e
+                        - text: "general-purpose: Przenieś fixit_logitech_pr…"
+                    - cell "6" [ref=e1898]
+                    - cell "≥73" [ref=e1899]
+                    - cell "32k" [ref=e1900]
+                    - cell "253k" [ref=e1901]
+                  - 'row "general-purpose: Przenieś REPO_EVENTHUB 4 ≥72 47k 135k" [ref=e1902]':
+                    - 'cell "general-purpose: Przenieś REPO_EVENTHUB" [ref=e1903]':
+                      - 'link "general-purpose: Przenieś REPO_EVENTHUB" [ref=e1904] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=adf127b7c9a6f0449
+                        - text: "general-purpose: Przenieś REPO_EVENTHUB"
+                    - cell "4" [ref=e1906]
+                    - cell "≥72" [ref=e1907]
+                    - cell "47k" [ref=e1908]
+                    - cell "135k" [ref=e1909]
+                  - 'row "general-purpose: Przenieś agency-test 4 ≥64 30k 155k" [ref=e1910]':
+                    - 'cell "general-purpose: Przenieś agency-test" [ref=e1911]':
+                      - 'link "general-purpose: Przenieś agency-test" [ref=e1912] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a3abb269a811db5a3
+                        - text: "general-purpose: Przenieś agency-test"
+                    - cell "4" [ref=e1914]
+                    - cell "≥64" [ref=e1915]
+                    - cell "30k" [ref=e1916]
+                    - cell "155k" [ref=e1917]
+                  - 'row "general-purpose: Przenieś kubix 4 ≥62 30k 156k" [ref=e1918]':
+                    - 'cell "general-purpose: Przenieś kubix" [ref=e1919]':
+                      - 'link "general-purpose: Przenieś kubix" [ref=e1920] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=add9be3fada48ac03
+                        - text: "general-purpose: Przenieś kubix"
+                    - cell "4" [ref=e1922]
+                    - cell "≥62" [ref=e1923]
+                    - cell "30k" [ref=e1924]
+                    - cell "156k" [ref=e1925]
+                  - 'row "general-purpose: Przenieś pm_center 4 ≥61 29k 155k" [ref=e1926]':
+                    - 'cell "general-purpose: Przenieś pm_center" [ref=e1927]':
+                      - 'link "general-purpose: Przenieś pm_center" [ref=e1928] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=aa9a11087ea809761
+                        - text: "general-purpose: Przenieś pm_center"
+                    - cell "4" [ref=e1930]
+                    - cell "≥61" [ref=e1931]
+                    - cell "29k" [ref=e1932]
+                    - cell "155k" [ref=e1933]
+                  - 'row "general-purpose: Przenieś REPO_BIGD 3 ≥58 29k 108k" [ref=e1934]':
+                    - 'cell "general-purpose: Przenieś REPO_BIGD" [ref=e1935]':
+                      - 'link "general-purpose: Przenieś REPO_BIGD" [ref=e1936] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=ab456f7786b9f1faa
+                        - text: "general-purpose: Przenieś REPO_BIGD"
+                    - cell "3" [ref=e1938]
+                    - cell "≥58" [ref=e1939]
+                    - cell "29k" [ref=e1940]
+                    - cell "108k" [ref=e1941]
+                  - 'row "general-purpose: Przenieś oba REPO_HANS2 4 ≥58 30k 156k" [ref=e1942]':
+                    - 'cell "general-purpose: Przenieś oba REPO_HANS2" [ref=e1943]':
+                      - 'link "general-purpose: Przenieś oba REPO_HANS2" [ref=e1944] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=af74198558b61019b
+                        - text: "general-purpose: Przenieś oba REPO_HANS2"
+                    - cell "4" [ref=e1946]
+                    - cell "≥58" [ref=e1947]
+                    - cell "30k" [ref=e1948]
+                    - cell "156k" [ref=e1949]
+                  - 'row "general-purpose: Przenieś REPO_NISSO 3 ≥57 29k 108k" [ref=e1950]':
+                    - 'cell "general-purpose: Przenieś REPO_NISSO" [ref=e1951]':
+                      - 'link "general-purpose: Przenieś REPO_NISSO" [ref=e1952] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=ac221138832e1d0f6
+                        - text: "general-purpose: Przenieś REPO_NISSO"
+                    - cell "3" [ref=e1954]
+                    - cell "≥57" [ref=e1955]
+                    - cell "29k" [ref=e1956]
+                    - cell "108k" [ref=e1957]
+                  - 'row "general-purpose: Przenieś REPO_FP_ADAPTER 3 ≥57 29k 108k" [ref=e1958]':
+                    - 'cell "general-purpose: Przenieś REPO_FP_ADAPTER" [ref=e1959]':
+                      - 'link "general-purpose: Przenieś REPO_FP_ADAPTER" [ref=e1960] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=af84ace15609bfe79
+                        - text: "general-purpose: Przenieś REPO_FP_ADAPTER"
+                    - cell "3" [ref=e1962]
+                    - cell "≥57" [ref=e1963]
+                    - cell "29k" [ref=e1964]
+                    - cell "108k" [ref=e1965]
+                  - 'row "general-purpose: Przenieś REPO_BILLINGTOOL 3 ≥56 29k 108k" [ref=e1966]':
+                    - 'cell "general-purpose: Przenieś REPO_BILLINGTOOL" [ref=e1967]':
+                      - 'link "general-purpose: Przenieś REPO_BILLINGTOOL" [ref=e1968] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a3514d5897c1b2a8b
+                        - text: "general-purpose: Przenieś REPO_BILLINGTOOL"
+                    - cell "3" [ref=e1970]
+                    - cell "≥56" [ref=e1971]
+                    - cell "29k" [ref=e1972]
+                    - cell "108k" [ref=e1973]
+                  - 'row "general-purpose: Przenieś REPO_ADAPTER 3 ≥56 29k 108k" [ref=e1974]':
+                    - 'cell "general-purpose: Przenieś REPO_ADAPTER" [ref=e1975]':
+                      - 'link "general-purpose: Przenieś REPO_ADAPTER" [ref=e1976] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a8b7892c852f831b2
+                        - text: "general-purpose: Przenieś REPO_ADAPTER"
+                    - cell "3" [ref=e1978]
+                    - cell "≥56" [ref=e1979]
+                    - cell "29k" [ref=e1980]
+                    - cell "108k" [ref=e1981]
+                  - 'row "general-purpose: Przenieś REPO_CONSENT 3 ≥56 47k 89k" [ref=e1982]':
+                    - 'cell "general-purpose: Przenieś REPO_CONSENT" [ref=e1983]':
+                      - 'link "general-purpose: Przenieś REPO_CONSENT" [ref=e1984] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=aa9c0fb1bc813ccc3
+                        - text: "general-purpose: Przenieś REPO_CONSENT"
+                    - cell "3" [ref=e1986]
+                    - cell "≥56" [ref=e1987]
+                    - cell "47k" [ref=e1988]
+                    - cell "89k" [ref=e1989]
+                  - 'row "general-purpose: Przenieś REPO_IAM 3 ≥56 47k 89k" [ref=e1990]':
+                    - 'cell "general-purpose: Przenieś REPO_IAM" [ref=e1991]':
+                      - 'link "general-purpose: Przenieś REPO_IAM" [ref=e1992] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=acaf4cdbf5b19f4d2
+                        - text: "general-purpose: Przenieś REPO_IAM"
+                    - cell "3" [ref=e1994]
+                    - cell "≥56" [ref=e1995]
+                    - cell "47k" [ref=e1996]
+                    - cell "89k" [ref=e1997]
+                  - 'row "general-purpose: Przenieś kid-game1 4 ≥52 30k 155k" [ref=e1998]':
+                    - 'cell "general-purpose: Przenieś kid-game1" [ref=e1999]':
+                      - 'link "general-purpose: Przenieś kid-game1" [ref=e2000] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=ab8b5c8c5d41bdf3c
+                        - text: "general-purpose: Przenieś kid-game1"
+                    - cell "4" [ref=e2002]
+                    - cell "≥52" [ref=e2003]
+                    - cell "30k" [ref=e2004]
+                    - cell "155k" [ref=e2005]
+                  - 'row "general-purpose: Przenieś prgrm2 i worktrees 4 ≥52 77k 116k" [ref=e2006]':
+                    - 'cell "general-purpose: Przenieś prgrm2 i worktrees" [ref=e2007]':
+                      - 'link "general-purpose: Przenieś prgrm2 i worktrees" [ref=e2008] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=ac29e1417758a90f5
+                        - text: "general-purpose: Przenieś prgrm2 i worktrees"
+                    - cell "4" [ref=e2010]
+                    - cell "≥52" [ref=e2011]
+                    - cell "77k" [ref=e2012]
+                    - cell "116k" [ref=e2013]
+                  - 'row "general-purpose: Przenieś autonomus_llm_age… 4 ≥47 32k 157k" [ref=e2014]':
+                    - 'cell "general-purpose: Przenieś autonomus_llm_age…" [ref=e2015]':
+                      - 'link "general-purpose: Przenieś autonomus_llm_age…" [ref=e2016] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=ab4161c278d1c1902
+                        - text: "general-purpose: Przenieś autonomus_llm_age…"
+                    - cell "4" [ref=e2018]
+                    - cell "≥47" [ref=e2019]
+                    - cell "32k" [ref=e2020]
+                    - cell "157k" [ref=e2021]
+                  - 'row "general-purpose: Przenieś agent_vizualizati… 3 ≥43 29k 108k" [ref=e2022]':
+                    - 'cell "general-purpose: Przenieś agent_vizualizati…" [ref=e2023]':
+                      - 'link "general-purpose: Przenieś agent_vizualizati…" [ref=e2024] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a0d933d0f26261438
+                        - text: "general-purpose: Przenieś agent_vizualizati…"
+                    - cell "3" [ref=e2026]
+                    - cell "≥43" [ref=e2027]
+                    - cell "29k" [ref=e2028]
+                    - cell "108k" [ref=e2029]
+                  - 'row "general-purpose: Przenieś REPO_RP-SHOP 3 ≥43 29k 108k" [ref=e2030]':
+                    - 'cell "general-purpose: Przenieś REPO_RP-SHOP" [ref=e2031]':
+                      - 'link "general-purpose: Przenieś REPO_RP-SHOP" [ref=e2032] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a6e1c904a23a7777f
+                        - text: "general-purpose: Przenieś REPO_RP-SHOP"
+                    - cell "3" [ref=e2034]
+                    - cell "≥43" [ref=e2035]
+                    - cell "29k" [ref=e2036]
+                    - cell "108k" [ref=e2037]
+                  - 'row "general-purpose: Przenieś open-mercato 3 ≥38 31k 109k" [ref=e2038]':
+                    - 'cell "general-purpose: Przenieś open-mercato" [ref=e2039]':
+                      - 'link "general-purpose: Przenieś open-mercato" [ref=e2040] [cursor=pointer]':
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&agent=a94e7e6053e88939a
+                        - text: "general-purpose: Przenieś open-mercato"
+                    - cell "3" [ref=e2042]
+                    - cell "≥38" [ref=e2043]
+                    - cell "31k" [ref=e2044]
+                    - cell "109k" [ref=e2045]
+                - rowgroup [ref=e2046]:
+                  - row "total 359 ≥194k 2M 36.7M" [ref=e2047]:
+                    - cell "total" [ref=e2048]
+                    - cell "359" [ref=e2049]
+                    - cell "≥194k" [ref=e2050]
+                    - cell "2M" [ref=e2051]
+                    - cell "36.7M" [ref=e2052]
+              - paragraph [ref=e2053]: "models: claude-sonnet-5-5 ×356 · claude-opus-5-5 ×3"
+              - paragraph [ref=e2054]: "≥ = lower bound: 195 responses were saved without final usage (subagents in Claude Code ≤ 2.1.300)"
+              - paragraph [ref=e2055]: "Counters are not summed: cache read is the same context read again on every call, usually ~95% of all tokens."
+          - group [ref=e511]:
+            - 'generic "parser: 2% blind" [ref=e512] [cursor=pointer]'
+      - generic [ref=e514]:
+        - generic [ref=e515]:
+          - generic [ref=e516]: files whose content reached an agent (read with a tool unless marked) · click a row → calls that touched it
+          - link "+ searched / listed / run" [ref=e517] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&more=1
+        - table [ref=e518]:
+          - rowgroup [ref=e519]:
+            - row "file reads ▾ how agents first last" [ref=e520]:
+              - columnheader "file" [ref=e521]:
+                - link "file" [ref=e522] [cursor=pointer]:
+                  - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&sort=path
+              - columnheader "reads ▾" [ref=e523]:
+                - link "reads ▾" [ref=e524] [cursor=pointer]:
+                  - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&sort=count
+              - columnheader "how" [ref=e525]
+              - columnheader "agents" [ref=e526]:
+                - link "agents" [ref=e527] [cursor=pointer]:
+                  - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&sort=agents
+              - columnheader "first" [ref=e528]:
+                - link "first" [ref=e529] [cursor=pointer]:
+                  - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&sort=first
+              - columnheader "last" [ref=e530]:
+                - link "last" [ref=e531] [cursor=pointer]:
+                  - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&sort=last
+          - rowgroup [ref=e532]:
+            - row [ref=e533] [cursor=pointer]:
+              - cell ".claude/CLAUDE.md" [ref=e534]
+              - cell "44" [ref=e535]
+              - cell "injected ×42 + read again" [ref=e536]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×2" [ref=e537]: injected ×42 + read again
+              - cell [ref=e538]:
+                - generic "main" [ref=e539]
+                - 'generic "general-purpose: Przenieś REPO_CONSENT" [ref=e540]'
+                - 'generic "general-purpose: Przenieś REPO_EVENTHUB" [ref=e541]'
+                - 'generic "general-purpose: Przenieś REPO_IAM" [ref=e542]'
+                - 'generic "general-purpose: Przenieś REPO_ADAPTER" [ref=e543]'
+                - 'generic "general-purpose: Przenieś REPO_BILLINGTOOL" [ref=e544]'
+                - 'generic "general-purpose: Przenieś REPO_BIGD" [ref=e545]'
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e546]'
+                - 'generic "general-purpose: Przenieś REPO_FP_ADAPTER" [ref=e547]'
+                - 'generic "general-purpose: Przenieś REPO_NISSO" [ref=e548]'
+                - 'generic "general-purpose: Przenieś agent_vizualization" [ref=e549]'
+                - 'generic "general-purpose: Przenieś kid-game1" [ref=e550]'
+                - 'generic "general-purpose: Przenieś playwright-playground" [ref=e551]'
+                - 'generic "general-purpose: Przenieś REPO_PRICEDROP" [ref=e552]'
+                - 'generic "general-purpose: Przenieś REPO_OSC" [ref=e553]'
+                - 'generic "general-purpose: Przenieś REPO_RP-SHOP" [ref=e554]'
+                - 'generic "general-purpose: Przenieś agency-test" [ref=e555]'
+                - 'generic "general-purpose: Przenieś figma-mcp-layout-admina" [ref=e556]'
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e557]'
+                - 'generic "general-purpose: Przenieś wp_mcp" [ref=e558]'
+                - 'generic "general-purpose: Przenieś autonomus_llm_agency_page" [ref=e559]'
+                - 'generic "general-purpose: Przenieś dealfinder" [ref=e560]'
+                - 'generic "general-purpose: Przenieś aitrader" [ref=e561]'
+                - 'generic "general-purpose: Przenieś kubix" [ref=e562]'
+                - 'generic "general-purpose: Przenieś pm_center" [ref=e563]'
+                - 'generic "general-purpose: Przenieś ROMEK" [ref=e564]'
+                - 'generic "general-purpose: Przenieś eduBombel" [ref=e565]'
+                - 'generic "general-purpose: Przenieś yodai" [ref=e566]'
+                - 'generic "general-purpose: Przenieś lesna-wyprawa" [ref=e567]'
+                - 'generic "general-purpose: Przenieś open-mercato" [ref=e568]'
+                - 'generic "general-purpose: Przenieś progremo_ksiegowosc" [ref=e569]'
+                - 'generic "general-purpose: Przenieś spec-kit" [ref=e570]'
+                - 'generic "general-purpose: Przenieś prgrm2 i worktrees" [ref=e571]'
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e572]'
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e573]'
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e574]'
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e575]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e576]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e577]'
+              - cell "09:21:15" [ref=e578]
+              - cell "13:45:29" [ref=e579]
+            - row [ref=e580] [cursor=pointer]:
+              - cell "CLAUDE.md" [ref=e581]: CLAUDE.md
+              - cell "42" [ref=e582]
+              - cell "injected ×41 + read again" [ref=e583]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×1" [ref=e584]: injected ×41 + read again
+              - cell [ref=e585]:
+                - generic "main" [ref=e586]
+                - 'generic "general-purpose: Przenieś REPO_CONSENT" [ref=e587]'
+                - 'generic "general-purpose: Przenieś REPO_EVENTHUB" [ref=e588]'
+                - 'generic "general-purpose: Przenieś REPO_IAM" [ref=e589]'
+                - 'generic "general-purpose: Przenieś REPO_ADAPTER" [ref=e590]'
+                - 'generic "general-purpose: Przenieś REPO_BILLINGTOOL" [ref=e591]'
+                - 'generic "general-purpose: Przenieś REPO_BIGD" [ref=e592]'
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e593]'
+                - 'generic "general-purpose: Przenieś REPO_FP_ADAPTER" [ref=e594]'
+                - 'generic "general-purpose: Przenieś REPO_NISSO" [ref=e595]'
+                - 'generic "general-purpose: Przenieś agent_vizualization" [ref=e596]'
+                - 'generic "general-purpose: Przenieś kid-game1" [ref=e597]'
+                - 'generic "general-purpose: Przenieś playwright-playground" [ref=e598]'
+                - 'generic "general-purpose: Przenieś REPO_PRICEDROP" [ref=e599]'
+                - 'generic "general-purpose: Przenieś REPO_OSC" [ref=e600]'
+                - 'generic "general-purpose: Przenieś REPO_RP-SHOP" [ref=e601]'
+                - 'generic "general-purpose: Przenieś agency-test" [ref=e602]'
+                - 'generic "general-purpose: Przenieś figma-mcp-layout-admina" [ref=e603]'
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e604]'
+                - 'generic "general-purpose: Przenieś wp_mcp" [ref=e605]'
+                - 'generic "general-purpose: Przenieś autonomus_llm_agency_page" [ref=e606]'
+                - 'generic "general-purpose: Przenieś dealfinder" [ref=e607]'
+                - 'generic "general-purpose: Przenieś aitrader" [ref=e608]'
+                - 'generic "general-purpose: Przenieś kubix" [ref=e609]'
+                - 'generic "general-purpose: Przenieś pm_center" [ref=e610]'
+                - 'generic "general-purpose: Przenieś ROMEK" [ref=e611]'
+                - 'generic "general-purpose: Przenieś eduBombel" [ref=e612]'
+                - 'generic "general-purpose: Przenieś yodai" [ref=e613]'
+                - 'generic "general-purpose: Przenieś lesna-wyprawa" [ref=e614]'
+                - 'generic "general-purpose: Przenieś open-mercato" [ref=e615]'
+                - 'generic "general-purpose: Przenieś progremo_ksiegowosc" [ref=e616]'
+                - 'generic "general-purpose: Przenieś spec-kit" [ref=e617]'
+                - 'generic "general-purpose: Przenieś prgrm2 i worktrees" [ref=e618]'
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e619]'
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e620]'
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e621]'
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e622]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e623]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e624]'
+              - cell "09:21:15" [ref=e625]
+              - cell "13:45:23" [ref=e626]
+            - row [ref=e627] [cursor=pointer]:
+              - cell ".claude/rules/dokumentacja.md" [ref=e628]
+              - cell "40" [ref=e629]
+              - cell "injected" [ref=e630]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file)" [ref=e631]: injected
+              - cell [ref=e632]:
+                - generic "main" [ref=e633]
+                - 'generic "general-purpose: Przenieś REPO_CONSENT" [ref=e634]'
+                - 'generic "general-purpose: Przenieś REPO_EVENTHUB" [ref=e635]'
+                - 'generic "general-purpose: Przenieś REPO_IAM" [ref=e636]'
+                - 'generic "general-purpose: Przenieś REPO_ADAPTER" [ref=e637]'
+                - 'generic "general-purpose: Przenieś REPO_BILLINGTOOL" [ref=e638]'
+                - 'generic "general-purpose: Przenieś REPO_BIGD" [ref=e639]'
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e640]'
+                - 'generic "general-purpose: Przenieś REPO_FP_ADAPTER" [ref=e641]'
+                - 'generic "general-purpose: Przenieś REPO_NISSO" [ref=e642]'
+                - 'generic "general-purpose: Przenieś agent_vizualization" [ref=e643]'
+                - 'generic "general-purpose: Przenieś kid-game1" [ref=e644]'
+                - 'generic "general-purpose: Przenieś playwright-playground" [ref=e645]'
+                - 'generic "general-purpose: Przenieś REPO_PRICEDROP" [ref=e646]'
+                - 'generic "general-purpose: Przenieś REPO_OSC" [ref=e647]'
+                - 'generic "general-purpose: Przenieś REPO_RP-SHOP" [ref=e648]'
+                - 'generic "general-purpose: Przenieś agency-test" [ref=e649]'
+                - 'generic "general-purpose: Przenieś figma-mcp-layout-admina" [ref=e650]'
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e651]'
+                - 'generic "general-purpose: Przenieś wp_mcp" [ref=e652]'
+                - 'generic "general-purpose: Przenieś autonomus_llm_agency_page" [ref=e653]'
+                - 'generic "general-purpose: Przenieś dealfinder" [ref=e654]'
+                - 'generic "general-purpose: Przenieś aitrader" [ref=e655]'
+                - 'generic "general-purpose: Przenieś kubix" [ref=e656]'
+                - 'generic "general-purpose: Przenieś pm_center" [ref=e657]'
+                - 'generic "general-purpose: Przenieś ROMEK" [ref=e658]'
+                - 'generic "general-purpose: Przenieś eduBombel" [ref=e659]'
+                - 'generic "general-purpose: Przenieś yodai" [ref=e660]'
+                - 'generic "general-purpose: Przenieś lesna-wyprawa" [ref=e661]'
+                - 'generic "general-purpose: Przenieś open-mercato" [ref=e662]'
+                - 'generic "general-purpose: Przenieś progremo_ksiegowosc" [ref=e663]'
+                - 'generic "general-purpose: Przenieś spec-kit" [ref=e664]'
+                - 'generic "general-purpose: Przenieś prgrm2 i worktrees" [ref=e665]'
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e666]'
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e667]'
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e668]'
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e669]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e670]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e671]'
+              - cell "09:21:15" [ref=e672]
+              - cell "13:22:54" [ref=e673]
+            - row [ref=e674] [cursor=pointer]:
+              - cell ".claude/rules/komunikacja.md" [ref=e675]
+              - cell "40" [ref=e676]
+              - cell "injected" [ref=e677]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file)" [ref=e678]: injected
+              - cell [ref=e679]:
+                - generic "main" [ref=e680]
+                - 'generic "general-purpose: Przenieś REPO_CONSENT" [ref=e681]'
+                - 'generic "general-purpose: Przenieś REPO_EVENTHUB" [ref=e682]'
+                - 'generic "general-purpose: Przenieś REPO_IAM" [ref=e683]'
+                - 'generic "general-purpose: Przenieś REPO_ADAPTER" [ref=e684]'
+                - 'generic "general-purpose: Przenieś REPO_BILLINGTOOL" [ref=e685]'
+                - 'generic "general-purpose: Przenieś REPO_BIGD" [ref=e686]'
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e687]'
+                - 'generic "general-purpose: Przenieś REPO_FP_ADAPTER" [ref=e688]'
+                - 'generic "general-purpose: Przenieś REPO_NISSO" [ref=e689]'
+                - 'generic "general-purpose: Przenieś agent_vizualization" [ref=e690]'
+                - 'generic "general-purpose: Przenieś kid-game1" [ref=e691]'
+                - 'generic "general-purpose: Przenieś playwright-playground" [ref=e692]'
+                - 'generic "general-purpose: Przenieś REPO_PRICEDROP" [ref=e693]'
+                - 'generic "general-purpose: Przenieś REPO_OSC" [ref=e694]'
+                - 'generic "general-purpose: Przenieś REPO_RP-SHOP" [ref=e695]'
+                - 'generic "general-purpose: Przenieś agency-test" [ref=e696]'
+                - 'generic "general-purpose: Przenieś figma-mcp-layout-admina" [ref=e697]'
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e698]'
+                - 'generic "general-purpose: Przenieś wp_mcp" [ref=e699]'
+                - 'generic "general-purpose: Przenieś autonomus_llm_agency_page" [ref=e700]'
+                - 'generic "general-purpose: Przenieś dealfinder" [ref=e701]'
+                - 'generic "general-purpose: Przenieś aitrader" [ref=e702]'
+                - 'generic "general-purpose: Przenieś kubix" [ref=e703]'
+                - 'generic "general-purpose: Przenieś pm_center" [ref=e704]'
+                - 'generic "general-purpose: Przenieś ROMEK" [ref=e705]'
+                - 'generic "general-purpose: Przenieś eduBombel" [ref=e706]'
+                - 'generic "general-purpose: Przenieś yodai" [ref=e707]'
+                - 'generic "general-purpose: Przenieś lesna-wyprawa" [ref=e708]'
+                - 'generic "general-purpose: Przenieś open-mercato" [ref=e709]'
+                - 'generic "general-purpose: Przenieś progremo_ksiegowosc" [ref=e710]'
+                - 'generic "general-purpose: Przenieś spec-kit" [ref=e711]'
+                - 'generic "general-purpose: Przenieś prgrm2 i worktrees" [ref=e712]'
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e713]'
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e714]'
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e715]'
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e716]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e717]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e718]'
+              - cell "09:21:15" [ref=e719]
+              - cell "13:22:54" [ref=e720]
+            - row [ref=e721] [cursor=pointer]:
+              - cell ".claude/rules/ostroznosc-i-zakres.md" [ref=e722]
+              - cell "40" [ref=e723]
+              - cell "injected" [ref=e724]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file)" [ref=e725]: injected
+              - cell [ref=e726]:
+                - generic "main" [ref=e727]
+                - 'generic "general-purpose: Przenieś REPO_CONSENT" [ref=e728]'
+                - 'generic "general-purpose: Przenieś REPO_EVENTHUB" [ref=e729]'
+                - 'generic "general-purpose: Przenieś REPO_IAM" [ref=e730]'
+                - 'generic "general-purpose: Przenieś REPO_ADAPTER" [ref=e731]'
+                - 'generic "general-purpose: Przenieś REPO_BILLINGTOOL" [ref=e732]'
+                - 'generic "general-purpose: Przenieś REPO_BIGD" [ref=e733]'
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e734]'
+                - 'generic "general-purpose: Przenieś REPO_FP_ADAPTER" [ref=e735]'
+                - 'generic "general-purpose: Przenieś REPO_NISSO" [ref=e736]'
+                - 'generic "general-purpose: Przenieś agent_vizualization" [ref=e737]'
+                - 'generic "general-purpose: Przenieś kid-game1" [ref=e738]'
+                - 'generic "general-purpose: Przenieś playwright-playground" [ref=e739]'
+                - 'generic "general-purpose: Przenieś REPO_PRICEDROP" [ref=e740]'
+                - 'generic "general-purpose: Przenieś REPO_OSC" [ref=e741]'
+                - 'generic "general-purpose: Przenieś REPO_RP-SHOP" [ref=e742]'
+                - 'generic "general-purpose: Przenieś agency-test" [ref=e743]'
+                - 'generic "general-purpose: Przenieś figma-mcp-layout-admina" [ref=e744]'
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e745]'
+                - 'generic "general-purpose: Przenieś wp_mcp" [ref=e746]'
+                - 'generic "general-purpose: Przenieś autonomus_llm_agency_page" [ref=e747]'
+                - 'generic "general-purpose: Przenieś dealfinder" [ref=e748]'
+                - 'generic "general-purpose: Przenieś aitrader" [ref=e749]'
+                - 'generic "general-purpose: Przenieś kubix" [ref=e750]'
+                - 'generic "general-purpose: Przenieś pm_center" [ref=e751]'
+                - 'generic "general-purpose: Przenieś ROMEK" [ref=e752]'
+                - 'generic "general-purpose: Przenieś eduBombel" [ref=e753]'
+                - 'generic "general-purpose: Przenieś yodai" [ref=e754]'
+                - 'generic "general-purpose: Przenieś lesna-wyprawa" [ref=e755]'
+                - 'generic "general-purpose: Przenieś open-mercato" [ref=e756]'
+                - 'generic "general-purpose: Przenieś progremo_ksiegowosc" [ref=e757]'
+                - 'generic "general-purpose: Przenieś spec-kit" [ref=e758]'
+                - 'generic "general-purpose: Przenieś prgrm2 i worktrees" [ref=e759]'
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e760]'
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e761]'
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e762]'
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e763]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e764]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e765]'
+              - cell "09:21:15" [ref=e766]
+              - cell "13:22:54" [ref=e767]
+            - 'row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/g.txt 26 modified general-purpose: Przenieś REPO_IAM general-purpose: Przenieś REPO_CONSENT general-purpose: Przenieś REPO_EVENTHUB general-purpose: Przenieś REPO_BILLINGTOOL general-purpose: Przenieś REPO_ADAPTER general-purpose: Przenieś REPO_NISSO general-purpose: Przenieś REPO_FP_ADAPTER general-purpose: Przenieś REPO_RP-SHOP general-purpose: Przenieś REPO_OSC general-purpose: Przenieś REPO_PRICEDROP general-purpose: Przenieś open-mercato general-purpose: Przenieś lesna-wyprawa general-purpose: Przenieś spec-kit 11:25:29 11:38:14" [ref=e768] [cursor=pointer]':
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/g.txt" [ref=e769]
+              - cell "26" [ref=e770]
+              - cell "modified" [ref=e771]:
+                - generic [ref=e772]: modified
+              - 'cell "general-purpose: Przenieś REPO_IAM general-purpose: Przenieś REPO_CONSENT general-purpose: Przenieś REPO_EVENTHUB general-purpose: Przenieś REPO_BILLINGTOOL general-purpose: Przenieś REPO_ADAPTER general-purpose: Przenieś REPO_NISSO general-purpose: Przenieś REPO_FP_ADAPTER general-purpose: Przenieś REPO_RP-SHOP general-purpose: Przenieś REPO_OSC general-purpose: Przenieś REPO_PRICEDROP general-purpose: Przenieś open-mercato general-purpose: Przenieś lesna-wyprawa general-purpose: Przenieś spec-kit" [ref=e773]':
+                - 'generic "general-purpose: Przenieś REPO_IAM" [ref=e774]'
+                - 'generic "general-purpose: Przenieś REPO_CONSENT" [ref=e775]'
+                - 'generic "general-purpose: Przenieś REPO_EVENTHUB" [ref=e776]'
+                - 'generic "general-purpose: Przenieś REPO_BILLINGTOOL" [ref=e777]'
+                - 'generic "general-purpose: Przenieś REPO_ADAPTER" [ref=e778]'
+                - 'generic "general-purpose: Przenieś REPO_NISSO" [ref=e779]'
+                - 'generic "general-purpose: Przenieś REPO_FP_ADAPTER" [ref=e780]'
+                - 'generic "general-purpose: Przenieś REPO_RP-SHOP" [ref=e781]'
+                - 'generic "general-purpose: Przenieś REPO_OSC" [ref=e782]'
+                - 'generic "general-purpose: Przenieś REPO_PRICEDROP" [ref=e783]'
+                - 'generic "general-purpose: Przenieś open-mercato" [ref=e784]'
+                - 'generic "general-purpose: Przenieś lesna-wyprawa" [ref=e785]'
+                - 'generic "general-purpose: Przenieś spec-kit" [ref=e786]'
+              - cell "11:25:29" [ref=e787]
+              - cell "11:38:14" [ref=e788]
+            - 'row ".claude/skills/mapa-przebudowy/SKILL.md 10 injected ×2 + read again modified main general-purpose: Docs paths: Prisma group general-purpose: Docs paths: A + B general-purpose: Docs paths: C + D general-purpose: Repo paths: REPOS_PRGRM część 2 general-purpose: Repo paths: REPOS_NETZI general-purpose: Repo paths: REPOS_PRGRM część 1 10:04:12 13:22:59" [ref=e789] [cursor=pointer]':
+              - cell ".claude/skills/mapa-przebudowy/SKILL.md" [ref=e790]
+              - cell "10" [ref=e791]
+              - cell "injected ×2 + read again modified" [ref=e792]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×8" [ref=e793]: injected ×2 + read again
+                - generic [ref=e794]: modified
+              - 'cell "main general-purpose: Docs paths: Prisma group general-purpose: Docs paths: A + B general-purpose: Docs paths: C + D general-purpose: Repo paths: REPOS_PRGRM część 2 general-purpose: Repo paths: REPOS_NETZI general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e795]':
+                - generic "main" [ref=e796]
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e797]'
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e798]'
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e799]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e800]'
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e801]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e802]'
+              - cell "10:04:12" [ref=e803]
+              - cell "13:22:59" [ref=e804]
+            - 'row "/tmp/x 8 modified general-purpose: Przenieś oba REPO_HANS2 general-purpose: Przenieś fixit_logitech_promo general-purpose: Przenieś dealfinder general-purpose: Przenieś pm_center general-purpose: Przenieś eduBombel 11:27:28 11:35:27" [ref=e805] [cursor=pointer]':
+              - cell "/tmp/x" [ref=e806]
+              - cell "8" [ref=e807]
+              - cell "modified" [ref=e808]:
+                - generic [ref=e809]: modified
+              - 'cell "general-purpose: Przenieś oba REPO_HANS2 general-purpose: Przenieś fixit_logitech_promo general-purpose: Przenieś dealfinder general-purpose: Przenieś pm_center general-purpose: Przenieś eduBombel" [ref=e810]':
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e811]'
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e812]'
+                - 'generic "general-purpose: Przenieś dealfinder" [ref=e813]'
+                - 'generic "general-purpose: Przenieś pm_center" [ref=e814]'
+                - 'generic "general-purpose: Przenieś eduBombel" [ref=e815]'
+              - cell "11:27:28" [ref=e816]
+              - cell "11:35:27" [ref=e817]
+            - 'row "~/.claude/projects/-Users-Sebastian-SK-workbox9/memory/MEMORY.md 7 injected main general-purpose: Docs paths: A + B general-purpose: Docs paths: C + D general-purpose: Docs paths: Prisma group general-purpose: Repo paths: REPOS_NETZI general-purpose: Repo paths: REPOS_PRGRM część 1 general-purpose: Repo paths: REPOS_PRGRM część 2 12:53:45 13:22:54" [ref=e818] [cursor=pointer]':
+              - cell "~/.claude/projects/-Users-Sebastian-SK-workbox9/memory/MEMORY.md" [ref=e819]
+              - cell "7" [ref=e820]
+              - cell "injected" [ref=e821]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file)" [ref=e822]: injected
+              - 'cell "main general-purpose: Docs paths: A + B general-purpose: Docs paths: C + D general-purpose: Docs paths: Prisma group general-purpose: Repo paths: REPOS_NETZI general-purpose: Repo paths: REPOS_PRGRM część 1 general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e823]':
+                - generic "main" [ref=e824]
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e825]'
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e826]'
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e827]'
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e828]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e829]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e830]'
+              - cell "12:53:45" [ref=e831]
+              - cell "13:22:54" [ref=e832]
+            - 'row "workbox9_netzi/LLM_CONTEXT/context_system_map.llm.md 7 fragment only modified general-purpose: Docs paths: A + B 13:21:14 13:22:05" [ref=e833] [cursor=pointer]':
+              - cell "workbox9_netzi/LLM_CONTEXT/context_system_map.llm.md" [ref=e834]
+              - cell "7" [ref=e835]
+              - cell "fragment only modified" [ref=e836]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e837]: fragment only
+                - generic [ref=e838]: modified
+              - 'cell "general-purpose: Docs paths: A + B" [ref=e839]':
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e840]'
+              - cell "13:21:14" [ref=e841]
+              - cell "13:22:05" [ref=e842]
+            - 'row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/files.txt 7 modified general-purpose: Docs paths: Prisma group general-purpose: Docs paths: C + D general-purpose: Repo paths: REPOS_NETZI 13:21:12 13:23:11" [ref=e843] [cursor=pointer]':
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/files.txt" [ref=e844]
+              - cell "7" [ref=e845]
+              - cell "modified" [ref=e846]:
+                - generic [ref=e847]: modified
+              - 'cell "general-purpose: Docs paths: Prisma group general-purpose: Docs paths: C + D general-purpose: Repo paths: REPOS_NETZI" [ref=e848]':
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e849]'
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e850]'
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e851]'
+              - cell "13:21:12" [ref=e852]
+              - cell "13:23:11" [ref=e853]
+            - 'row "/private/tmp/claude-501/g.txt 6 modified general-purpose: Przenieś oba REPO_HANS2 general-purpose: Przenieś figma-mcp-layout-admina general-purpose: Przenieś autonomus_llm_agency_page 11:27:36 11:31:54" [ref=e854] [cursor=pointer]':
+              - cell "/private/tmp/claude-501/g.txt" [ref=e855]
+              - cell "6" [ref=e856]
+              - cell "modified" [ref=e857]:
+                - generic [ref=e858]: modified
+              - 'cell "general-purpose: Przenieś oba REPO_HANS2 general-purpose: Przenieś figma-mcp-layout-admina general-purpose: Przenieś autonomus_llm_agency_page" [ref=e859]':
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e860]'
+                - 'generic "general-purpose: Przenieś figma-mcp-layout-admina" [ref=e861]'
+                - 'generic "general-purpose: Przenieś autonomus_llm_agency_page" [ref=e862]'
+              - cell "11:27:36" [ref=e863]
+              - cell "11:31:54" [ref=e864]
+            - 'row "workbox9_netzi/PROJECT_GROUP_PRISMA/Restructurisation.llm.md 5 fragment only general-purpose: Docs paths: Prisma group main 13:21:23 13:36:04" [ref=e865] [cursor=pointer]':
+              - cell "workbox9_netzi/PROJECT_GROUP_PRISMA/Restructurisation.llm.md" [ref=e866]
+              - cell "5" [ref=e867]
+              - cell "fragment only" [ref=e868]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e869]: fragment only
+              - 'cell "general-purpose: Docs paths: Prisma group main" [ref=e870]':
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e871]'
+                - generic "main" [ref=e872]
+              - cell "13:21:23" [ref=e873]
+              - cell "13:36:04" [ref=e874]
+            - row ".claude/claude-wrapper.zsh 4 injected ×2 + read again modified main 10:20:04 13:35:58" [ref=e875] [cursor=pointer]:
+              - cell ".claude/claude-wrapper.zsh" [ref=e876]
+              - cell "4" [ref=e877]
+              - cell "injected ×2 + read again modified" [ref=e878]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×2" [ref=e879]: injected ×2 + read again
+                - generic [ref=e880]: modified
+              - cell "main" [ref=e881]:
+                - generic "main" [ref=e882]
+              - cell "10:20:04" [ref=e883]
+              - cell "13:35:58" [ref=e884]
+            - 'row "context/todo/2026-10-22-restrukturyzacja-2-dokumentacja-progress.md 4 injected ×1 + read again modified main general-purpose: Docs paths: Prisma group general-purpose: Docs paths: A + B general-purpose: Docs paths: C + D general-purpose: Repo paths: REPOS_PRGRM część 2 general-purpose: Repo paths: REPOS_NETZI general-purpose: Repo paths: REPOS_PRGRM część 1 13:20:24 13:45:33" [ref=e885] [cursor=pointer]':
+              - cell "context/todo/2026-10-22-restrukturyzacja-2-dokumentacja-progress.md" [ref=e886]
+              - cell "4" [ref=e887]
+              - cell "injected ×1 + read again modified" [ref=e888]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×3" [ref=e889]: injected ×1 + read again
+                - generic [ref=e890]: modified
+              - 'cell "main general-purpose: Docs paths: Prisma group general-purpose: Docs paths: A + B general-purpose: Docs paths: C + D general-purpose: Repo paths: REPOS_PRGRM część 2 general-purpose: Repo paths: REPOS_NETZI general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e891]':
+                - generic "main" [ref=e892]
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e893]'
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e894]'
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e895]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e896]'
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e897]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e898]'
+              - cell "13:20:24" [ref=e899]
+              - cell "13:45:33" [ref=e900]
+            - 'row "workbox9_netzi/CLAUDE.md 4 injected ×2 + read again main general-purpose: Docs paths: A + B 10:33:22 13:36:04" [ref=e901] [cursor=pointer]':
+              - cell "workbox9_netzi/CLAUDE.md" [ref=e902]
+              - cell "4" [ref=e903]
+              - cell "injected ×2 + read again" [ref=e904]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×2" [ref=e905]: injected ×2 + read again
+              - 'cell "main general-purpose: Docs paths: A + B" [ref=e906]':
+                - generic "main" [ref=e907]
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e908]'
+              - cell "10:33:22" [ref=e909]
+              - cell "13:36:04" [ref=e910]
+            - 'row "/tmp/g.txt 4 modified general-purpose: Przenieś yodai general-purpose: Przenieś ROMEK 11:35:08 11:35:13" [ref=e911] [cursor=pointer]':
+              - cell "/tmp/g.txt" [ref=e912]
+              - cell "4" [ref=e913]
+              - cell "modified" [ref=e914]:
+                - generic [ref=e915]: modified
+              - 'cell "general-purpose: Przenieś yodai general-purpose: Przenieś ROMEK" [ref=e916]':
+                - 'generic "general-purpose: Przenieś yodai" [ref=e917]'
+                - 'generic "general-purpose: Przenieś ROMEK" [ref=e918]'
+              - cell "11:35:08" [ref=e919]
+              - cell "11:35:13" [ref=e920]
+            - row "~/.zshrc 3 injected ×1 + read again main 10:31:22 13:15:15" [ref=e921] [cursor=pointer]:
+              - cell "~/.zshrc" [ref=e922]
+              - cell "3" [ref=e923]
+              - cell "injected ×1 + read again" [ref=e924]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×2" [ref=e925]: injected ×1 + read again
+              - cell "main" [ref=e926]:
+                - generic "main" [ref=e927]
+              - cell "10:31:22" [ref=e928]
+              - cell "13:15:15" [ref=e929]
+            - 'row "~/SK/REPOS_PRGRM/REPO_fixit_logitech_promo/context/required_env.md 3 fragment only modified general-purpose: Przenieś fixit_logitech_promo general-purpose: Repo paths: REPOS_PRGRM część 2 11:30:44 13:23:39" [ref=e930] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_fixit_logitech_promo/context/required_env.md" [ref=e931]
+              - cell "3" [ref=e932]
+              - cell "fragment only modified" [ref=e933]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e934]: fragment only
+                - generic [ref=e935]: modified
+              - 'cell "general-purpose: Przenieś fixit_logitech_promo general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e936]':
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e937]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e938]'
+              - cell "11:30:44" [ref=e939]
+              - cell "13:23:39" [ref=e940]
+            - 'row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/ch.txt 3 modified general-purpose: Docs paths: C + D 13:21:49 13:21:54" [ref=e941] [cursor=pointer]':
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/ch.txt" [ref=e942]
+              - cell "3" [ref=e943]
+              - cell "modified" [ref=e944]:
+                - generic [ref=e945]: modified
+              - 'cell "general-purpose: Docs paths: C + D" [ref=e946]':
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e947]'
+              - cell "13:21:49" [ref=e948]
+              - cell "13:21:54" [ref=e949]
+            - row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/claudewrap.zsh 3 modified main 10:36:19 10:51:26" [ref=e950] [cursor=pointer]:
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/claudewrap.zsh" [ref=e951]
+              - cell "3" [ref=e952]
+              - cell "modified" [ref=e953]:
+                - generic [ref=e954]: modified
+              - cell "main" [ref=e955]:
+                - generic "main" [ref=e956]
+              - cell "10:36:19" [ref=e957]
+              - cell "10:51:26" [ref=e958]
+            - 'row "~/SK/REPOS_PRGRM/REPO_lesna-wyprawa/front/CLAUDE.md 2 fragment only modified general-purpose: Przenieś lesna-wyprawa main 11:36:50 13:33:22" [ref=e959] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_lesna-wyprawa/front/CLAUDE.md" [ref=e960]
+              - cell "2" [ref=e961]
+              - cell "fragment only modified" [ref=e962]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e963]: fragment only
+                - generic [ref=e964]: modified
+              - 'cell "general-purpose: Przenieś lesna-wyprawa main" [ref=e965]':
+                - 'generic "general-purpose: Przenieś lesna-wyprawa" [ref=e966]'
+                - generic "main" [ref=e967]
+              - cell "11:36:50" [ref=e968]
+              - cell "13:33:22" [ref=e969]
+            - 'row "~/SK/REPOS_PRGRM/REPO_progremo_ksiegowosc/CLAUDE.md 2 fragment only main general-purpose: Przenieś progremo_ksiegowosc 11:32:26 11:36:58" [ref=e970] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_progremo_ksiegowosc/CLAUDE.md" [ref=e971]
+              - cell "2" [ref=e972]
+              - cell "fragment only" [ref=e973]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e974]: fragment only
+              - 'cell "main general-purpose: Przenieś progremo_ksiegowosc" [ref=e975]':
+                - generic "main" [ref=e976]
+                - 'generic "general-purpose: Przenieś progremo_ksiegowosc" [ref=e977]'
+              - cell "11:32:26" [ref=e978]
+              - cell "11:36:58" [ref=e979]
+            - row "context/todo/2026-10-22-restrukturyzacja-2-repos.md 2 fragment only modified main 10:03:32 11:32:44" [ref=e980] [cursor=pointer]:
+              - cell "context/todo/2026-10-22-restrukturyzacja-2-repos.md" [ref=e981]
+              - cell "2" [ref=e982]
+              - cell "fragment only modified" [ref=e983]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e984]: fragment only
+                - generic [ref=e985]: modified
+              - cell "main" [ref=e986]:
+                - generic "main" [ref=e987]
+              - cell "10:03:32" [ref=e988]
+              - cell "11:32:44" [ref=e989]
+            - row "workbox9_netzi/PROJECT_GROUP_PRISMA/CLAUDE.md 2 injected ×1 + read again main 12:53:45 13:36:04" [ref=e990] [cursor=pointer]:
+              - cell "workbox9_netzi/PROJECT_GROUP_PRISMA/CLAUDE.md" [ref=e991]
+              - cell "2" [ref=e992]
+              - cell "injected ×1 + read again" [ref=e993]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×1" [ref=e994]: injected ×1 + read again
+              - cell "main" [ref=e995]:
+                - generic "main" [ref=e996]
+              - cell "12:53:45" [ref=e997]
+              - cell "13:36:04" [ref=e998]
+            - 'row "workbox9_netzi/PROJECT_GROUP_PRISMA/PROJECT_PRISMA_DE/CLAUDE.md 2 fragment only general-purpose: Docs paths: Prisma group 13:21:17 13:21:17" [ref=e999] [cursor=pointer]':
+              - cell "workbox9_netzi/PROJECT_GROUP_PRISMA/PROJECT_PRISMA_DE/CLAUDE.md" [ref=e1000]
+              - cell "2" [ref=e1001]
+              - cell "fragment only" [ref=e1002]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1003]: fragment only
+              - 'cell "general-purpose: Docs paths: Prisma group" [ref=e1004]':
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e1005]'
+              - cell "13:21:17" [ref=e1006]
+              - cell "13:21:17" [ref=e1007]
+            - 'row "workbox9_prgrm/PROJECT_autonomus_llm_agency_page/CLAUDE.md 2 modified general-purpose: Przenieś autonomus_llm_agency_page main 11:32:02 11:34:22" [ref=e1008] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_autonomus_llm_agency_page/CLAUDE.md" [ref=e1009]
+              - cell "2" [ref=e1010]
+              - cell "modified" [ref=e1011]:
+                - generic [ref=e1012]: modified
+              - 'cell "general-purpose: Przenieś autonomus_llm_agency_page main" [ref=e1013]':
+                - 'generic "general-purpose: Przenieś autonomus_llm_agency_page" [ref=e1014]'
+                - generic "main" [ref=e1015]
+              - cell "11:32:02" [ref=e1016]
+              - cell "11:34:22" [ref=e1017]
+            - 'row "workbox9_prgrm/PROJECT_eduBombel/CLAUDE.md 2 modified general-purpose: Przenieś eduBombel main 11:35:44 11:35:50" [ref=e1018] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_eduBombel/CLAUDE.md" [ref=e1019]
+              - cell "2" [ref=e1020]
+              - cell "modified" [ref=e1021]:
+                - generic [ref=e1022]: modified
+              - 'cell "general-purpose: Przenieś eduBombel main" [ref=e1023]':
+                - 'generic "general-purpose: Przenieś eduBombel" [ref=e1024]'
+                - generic "main" [ref=e1025]
+              - cell "11:35:44" [ref=e1026]
+              - cell "11:35:50" [ref=e1027]
+            - 'row "workbox9_prgrm/PROJECT_fixit_logitech_promo/CLAUDE.md 2 modified general-purpose: Przenieś fixit_logitech_promo main 11:30:48 11:34:22" [ref=e1028] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_fixit_logitech_promo/CLAUDE.md" [ref=e1029]
+              - cell "2" [ref=e1030]
+              - cell "modified" [ref=e1031]:
+                - generic [ref=e1032]: modified
+              - 'cell "general-purpose: Przenieś fixit_logitech_promo main" [ref=e1033]':
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e1034]'
+                - generic "main" [ref=e1035]
+              - cell "11:30:48" [ref=e1036]
+              - cell "11:34:22" [ref=e1037]
+            - 'row "workbox9_prgrm/PROJECT_kubix/CLAUDE.md 2 modified general-purpose: Przenieś kubix main 11:33:27 13:13:35" [ref=e1038] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_kubix/CLAUDE.md" [ref=e1039]
+              - cell "2" [ref=e1040]
+              - cell "modified" [ref=e1041]:
+                - generic [ref=e1042]: modified
+              - 'cell "general-purpose: Przenieś kubix main" [ref=e1043]':
+                - 'generic "general-purpose: Przenieś kubix" [ref=e1044]'
+                - generic "main" [ref=e1045]
+              - cell "11:33:27" [ref=e1046]
+              - cell "13:13:35" [ref=e1047]
+            - 'row "workbox9_prgrm/PROJECT_open-mercato/CLAUDE.md 2 modified general-purpose: Przenieś open-mercato main 11:36:43 11:36:48" [ref=e1048] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_open-mercato/CLAUDE.md" [ref=e1049]
+              - cell "2" [ref=e1050]
+              - cell "modified" [ref=e1051]:
+                - generic [ref=e1052]: modified
+              - 'cell "general-purpose: Przenieś open-mercato main" [ref=e1053]':
+                - 'generic "general-purpose: Przenieś open-mercato" [ref=e1054]'
+                - generic "main" [ref=e1055]
+              - cell "11:36:43" [ref=e1056]
+              - cell "11:36:48" [ref=e1057]
+            - 'row "workbox9_prgrm/PROJECT_playwright-playground/CLAUDE.md 2 modified general-purpose: Przenieś playwright-playground main 11:28:51 11:28:58" [ref=e1058] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_playwright-playground/CLAUDE.md" [ref=e1059]
+              - cell "2" [ref=e1060]
+              - cell "modified" [ref=e1061]:
+                - generic [ref=e1062]: modified
+              - 'cell "general-purpose: Przenieś playwright-playground main" [ref=e1063]':
+                - 'generic "general-purpose: Przenieś playwright-playground" [ref=e1064]'
+                - generic "main" [ref=e1065]
+              - cell "11:28:51" [ref=e1066]
+              - cell "11:28:58" [ref=e1067]
+            - 'row "workbox9_prgrm/PROJECT_wp_mcp/CLAUDE.md 2 modified general-purpose: Przenieś wp_mcp main 11:32:02 11:32:09" [ref=e1068] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_wp_mcp/CLAUDE.md" [ref=e1069]
+              - cell "2" [ref=e1070]
+              - cell "modified" [ref=e1071]:
+                - generic [ref=e1072]: modified
+              - 'cell "general-purpose: Przenieś wp_mcp main" [ref=e1073]':
+                - 'generic "general-purpose: Przenieś wp_mcp" [ref=e1074]'
+                - generic "main" [ref=e1075]
+              - cell "11:32:02" [ref=e1076]
+              - cell "11:32:09" [ref=e1077]
+            - 'row "workbox9_prgrm/doc/SERWER_WEBD.md 2 fragment only modified general-purpose: Docs paths: A + B 13:21:29 13:21:38" [ref=e1078] [cursor=pointer]':
+              - cell "workbox9_prgrm/doc/SERWER_WEBD.md" [ref=e1079]
+              - cell "2" [ref=e1080]
+              - cell "fragment only modified" [ref=e1081]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1082]: fragment only
+                - generic [ref=e1083]: modified
+              - 'cell "general-purpose: Docs paths: A + B" [ref=e1084]':
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e1085]'
+              - cell "13:21:29" [ref=e1086]
+              - cell "13:21:38" [ref=e1087]
+            - row "workbox_rebuild.md 2 injected ×1 + read again main 09:21:17 12:45:06" [ref=e1088] [cursor=pointer]:
+              - cell "workbox_rebuild.md" [ref=e1089]: workbox_rebuild.md
+              - cell "2" [ref=e1090]
+              - cell "injected ×1 + read again" [ref=e1091]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×1" [ref=e1092]: injected ×1 + read again
+              - cell "main" [ref=e1093]:
+                - generic "main" [ref=e1094]
+              - cell "09:21:17" [ref=e1095]
+              - cell "12:45:06" [ref=e1096]
+            - 'row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/a.txt 2 modified general-purpose: Docs paths: C + D 13:21:54 13:21:54" [ref=e1097] [cursor=pointer]':
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/a.txt" [ref=e1098]
+              - cell "2" [ref=e1099]
+              - cell "modified" [ref=e1100]:
+                - generic [ref=e1101]: modified
+              - 'cell "general-purpose: Docs paths: C + D" [ref=e1102]':
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e1103]'
+              - cell "13:21:54" [ref=e1104]
+              - cell "13:21:54" [ref=e1105]
+            - 'row "/private/tmp/claude-501/old.txt 2 modified general-purpose: Przenieś prgrm2 i worktrees 11:49:00 11:49:00" [ref=e1106] [cursor=pointer]':
+              - cell "/private/tmp/claude-501/old.txt" [ref=e1107]
+              - cell "2" [ref=e1108]
+              - cell "modified" [ref=e1109]:
+                - generic [ref=e1110]: modified
+              - 'cell "general-purpose: Przenieś prgrm2 i worktrees" [ref=e1111]':
+                - 'generic "general-purpose: Przenieś prgrm2 i worktrees" [ref=e1112]'
+              - cell "11:49:00" [ref=e1113]
+              - cell "11:49:00" [ref=e1114]
+            - 'row "/tmp/claude-501/g.txt 2 modified general-purpose: Przenieś REPO_BIGD 11:26:48 11:26:48" [ref=e1115] [cursor=pointer]':
+              - cell "/tmp/claude-501/g.txt" [ref=e1116]
+              - cell "2" [ref=e1117]
+              - cell "modified" [ref=e1118]:
+                - generic [ref=e1119]: modified
+              - 'cell "general-purpose: Przenieś REPO_BIGD" [ref=e1120]':
+                - 'generic "general-purpose: Przenieś REPO_BIGD" [ref=e1121]'
+              - cell "11:26:48" [ref=e1122]
+              - cell "11:26:48" [ref=e1123]
+            - row "~/.zshrc.bak-restr2 1 main 13:15:15 13:15:15" [ref=e1124] [cursor=pointer]:
+              - cell "~/.zshrc.bak-restr2" [ref=e1125]
+              - cell "1" [ref=e1126]
+              - cell [ref=e1127]
+              - cell "main" [ref=e1128]:
+                - generic "main" [ref=e1129]
+              - cell "13:15:15" [ref=e1130]
+              - cell "13:15:15" [ref=e1131]
+            - 'row "~/SK 1 main general-purpose: Przenieś oba REPO_HANS2 general-purpose: Przenieś fixit_logitech_promo 09:21:21 13:45:23" [ref=e1132] [cursor=pointer]':
+              - cell "~/SK" [ref=e1133]
+              - cell "1" [ref=e1134]
+              - cell [ref=e1135]
+              - 'cell "main general-purpose: Przenieś oba REPO_HANS2 general-purpose: Przenieś fixit_logitech_promo" [ref=e1136]':
+                - generic "main" [ref=e1137]
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e1138]'
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e1139]'
+              - cell "09:21:21" [ref=e1140]
+              - cell "13:45:23" [ref=e1141]
+            - 'row "~/SK/.post_REPO_HANS2_API.txt 1 modified general-purpose: Przenieś oba REPO_HANS2 11:27:28 11:27:28" [ref=e1142] [cursor=pointer]':
+              - cell "~/SK/.post_REPO_HANS2_API.txt" [ref=e1143]
+              - cell "1" [ref=e1144]
+              - cell "modified" [ref=e1145]:
+                - generic [ref=e1146]: modified
+              - 'cell "general-purpose: Przenieś oba REPO_HANS2" [ref=e1147]':
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e1148]'
+              - cell "11:27:28" [ref=e1149]
+              - cell "11:27:28" [ref=e1150]
+            - 'row "~/SK/.post_REPO_HANS2_BACKEND.txt 1 modified general-purpose: Przenieś oba REPO_HANS2 11:27:28 11:27:28" [ref=e1151] [cursor=pointer]':
+              - cell "~/SK/.post_REPO_HANS2_BACKEND.txt" [ref=e1152]
+              - cell "1" [ref=e1153]
+              - cell "modified" [ref=e1154]:
+                - generic [ref=e1155]: modified
+              - 'cell "general-purpose: Przenieś oba REPO_HANS2" [ref=e1156]':
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e1157]'
+              - cell "11:27:28" [ref=e1158]
+              - cell "11:27:28" [ref=e1159]
+            - 'row "~/SK/.pre_REPO_HANS2_API.txt 1 modified general-purpose: Przenieś oba REPO_HANS2 11:27:28 11:27:28" [ref=e1160] [cursor=pointer]':
+              - cell "~/SK/.pre_REPO_HANS2_API.txt" [ref=e1161]
+              - cell "1" [ref=e1162]
+              - cell "modified" [ref=e1163]:
+                - generic [ref=e1164]: modified
+              - 'cell "general-purpose: Przenieś oba REPO_HANS2" [ref=e1165]':
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e1166]'
+              - cell "11:27:28" [ref=e1167]
+              - cell "11:27:28" [ref=e1168]
+            - 'row "~/SK/.pre_REPO_HANS2_BACKEND.txt 1 modified general-purpose: Przenieś oba REPO_HANS2 11:27:28 11:27:28" [ref=e1169] [cursor=pointer]':
+              - cell "~/SK/.pre_REPO_HANS2_BACKEND.txt" [ref=e1170]
+              - cell "1" [ref=e1171]
+              - cell "modified" [ref=e1172]:
+                - generic [ref=e1173]: modified
+              - 'cell "general-purpose: Przenieś oba REPO_HANS2" [ref=e1174]':
+                - 'generic "general-purpose: Przenieś oba REPO_HANS2" [ref=e1175]'
+              - cell "11:27:28" [ref=e1176]
+              - cell "11:27:28" [ref=e1177]
+            - 'row "~/SK/REPOS_NETZI/REPO_PRISMA_DH/.claude/settings.local.json 1 fragment only general-purpose: Repo paths: REPOS_NETZI 13:23:15 13:23:15" [ref=e1178] [cursor=pointer]':
+              - cell "~/SK/REPOS_NETZI/REPO_PRISMA_DH/.claude/settings.local.json" [ref=e1179]
+              - cell "1" [ref=e1180]
+              - cell "fragment only" [ref=e1181]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1182]: fragment only
+              - 'cell "general-purpose: Repo paths: REPOS_NETZI" [ref=e1183]':
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e1184]'
+              - cell "13:23:15" [ref=e1185]
+              - cell "13:23:15" [ref=e1186]
+            - 'row "~/SK/REPOS_NETZI/REPO_PRISMA_DH_2/.claude/settings.local.json 1 fragment only modified general-purpose: Repo paths: REPOS_NETZI main 13:23:15 13:23:49" [ref=e1187] [cursor=pointer]':
+              - cell "~/SK/REPOS_NETZI/REPO_PRISMA_DH_2/.claude/settings.local.json" [ref=e1188]
+              - cell "1" [ref=e1189]
+              - cell "fragment only modified" [ref=e1190]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1191]: fragment only
+                - generic [ref=e1192]: modified
+              - 'cell "general-purpose: Repo paths: REPOS_NETZI main" [ref=e1193]':
+                - 'generic "general-purpose: Repo paths: REPOS_NETZI" [ref=e1194]'
+                - generic "main" [ref=e1195]
+              - cell "13:23:15" [ref=e1196]
+              - cell "13:23:49" [ref=e1197]
+            - 'row "~/SK/REPOS_PRGRM/REPO_ROMEK/CLAUDE.md 1 fragment only modified main general-purpose: Przenieś ROMEK 11:32:26 13:33:22" [ref=e1198] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_ROMEK/CLAUDE.md" [ref=e1199]
+              - cell "1" [ref=e1200]
+              - cell "fragment only modified" [ref=e1201]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1202]: fragment only
+                - generic [ref=e1203]: modified
+              - 'cell "main general-purpose: Przenieś ROMEK" [ref=e1204]':
+                - generic "main" [ref=e1205]
+                - 'generic "general-purpose: Przenieś ROMEK" [ref=e1206]'
+              - cell "11:32:26" [ref=e1207]
+              - cell "13:33:22" [ref=e1208]
+            - 'row "~/SK/REPOS_PRGRM/REPO_ROMEK/README.md 1 fragment only general-purpose: Przenieś ROMEK 11:35:13 11:35:16" [ref=e1209] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_ROMEK/README.md" [ref=e1210]
+              - cell "1" [ref=e1211]
+              - cell "fragment only" [ref=e1212]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1213]: fragment only
+              - 'cell "general-purpose: Przenieś ROMEK" [ref=e1214]':
+                - 'generic "general-purpose: Przenieś ROMEK" [ref=e1215]'
+              - cell "11:35:13" [ref=e1216]
+              - cell "11:35:16" [ref=e1217]
+            - 'row "~/SK/REPOS_PRGRM/REPO_agency-test/landing-page-copy.md 1 fragment only general-purpose: Przenieś agency-test 11:30:40 11:30:40" [ref=e1218] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_agency-test/landing-page-copy.md" [ref=e1219]
+              - cell "1" [ref=e1220]
+              - cell "fragment only" [ref=e1221]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1222]: fragment only
+              - 'cell "general-purpose: Przenieś agency-test" [ref=e1223]':
+                - 'generic "general-purpose: Przenieś agency-test" [ref=e1224]'
+              - cell "11:30:40" [ref=e1225]
+              - cell "11:30:40" [ref=e1226]
+            - 'row "~/SK/REPOS_PRGRM/REPO_agent_vizualization/README.md 1 fragment only modified main general-purpose: Repo paths: REPOS_PRGRM część 2 13:13:35 13:23:39" [ref=e1227] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_agent_vizualization/README.md" [ref=e1228]
+              - cell "1" [ref=e1229]
+              - cell "fragment only modified" [ref=e1230]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1231]: fragment only
+                - generic [ref=e1232]: modified
+              - 'cell "main general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e1233]':
+                - generic "main" [ref=e1234]
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e1235]'
+              - cell "13:13:35" [ref=e1236]
+              - cell "13:23:39" [ref=e1237]
+            - row "~/SK/REPOS_PRGRM/REPO_agent_vizualization/package.json 1 main 13:13:35 13:13:35" [ref=e1238] [cursor=pointer]:
+              - cell "~/SK/REPOS_PRGRM/REPO_agent_vizualization/package.json" [ref=e1239]
+              - cell "1" [ref=e1240]
+              - cell [ref=e1241]
+              - cell "main" [ref=e1242]:
+                - generic "main" [ref=e1243]
+              - cell "13:13:35" [ref=e1244]
+              - cell "13:13:35" [ref=e1245]
+            - 'row "~/SK/REPOS_PRGRM/REPO_aitrader/concept.md 1 general-purpose: Przenieś aitrader 11:33:45 11:33:45" [ref=e1246] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_aitrader/concept.md" [ref=e1247]
+              - cell "1" [ref=e1248]
+              - cell [ref=e1249]
+              - 'cell "general-purpose: Przenieś aitrader" [ref=e1250]':
+                - 'generic "general-purpose: Przenieś aitrader" [ref=e1251]'
+              - cell "11:33:45" [ref=e1252]
+              - cell "11:33:45" [ref=e1253]
+            - 'row "~/SK/REPOS_PRGRM/REPO_autonomus_llm_agency_page/CLAUDE.md 1 fragment only modified general-purpose: Przenieś autonomus_llm_agency_page main general-purpose: Repo paths: REPOS_PRGRM część 2 11:31:54 13:33:22" [ref=e1254] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_autonomus_llm_agency_page/CLAUDE.md" [ref=e1255]
+              - cell "1" [ref=e1256]
+              - cell "fragment only modified" [ref=e1257]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1258]: fragment only
+                - generic [ref=e1259]: modified
+              - 'cell "general-purpose: Przenieś autonomus_llm_agency_page main general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e1260]':
+                - 'generic "general-purpose: Przenieś autonomus_llm_agency_page" [ref=e1261]'
+                - generic "main" [ref=e1262]
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 2" [ref=e1263]'
+              - cell "11:31:54" [ref=e1264]
+              - cell "13:33:22" [ref=e1265]
+            - 'row "~/SK/REPOS_PRGRM/REPO_dealfinder/STRATEGY.md 1 fragment only general-purpose: Przenieś dealfinder 11:31:47 11:31:47" [ref=e1266] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_dealfinder/STRATEGY.md" [ref=e1267]
+              - cell "1" [ref=e1268]
+              - cell "fragment only" [ref=e1269]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1270]: fragment only
+              - 'cell "general-purpose: Przenieś dealfinder" [ref=e1271]':
+                - 'generic "general-purpose: Przenieś dealfinder" [ref=e1272]'
+              - cell "11:31:47" [ref=e1273]
+              - cell "11:31:47" [ref=e1274]
+            - 'row "~/SK/REPOS_PRGRM/REPO_eduBombel/CLAUDE.md 1 fragment only main general-purpose: Przenieś eduBombel general-purpose: Docs paths: A + B 11:32:26 13:21:29" [ref=e1275] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_eduBombel/CLAUDE.md" [ref=e1276]
+              - cell "1" [ref=e1277]
+              - cell "fragment only" [ref=e1278]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1279]: fragment only
+              - 'cell "main general-purpose: Przenieś eduBombel general-purpose: Docs paths: A + B" [ref=e1280]':
+                - generic "main" [ref=e1281]
+                - 'generic "general-purpose: Przenieś eduBombel" [ref=e1282]'
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e1283]'
+              - cell "11:32:26" [ref=e1284]
+              - cell "13:21:29" [ref=e1285]
+            - 'row "~/SK/REPOS_PRGRM/REPO_eduBombel/README.md 1 fragment only general-purpose: Przenieś eduBombel 11:35:27 11:35:36" [ref=e1286] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_eduBombel/README.md" [ref=e1287]
+              - cell "1" [ref=e1288]
+              - cell "fragment only" [ref=e1289]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1290]: fragment only
+              - 'cell "general-purpose: Przenieś eduBombel" [ref=e1291]':
+                - 'generic "general-purpose: Przenieś eduBombel" [ref=e1292]'
+              - cell "11:35:27" [ref=e1293]
+              - cell "11:35:36" [ref=e1294]
+            - 'row "~/SK/REPOS_PRGRM/REPO_figma-mcp-layout-admina/doonk-admin/index.php 1 fragment only general-purpose: Przenieś figma-mcp-layout-admina 11:30:51 11:30:51" [ref=e1295] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_figma-mcp-layout-admina/doonk-admin/index.php" [ref=e1296]
+              - cell "1" [ref=e1297]
+              - cell "fragment only" [ref=e1298]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1299]: fragment only
+              - 'cell "general-purpose: Przenieś figma-mcp-layout-admina" [ref=e1300]':
+                - 'generic "general-purpose: Przenieś figma-mcp-layout-admina" [ref=e1301]'
+              - cell "11:30:51" [ref=e1302]
+              - cell "11:30:51" [ref=e1303]
+            - 'row "~/SK/REPOS_PRGRM/REPO_fixit_logitech_promo/CLAUDE.MD 1 fragment only modified general-purpose: Przenieś fixit_logitech_promo main 11:30:44 13:33:22" [ref=e1304] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_fixit_logitech_promo/CLAUDE.MD" [ref=e1305]
+              - cell "1" [ref=e1306]
+              - cell "fragment only modified" [ref=e1307]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1308]: fragment only
+                - generic [ref=e1309]: modified
+              - 'cell "general-purpose: Przenieś fixit_logitech_promo main" [ref=e1310]':
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e1311]'
+                - generic "main" [ref=e1312]
+              - cell "11:30:44" [ref=e1313]
+              - cell "13:33:22" [ref=e1314]
+            - 'row "~/SK/REPOS_PRGRM/REPO_fixit_logitech_promo/README.MD 1 fragment only general-purpose: Przenieś fixit_logitech_promo 11:30:44 11:30:44" [ref=e1315] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_fixit_logitech_promo/README.MD" [ref=e1316]
+              - cell "1" [ref=e1317]
+              - cell "fragment only" [ref=e1318]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1319]: fragment only
+              - 'cell "general-purpose: Przenieś fixit_logitech_promo" [ref=e1320]':
+                - 'generic "general-purpose: Przenieś fixit_logitech_promo" [ref=e1321]'
+              - cell "11:30:44" [ref=e1322]
+              - cell "11:30:44" [ref=e1323]
+            - 'row "~/SK/REPOS_PRGRM/REPO_kid-game1/CLAUDE.md 1 fragment only general-purpose: Przenieś kid-game1 main 11:28:35 11:32:26" [ref=e1324] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_kid-game1/CLAUDE.md" [ref=e1325]
+              - cell "1" [ref=e1326]
+              - cell "fragment only" [ref=e1327]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1328]: fragment only
+              - 'cell "general-purpose: Przenieś kid-game1 main" [ref=e1329]':
+                - 'generic "general-purpose: Przenieś kid-game1" [ref=e1330]'
+                - generic "main" [ref=e1331]
+              - cell "11:28:35" [ref=e1332]
+              - cell "11:32:26" [ref=e1333]
+            - 'row "~/SK/REPOS_PRGRM/REPO_kid-game1/package.json 1 general-purpose: Przenieś kid-game1 11:28:38 11:28:38" [ref=e1334] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_kid-game1/package.json" [ref=e1335]
+              - cell "1" [ref=e1336]
+              - cell [ref=e1337]
+              - 'cell "general-purpose: Przenieś kid-game1" [ref=e1338]':
+                - 'generic "general-purpose: Przenieś kid-game1" [ref=e1339]'
+              - cell "11:28:38" [ref=e1340]
+              - cell "11:28:38" [ref=e1341]
+            - 'row "~/SK/REPOS_PRGRM/REPO_kid-game1/plan.md 1 fragment only general-purpose: Przenieś kid-game1 11:28:38 11:28:38" [ref=e1342] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_kid-game1/plan.md" [ref=e1343]
+              - cell "1" [ref=e1344]
+              - cell "fragment only" [ref=e1345]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1346]: fragment only
+              - 'cell "general-purpose: Przenieś kid-game1" [ref=e1347]':
+                - 'generic "general-purpose: Przenieś kid-game1" [ref=e1348]'
+              - cell "11:28:38" [ref=e1349]
+              - cell "11:28:38" [ref=e1350]
+            - 'row "~/SK/REPOS_PRGRM/REPO_kubix/index.php 1 fragment only general-purpose: Przenieś kubix 11:33:23 11:33:23" [ref=e1351] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_kubix/index.php" [ref=e1352]
+              - cell "1" [ref=e1353]
+              - cell "fragment only" [ref=e1354]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1355]: fragment only
+              - 'cell "general-purpose: Przenieś kubix" [ref=e1356]':
+                - 'generic "general-purpose: Przenieś kubix" [ref=e1357]'
+              - cell "11:33:23" [ref=e1358]
+              - cell "11:33:23" [ref=e1359]
+            - 'row "~/SK/REPOS_PRGRM/REPO_lesna-wyprawa/front/README.md 1 fragment only general-purpose: Przenieś lesna-wyprawa 11:36:50 11:36:50" [ref=e1360] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_lesna-wyprawa/front/README.md" [ref=e1361]
+              - cell "1" [ref=e1362]
+              - cell "fragment only" [ref=e1363]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1364]: fragment only
+              - 'cell "general-purpose: Przenieś lesna-wyprawa" [ref=e1365]':
+                - 'generic "general-purpose: Przenieś lesna-wyprawa" [ref=e1366]'
+              - cell "11:36:50" [ref=e1367]
+              - cell "11:36:50" [ref=e1368]
+            - 'row "~/SK/REPOS_PRGRM/REPO_open-mercato/AGENTS.md 1 fragment only general-purpose: Przenieś open-mercato 11:36:38 11:36:38" [ref=e1369] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_open-mercato/AGENTS.md" [ref=e1370]
+              - cell "1" [ref=e1371]
+              - cell "fragment only" [ref=e1372]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1373]: fragment only
+              - 'cell "general-purpose: Przenieś open-mercato" [ref=e1374]':
+                - 'generic "general-purpose: Przenieś open-mercato" [ref=e1375]'
+              - cell "11:36:38" [ref=e1376]
+              - cell "11:36:38" [ref=e1377]
+            - 'row "~/SK/REPOS_PRGRM/REPO_open-mercato/README.md 1 fragment only general-purpose: Przenieś open-mercato 11:36:38 11:36:38" [ref=e1378] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_open-mercato/README.md" [ref=e1379]
+              - cell "1" [ref=e1380]
+              - cell "fragment only" [ref=e1381]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1382]: fragment only
+              - 'cell "general-purpose: Przenieś open-mercato" [ref=e1383]':
+                - 'generic "general-purpose: Przenieś open-mercato" [ref=e1384]'
+              - cell "11:36:38" [ref=e1385]
+              - cell "11:36:38" [ref=e1386]
+            - 'row "~/SK/REPOS_PRGRM/REPO_playwright-playground/package.json 1 general-purpose: Przenieś playwright-playground 11:28:47 11:28:47" [ref=e1387] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_playwright-playground/package.json" [ref=e1388]
+              - cell "1" [ref=e1389]
+              - cell [ref=e1390]
+              - 'cell "general-purpose: Przenieś playwright-playground" [ref=e1391]':
+                - 'generic "general-purpose: Przenieś playwright-playground" [ref=e1392]'
+              - cell "11:28:47" [ref=e1393]
+              - cell "11:28:47" [ref=e1394]
+            - 'row "~/SK/REPOS_PRGRM/REPO_playwright-playground/test.js 1 fragment only general-purpose: Przenieś playwright-playground 11:28:47 11:28:47" [ref=e1395] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_playwright-playground/test.js" [ref=e1396]
+              - cell "1" [ref=e1397]
+              - cell "fragment only" [ref=e1398]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1399]: fragment only
+              - 'cell "general-purpose: Przenieś playwright-playground" [ref=e1400]':
+                - 'generic "general-purpose: Przenieś playwright-playground" [ref=e1401]'
+              - cell "11:28:47" [ref=e1402]
+              - cell "11:28:47" [ref=e1403]
+            - 'row "~/SK/REPOS_PRG…es/copilot-worktree-2026-02-17T15-51-58/.git 1 general-purpose: Przenieś prgrm2 i worktrees 11:48:58 11:48:58" [ref=e1404] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRG…es/copilot-worktree-2026-02-17T15-51-58/.git" [ref=e1405]
+              - cell "1" [ref=e1406]
+              - cell [ref=e1407]
+              - 'cell "general-purpose: Przenieś prgrm2 i worktrees" [ref=e1408]':
+                - 'generic "general-purpose: Przenieś prgrm2 i worktrees" [ref=e1409]'
+              - cell "11:48:58" [ref=e1410]
+              - cell "11:48:58" [ref=e1411]
+            - 'row "~/SK/REPOS_PRGRM/REPO_prgrm2/CLAUDE.md 1 fragment only modified main general-purpose: Przenieś prgrm2 i worktrees 11:32:26 13:33:22" [ref=e1412] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_prgrm2/CLAUDE.md" [ref=e1413]
+              - cell "1" [ref=e1414]
+              - cell "fragment only modified" [ref=e1415]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1416]: fragment only
+                - generic [ref=e1417]: modified
+              - 'cell "main general-purpose: Przenieś prgrm2 i worktrees" [ref=e1418]':
+                - generic "main" [ref=e1419]
+                - 'generic "general-purpose: Przenieś prgrm2 i worktrees" [ref=e1420]'
+              - cell "11:32:26" [ref=e1421]
+              - cell "13:33:22" [ref=e1422]
+            - 'row "~/SK/REPOS_PRGRM/REPO_prgrm2/README.md 1 fragment only general-purpose: Przenieś prgrm2 i worktrees 11:49:00 11:49:00" [ref=e1423] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_prgrm2/README.md" [ref=e1424]
+              - cell "1" [ref=e1425]
+              - cell "fragment only" [ref=e1426]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1427]: fragment only
+              - 'cell "general-purpose: Przenieś prgrm2 i worktrees" [ref=e1428]':
+                - 'generic "general-purpose: Przenieś prgrm2 i worktrees" [ref=e1429]'
+              - cell "11:49:00" [ref=e1430]
+              - cell "11:49:00" [ref=e1431]
+            - 'row "~/SK/REPOS_PRGRM/REPO_progremo_ksiegowosc/README.md 1 fragment only general-purpose: Przenieś progremo_ksiegowosc 11:36:50 11:36:55" [ref=e1432] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_progremo_ksiegowosc/README.md" [ref=e1433]
+              - cell "1" [ref=e1434]
+              - cell "fragment only" [ref=e1435]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1436]: fragment only
+              - 'cell "general-purpose: Przenieś progremo_ksiegowosc" [ref=e1437]':
+                - 'generic "general-purpose: Przenieś progremo_ksiegowosc" [ref=e1438]'
+              - cell "11:36:50" [ref=e1439]
+              - cell "11:36:55" [ref=e1440]
+            - 'row "~/SK/REPOS_PRGRM/REPO_spec-kit/README.md 1 fragment only general-purpose: Przenieś spec-kit 11:38:21 11:38:21" [ref=e1441] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_spec-kit/README.md" [ref=e1442]
+              - cell "1" [ref=e1443]
+              - cell "fragment only" [ref=e1444]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1445]: fragment only
+              - 'cell "general-purpose: Przenieś spec-kit" [ref=e1446]':
+                - 'generic "general-purpose: Przenieś spec-kit" [ref=e1447]'
+              - cell "11:38:21" [ref=e1448]
+              - cell "11:38:21" [ref=e1449]
+            - 'row "~/SK/REPOS_PRGRM/REPO_wp_mcp/README.md 1 fragment only general-purpose: Przenieś wp_mcp 11:31:49 11:31:52" [ref=e1450] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_wp_mcp/README.md" [ref=e1451]
+              - cell "1" [ref=e1452]
+              - cell "fragment only" [ref=e1453]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1454]: fragment only
+              - 'cell "general-purpose: Przenieś wp_mcp" [ref=e1455]':
+                - 'generic "general-purpose: Przenieś wp_mcp" [ref=e1456]'
+              - cell "11:31:49" [ref=e1457]
+              - cell "11:31:52" [ref=e1458]
+            - 'row "~/SK/REPOS_PRGRM/REPO_yodai/CLAUDE.md 1 fragment only modified main general-purpose: Przenieś yodai general-purpose: Repo paths: REPOS_PRGRM część 1 11:32:26 13:33:22" [ref=e1459] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_yodai/CLAUDE.md" [ref=e1460]
+              - cell "1" [ref=e1461]
+              - cell "fragment only modified" [ref=e1462]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1463]: fragment only
+                - generic [ref=e1464]: modified
+              - 'cell "main general-purpose: Przenieś yodai general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e1465]':
+                - generic "main" [ref=e1466]
+                - 'generic "general-purpose: Przenieś yodai" [ref=e1467]'
+                - 'generic "general-purpose: Repo paths: REPOS_PRGRM część 1" [ref=e1468]'
+              - cell "11:32:26" [ref=e1469]
+              - cell "13:33:22" [ref=e1470]
+            - 'row "~/SK/REPOS_PRGRM/REPO_yodai/README.md 1 fragment only general-purpose: Przenieś yodai 11:35:08 11:35:12" [ref=e1471] [cursor=pointer]':
+              - cell "~/SK/REPOS_PRGRM/REPO_yodai/README.md" [ref=e1472]
+              - cell "1" [ref=e1473]
+              - cell "fragment only" [ref=e1474]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1475]: fragment only
+              - 'cell "general-purpose: Przenieś yodai" [ref=e1476]':
+                - 'generic "general-purpose: Przenieś yodai" [ref=e1477]'
+              - cell "11:35:08" [ref=e1478]
+              - cell "11:35:12" [ref=e1479]
+            - row ".claude/skills/docrefactor/SKILL.md 1 fragment only main 10:03:49 10:03:49" [ref=e1480] [cursor=pointer]:
+              - cell ".claude/skills/docrefactor/SKILL.md" [ref=e1481]
+              - cell "1" [ref=e1482]
+              - cell "fragment only" [ref=e1483]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1484]: fragment only
+              - cell "main" [ref=e1485]:
+                - generic "main" [ref=e1486]
+              - cell "10:03:49" [ref=e1487]
+              - cell "10:03:49" [ref=e1488]
+            - 'row "AGENT_TOOLS/claude_code_quick_start/myteam_concept.llm.md 1 fragment only modified general-purpose: Docs paths: A + B 13:21:38 13:21:45" [ref=e1489] [cursor=pointer]':
+              - cell "AGENT_TOOLS/claude_code_quick_start/myteam_concept.llm.md" [ref=e1490]
+              - cell "1" [ref=e1491]
+              - cell "fragment only modified" [ref=e1492]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1493]: fragment only
+                - generic [ref=e1494]: modified
+              - 'cell "general-purpose: Docs paths: A + B" [ref=e1495]':
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e1496]'
+              - cell "13:21:38" [ref=e1497]
+              - cell "13:21:45" [ref=e1498]
+            - 'row "workbox9_netzi/PROJECT_FP_ADAPTER/CLAUDE.md 1 fragment only general-purpose: Przenieś REPO_FP_ADAPTER main general-purpose: Docs paths: C + D 11:27:32 13:21:39" [ref=e1499] [cursor=pointer]':
+              - cell "workbox9_netzi/PROJECT_FP_ADAPTER/CLAUDE.md" [ref=e1500]
+              - cell "1" [ref=e1501]
+              - cell "fragment only" [ref=e1502]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1503]: fragment only
+              - 'cell "general-purpose: Przenieś REPO_FP_ADAPTER main general-purpose: Docs paths: C + D" [ref=e1504]':
+                - 'generic "general-purpose: Przenieś REPO_FP_ADAPTER" [ref=e1505]'
+                - generic "main" [ref=e1506]
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e1507]'
+              - cell "11:27:32" [ref=e1508]
+              - cell "13:21:39" [ref=e1509]
+            - 'row "workbox9_netzi/PROJECT_GROUP_PRISMA/PROJECT_PRISMA_DH/CLAUDE.md 1 fragment only general-purpose: Docs paths: Prisma group 13:21:17 13:21:17" [ref=e1510] [cursor=pointer]':
+              - cell "workbox9_netzi/PROJECT_GROUP_PRISMA/PROJECT_PRISMA_DH/CLAUDE.md" [ref=e1511]
+              - cell "1" [ref=e1512]
+              - cell "fragment only" [ref=e1513]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1514]: fragment only
+              - 'cell "general-purpose: Docs paths: Prisma group" [ref=e1515]':
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e1516]'
+              - cell "13:21:17" [ref=e1517]
+              - cell "13:21:17" [ref=e1518]
+            - 'row "workbox9_netzi/PROJECT_GROUP_PRISMA/PROJECT_PRISMA_DH_2/CLAUDE.md 1 fragment only general-purpose: Docs paths: Prisma group 13:21:17 13:21:17" [ref=e1519] [cursor=pointer]':
+              - cell "workbox9_netzi/PROJECT_GROUP_PRISMA/PROJECT_PRISMA_DH_2/CLAUDE.md" [ref=e1520]
+              - cell "1" [ref=e1521]
+              - cell "fragment only" [ref=e1522]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1523]: fragment only
+              - 'cell "general-purpose: Docs paths: Prisma group" [ref=e1524]':
+                - 'generic "general-purpose: Docs paths: Prisma group" [ref=e1525]'
+              - cell "13:21:17" [ref=e1526]
+              - cell "13:21:17" [ref=e1527]
+            - 'row "workbox9_netzi/PROJECT_IAM/CLAUDE.md 1 fragment only main general-purpose: Docs paths: C + D 11:32:26 13:21:39" [ref=e1528] [cursor=pointer]':
+              - cell "workbox9_netzi/PROJECT_IAM/CLAUDE.md" [ref=e1529]
+              - cell "1" [ref=e1530]
+              - cell "fragment only" [ref=e1531]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1532]: fragment only
+              - 'cell "main general-purpose: Docs paths: C + D" [ref=e1533]':
+                - generic "main" [ref=e1534]
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e1535]'
+              - cell "11:32:26" [ref=e1536]
+              - cell "13:21:39" [ref=e1537]
+            - 'row "workbox9_netzi/TASKS_TODO/claude-md-refactor/claude-md-refactor.llm.md 1 fragment only modified general-purpose: Docs paths: A + B 13:21:51 13:22:05" [ref=e1538] [cursor=pointer]':
+              - cell "workbox9_netzi/TASKS_TODO/claude-md-refactor/claude-md-refactor.llm.md" [ref=e1539]
+              - cell "1" [ref=e1540]
+              - cell "fragment only modified" [ref=e1541]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1542]: fragment only
+                - generic [ref=e1543]: modified
+              - 'cell "general-purpose: Docs paths: A + B" [ref=e1544]':
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e1545]'
+              - cell "13:21:51" [ref=e1546]
+              - cell "13:22:05" [ref=e1547]
+            - 'row "workbox9_netzi/TASKS_TODO/dev-env-containerization-security/dev-env-containerization-security.llm.md 1 fragment only modified general-purpose: Docs paths: A + B 13:21:51 13:22:05" [ref=e1548] [cursor=pointer]':
+              - cell "workbox9_netzi/TASKS_TODO/dev-env-containerization-security/dev-env-containerization-security.llm.md" [ref=e1549]
+              - cell "1" [ref=e1550]
+              - cell "fragment only modified" [ref=e1551]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1552]: fragment only
+                - generic [ref=e1553]: modified
+              - 'cell "general-purpose: Docs paths: A + B" [ref=e1554]':
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e1555]'
+              - cell "13:21:51" [ref=e1556]
+              - cell "13:22:05" [ref=e1557]
+            - 'row "workbox9_prgrm/PROJECT_agency-test/CLAUDE.md 1 modified general-purpose: Przenieś agency-test 11:30:44 11:30:44" [ref=e1558] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_agency-test/CLAUDE.md" [ref=e1559]
+              - cell "1" [ref=e1560]
+              - cell "modified" [ref=e1561]:
+                - generic [ref=e1562]: modified
+              - 'cell "general-purpose: Przenieś agency-test" [ref=e1563]':
+                - 'generic "general-purpose: Przenieś agency-test" [ref=e1564]'
+              - cell "11:30:44" [ref=e1565]
+              - cell "11:30:44" [ref=e1566]
+            - 'row "workbox9_prgrm/PROJECT_aitrader/CLAUDE.md 1 modified general-purpose: Przenieś aitrader 11:33:48 11:33:48" [ref=e1567] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_aitrader/CLAUDE.md" [ref=e1568]
+              - cell "1" [ref=e1569]
+              - cell "modified" [ref=e1570]:
+                - generic [ref=e1571]: modified
+              - 'cell "general-purpose: Przenieś aitrader" [ref=e1572]':
+                - 'generic "general-purpose: Przenieś aitrader" [ref=e1573]'
+              - cell "11:33:48" [ref=e1574]
+              - cell "11:33:48" [ref=e1575]
+            - 'row "workbox9_prgrm/PROJECT_dealfinder/CLAUDE.md 1 modified general-purpose: Przenieś dealfinder 11:31:50 11:31:50" [ref=e1576] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_dealfinder/CLAUDE.md" [ref=e1577]
+              - cell "1" [ref=e1578]
+              - cell "modified" [ref=e1579]:
+                - generic [ref=e1580]: modified
+              - 'cell "general-purpose: Przenieś dealfinder" [ref=e1581]':
+                - 'generic "general-purpose: Przenieś dealfinder" [ref=e1582]'
+              - cell "11:31:50" [ref=e1583]
+              - cell "11:31:50" [ref=e1584]
+            - 'row "workbox9_prgrm/PROJECT_figma-mcp-layout-admina/CLAUDE.md 1 modified general-purpose: Przenieś figma-mcp-layout-admina 11:30:55 11:30:55" [ref=e1585] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_figma-mcp-layout-admina/CLAUDE.md" [ref=e1586]
+              - cell "1" [ref=e1587]
+              - cell "modified" [ref=e1588]:
+                - generic [ref=e1589]: modified
+              - 'cell "general-purpose: Przenieś figma-mcp-layout-admina" [ref=e1590]':
+                - 'generic "general-purpose: Przenieś figma-mcp-layout-admina" [ref=e1591]'
+              - cell "11:30:55" [ref=e1592]
+              - cell "11:30:55" [ref=e1593]
+            - 'row "workbox9_prgrm/PROJECT_kid-game1/CLAUDE.md 1 modified general-purpose: Przenieś kid-game1 11:28:42 11:28:42" [ref=e1594] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_kid-game1/CLAUDE.md" [ref=e1595]
+              - cell "1" [ref=e1596]
+              - cell "modified" [ref=e1597]:
+                - generic [ref=e1598]: modified
+              - 'cell "general-purpose: Przenieś kid-game1" [ref=e1599]':
+                - 'generic "general-purpose: Przenieś kid-game1" [ref=e1600]'
+              - cell "11:28:42" [ref=e1601]
+              - cell "11:28:42" [ref=e1602]
+            - 'row "workbox9_prgrm/PROJECT_lesna-wyprawa/CLAUDE.md 1 modified general-purpose: Przenieś lesna-wyprawa 11:37:02 11:37:02" [ref=e1603] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_lesna-wyprawa/CLAUDE.md" [ref=e1604]
+              - cell "1" [ref=e1605]
+              - cell "modified" [ref=e1606]:
+                - generic [ref=e1607]: modified
+              - 'cell "general-purpose: Przenieś lesna-wyprawa" [ref=e1608]':
+                - 'generic "general-purpose: Przenieś lesna-wyprawa" [ref=e1609]'
+              - cell "11:37:02" [ref=e1610]
+              - cell "11:37:02" [ref=e1611]
+            - 'row "workbox9_prgrm/PROJECT_pm_center/CLAUDE.md 1 modified general-purpose: Przenieś pm_center 11:33:30 11:33:30" [ref=e1612] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_pm_center/CLAUDE.md" [ref=e1613]
+              - cell "1" [ref=e1614]
+              - cell "modified" [ref=e1615]:
+                - generic [ref=e1616]: modified
+              - 'cell "general-purpose: Przenieś pm_center" [ref=e1617]':
+                - 'generic "general-purpose: Przenieś pm_center" [ref=e1618]'
+              - cell "11:33:30" [ref=e1619]
+              - cell "11:33:30" [ref=e1620]
+            - 'row "workbox9_prgrm/PROJECT_progremo_ksiegowosc/CLAUDE.md 1 modified general-purpose: Przenieś progremo_ksiegowosc 11:37:01 11:37:01" [ref=e1621] [cursor=pointer]':
+              - cell "workbox9_prgrm/PROJECT_progremo_ksiegowosc/CLAUDE.md" [ref=e1622]
+              - cell "1" [ref=e1623]
+              - cell "modified" [ref=e1624]:
+                - generic [ref=e1625]: modified
+              - 'cell "general-purpose: Przenieś progremo_ksiegowosc" [ref=e1626]':
+                - 'generic "general-purpose: Przenieś progremo_ksiegowosc" [ref=e1627]'
+              - cell "11:37:01" [ref=e1628]
+              - cell "11:37:01" [ref=e1629]
+            - row "workbox9_prgrm/PROJECT_v2026-stanmet-ropczyce-pl/CLAUDE.md 1 modified main 13:17:27 13:17:27" [ref=e1630] [cursor=pointer]:
+              - cell "workbox9_prgrm/PROJECT_v2026-stanmet-ropczyce-pl/CLAUDE.md" [ref=e1631]
+              - cell "1" [ref=e1632]
+              - cell "modified" [ref=e1633]:
+                - generic [ref=e1634]: modified
+              - cell "main" [ref=e1635]:
+                - generic "main" [ref=e1636]
+              - cell "13:17:27" [ref=e1637]
+              - cell "13:17:27" [ref=e1638]
+            - row "workbox9_prgrm/stanmet-ropczyce-pl/README.md 1 fragment only main 13:17:16 13:17:16" [ref=e1639] [cursor=pointer]:
+              - cell "workbox9_prgrm/stanmet-ropczyce-pl/README.md" [ref=e1640]
+              - cell "1" [ref=e1641]
+              - cell "fragment only" [ref=e1642]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1643]: fragment only
+              - cell "main" [ref=e1644]:
+                - generic "main" [ref=e1645]
+              - cell "13:17:16" [ref=e1646]
+              - cell "13:17:16" [ref=e1647]
+            - row "workbox9_prgrm/v2026-stanmet-ropczyce-pl/README.md 1 fragment only main 13:17:16 13:17:16" [ref=e1648] [cursor=pointer]:
+              - cell "workbox9_prgrm/v2026-stanmet-ropczyce-pl/README.md" [ref=e1649]
+              - cell "1" [ref=e1650]
+              - cell "fragment only" [ref=e1651]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1652]: fragment only
+              - cell "main" [ref=e1653]:
+                - generic "main" [ref=e1654]
+              - cell "13:17:16" [ref=e1655]
+              - cell "13:17:16" [ref=e1656]
+            - row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/apply_projects.py 1 injected modified main 10:54:46 12:45:06" [ref=e1657] [cursor=pointer]:
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/apply_projects.py" [ref=e1658]
+              - cell "1" [ref=e1659]
+              - cell "injected modified" [ref=e1660]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file)" [ref=e1661]: injected
+                - generic [ref=e1662]: modified
+              - cell "main" [ref=e1663]:
+                - generic "main" [ref=e1664]
+              - cell "10:54:46" [ref=e1665]
+              - cell "12:45:06" [ref=e1666]
+            - 'row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/changed.txt 1 modified general-purpose: Docs paths: C + D 13:21:27 13:21:54" [ref=e1667] [cursor=pointer]':
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/changed.txt" [ref=e1668]
+              - cell "1" [ref=e1669]
+              - cell "modified" [ref=e1670]:
+                - generic [ref=e1671]: modified
+              - 'cell "general-purpose: Docs paths: C + D" [ref=e1672]':
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e1673]'
+              - cell "13:21:27" [ref=e1674]
+              - cell "13:21:54" [ref=e1675]
+            - 'row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/hits.txt 1 modified general-purpose: Docs paths: A + B 13:21:00 13:21:07" [ref=e1676] [cursor=pointer]':
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/hits.txt" [ref=e1677]
+              - cell "1" [ref=e1678]
+              - cell "modified" [ref=e1679]:
+                - generic [ref=e1680]: modified
+              - 'cell "general-purpose: Docs paths: A + B" [ref=e1681]':
+                - 'generic "general-purpose: Docs paths: A + B" [ref=e1682]'
+              - cell "13:21:00" [ref=e1683]
+              - cell "13:21:07" [ref=e1684]
+            - 'row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/m.txt 1 modified general-purpose: Docs paths: C + D 13:21:01 13:21:05" [ref=e1685] [cursor=pointer]':
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/m.txt" [ref=e1686]
+              - cell "1" [ref=e1687]
+              - cell "modified" [ref=e1688]:
+                - generic [ref=e1689]: modified
+              - 'cell "general-purpose: Docs paths: C + D" [ref=e1690]':
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e1691]'
+              - cell "13:21:01" [ref=e1692]
+              - cell "13:21:05" [ref=e1693]
+            - 'row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/n.txt 1 modified general-purpose: Docs paths: C + D 13:21:05 13:21:27" [ref=e1694] [cursor=pointer]':
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/n.txt" [ref=e1695]
+              - cell "1" [ref=e1696]
+              - cell "modified" [ref=e1697]:
+                - generic [ref=e1698]: modified
+              - 'cell "general-purpose: Docs paths: C + D" [ref=e1699]':
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e1700]'
+              - cell "13:21:05" [ref=e1701]
+              - cell "13:21:27" [ref=e1702]
+            - row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/prune_claude_json.py 1 injected modified main 10:53:03 12:45:06" [ref=e1703] [cursor=pointer]:
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/prune_claude_json.py" [ref=e1704]
+              - cell "1" [ref=e1705]
+              - cell "injected modified" [ref=e1706]:
+                - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file)" [ref=e1707]: injected
+                - generic [ref=e1708]: modified
+              - cell "main" [ref=e1709]:
+                - generic "main" [ref=e1710]
+              - cell "10:53:03" [ref=e1711]
+              - cell "12:45:06" [ref=e1712]
+            - 'row "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/skip.txt 1 modified general-purpose: Docs paths: C + D 13:21:27 13:21:27" [ref=e1713] [cursor=pointer]':
+              - cell "/private/tmp/c…-8f7d-4e64-a643-4ee2e799b372/scratchpad/skip.txt" [ref=e1714]
+              - cell "1" [ref=e1715]
+              - cell "modified" [ref=e1716]:
+                - generic [ref=e1717]: modified
+              - 'cell "general-purpose: Docs paths: C + D" [ref=e1718]':
+                - 'generic "general-purpose: Docs paths: C + D" [ref=e1719]'
+              - cell "13:21:27" [ref=e1720]
+              - cell "13:21:27" [ref=e1721]

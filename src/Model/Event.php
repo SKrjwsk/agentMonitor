@@ -41,6 +41,14 @@ final readonly class Event
          * @var ?array{by: string, detail: ?string}
          */
         public ?array $denial = null,
+        /**
+         * Koszt wyniku narzędzia w kontekście (szacunek z usage transkryptu; hook go nie zna): `tokens` dopisane do kontekstu,
+         * `calls` = dalsze odpowiedzi modelu tego agenta, które czytały je z cache (do kompaktowania), `usd` = zapis + te odczyty
+         * według cennika API (null = model spoza cennika).
+         *
+         * @var ?array{tokens: int, calls: int, usd: ?float}
+         */
+        public ?array $carry = null,
     ) {
     }
 

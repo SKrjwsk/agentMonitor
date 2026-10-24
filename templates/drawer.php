@@ -71,6 +71,15 @@ $seconds = static function (string $from, ?string $to): ?float {
                         <div class="explain"><?= h($statusHelp) ?></div>
                         <?php if ($e->error !== null): ?><div class="muted">message (first line only): <?= h($e->error) ?></div><?php endif ?></dd>
                 <?php endif ?>
+                <?php if ($e->carry !== null && $e->carry['usd'] !== null): ?>
+                    <dt>cost</dt>
+                    <dd><strong><?= h(App::usd($e->carry['usd'])) ?></strong>
+                        <span class="muted">(<?= h(round(100 * $e->carry['usd'] / max($view['sessionTokens']['usd'], 1e-9), 1)) ?>% of the session)</span>
+                        <div class="explain">The result added ~<?= h(App::tokenCount($e->carry['tokens'])) ?> tokens to the agent's context.
+                            They were written to the cache once and then read again by <?= h($e->carry['calls']) ?> later model <?= $e->carry['calls'] === 1 ? 'call' : 'calls' ?> of this agent<?= $e->carry['calls'] > 0 ? ' (until the context was compacted or the agent finished)' : '' ?>.
+                            <?= $e->carry['tokens'] >= 5000 && $e->carry['calls'] >= 20 ? 'A narrower read (offset/limit, sed -n, grep) or a subagent would keep it out of the main context.' : '' ?></div>
+                        <div class="muted">Estimate at API prices: the next cache write split between the tool results by their length.</div></dd>
+                <?php endif ?>
             </dl>
 
             <h3><?= $context ? 'what was loaded' : ($e->tool === 'Bash' ? 'command' : 'input') ?></h3>

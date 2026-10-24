@@ -47,10 +47,15 @@ if ($view['allSessions']) {
     return;
 }
 $agents = $view['session']->agents;
+$sessionUsd = max($view['sessionTokens']['usd'], 1e-9);
 ?>
 <div class="list-bar">
     <a class="chip" href="/?<?= h(App::query($view, ['group' => '', 'pcmd' => ''])) ?>" <?= !$p['group'] ? 'viz-current' : '' ?>>in order</a>
     <a class="chip" href="/?<?= h(App::query($view, ['group' => '1', 'pcmd' => ''])) ?>" <?= $p['group'] ? 'viz-current' : '' ?>>by program</a>
+    <?php if (!$p['group'] && $view['session']->usage !== []): ?>
+        <a class="chip" href="/?<?= h(App::query($view, ['sort' => $p['sort'] === 'cost' ? '' : 'cost'])) ?>" <?= $p['sort'] === 'cost' ? 'viz-current' : '' ?>
+           title="most expensive first: the result was written to the context and read again on every later model call (estimate, API prices)">by cost</a>
+    <?php endif ?>
     <?php if ($p['pcmd'] !== ''): ?>
         <span class="chip" viz-current>program: <?= h($p['pcmd']) ?> <a href="/?<?= h(App::query($view, ['pcmd' => ''])) ?>" title="clear">×</a></span>
     <?php endif ?>
@@ -109,6 +114,9 @@ $agents = $view['session']->agents;
                 <code class="cmd" title="<?= h($e->summary) ?>"><?= $e->tool !== 'Bash' ? '<span class="tool">' . h($e->tool) . '</span> ' : '' ?><?= h(App::shortText($e->summary, $view['session']->cwd)) ?></code>
                 <?php if ($e->denial !== null): ?>
                     <span class="badge denied" title="<?= h((string) $e->error) ?>"><?= h($e->denial['by'] . ($e->denial['detail'] !== null ? ' · ' . $e->denial['detail'] : '')) ?></span>
+                <?php endif ?>
+                <?php if (($e->carry['usd'] ?? 0) >= 0.005): ?>
+                    <span class="cost" <?= $e->carry['usd'] >= 0.01 * $sessionUsd ? 'viz-high' : '' ?> title="<?= h('+' . App::tokenCount($e->carry['tokens']) . ' tokens in the context × ' . $e->carry['calls'] . ' later model calls = ' . round(100 * $e->carry['usd'] / $sessionUsd, 1) . '% of the session cost') ?>"><?= h(App::usd($e->carry['usd'])) ?></span>
                 <?php endif ?>
                 <?php if ($e->touches !== []): ?><span class="muted n" title="files resolved from the command"><?= h(count($e->touches)) ?> <?= count($e->touches) === 1 ? 'file' : 'files' ?></span><?php endif ?>
                 <?php if ($problems !== []): ?><span class="badge problem" title="<?= h(implode("\n", $problems)) ?>">⚠</span><?php endif ?>

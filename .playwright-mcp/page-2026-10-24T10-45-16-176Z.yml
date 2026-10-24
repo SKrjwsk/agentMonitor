@@ -1,0 +1,1059 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "◎ Overview" [ref=e4] [cursor=pointer]:
+      - /url: /
+    - link "Σ All sessions" [ref=e5] [cursor=pointer]:
+      - /url: /?s=all
+    - generic [ref=e6]:
+      - strong [ref=e7]: Sessions
+      - link "● follow latest" [ref=e8] [cursor=pointer]:
+        - /url: /?follow=1
+      - button "EN" [ref=e9] [cursor=pointer]
+      - button "◐" [ref=e10] [cursor=pointer]
+    - combobox "show sessions of one project (working directory of the session)" [ref=e12]:
+      - option "all projects (119)" [selected]
+      - option "REPO_agent_vizualization · 5"
+      - option "pokoj_dzieci_2.0 · 1"
+      - option "workbox9_prgrm · 3"
+      - option "THE_MASTER_PLAN · 9"
+      - option "PROJECT_PRISMA_GROUP/PROJECT_PRISMA_DH_2 · 14"
+      - option "workbox9 · 9"
+      - option "PROJECT_GROUP_PRISMA/PROJECT_PRISMA_DH_2 · 4"
+      - option "eduBombel · 18"
+      - option "yodai · 11"
+      - option "v2026-stanmet-ropczyce-pl · 4"
+      - option "stanmet-ropczyce-pl · 1"
+      - option "agent_vizualization · 10"
+      - option "m3/proj · 2"
+      - option "PROJECT_GROUP_PRISMA · 11"
+      - option "m0/proj · 1"
+      - option "open-mercato · 1"
+      - option "progremo_ksiegowosc · 3"
+      - option "REPO_PRISMA_DH_2 · 1"
+      - option "LLM_CONTEXT · 1"
+      - option "? · 1"
+      - option "PROJECT_FP_ADAPTER · 6"
+      - option "workbox9_swzk · 2"
+      - option ".claude · 1"
+    - list [ref=e13]:
+      - listitem [ref=e14]:
+        - link "GUI i praca z agentami REPO_agent_vizualization · 24.10 12:45 · $0.26 active" [ref=e15] [cursor=pointer]:
+          - /url: /?s=f411bec0-731f-4de0-96bf-1998289ca3fe
+          - generic [ref=e16]: GUI i praca z agentami
+          - generic [ref=e17]:
+            - text: REPO_agent_vizualization · 24.10 12:45 · $0.26
+            - generic [ref=e18]: active
+      - listitem [ref=e19]:
+        - link "Wizualizacja zużycia tokenów REPO_agent_vizualization · 24.10 12:42 · $11.1" [ref=e20] [cursor=pointer]:
+          - /url: /?s=39f1c150-f79e-49f8-a275-24e39711fc44
+          - generic [ref=e21]: Wizualizacja zużycia tokenów
+          - generic [ref=e22]: REPO_agent_vizualization · 24.10 12:42 · $11.1
+      - listitem [ref=e23]:
+        - link "Instalacja OpenSCAD na Ubuntu i macOS pokoj_dzieci_2.0 · 24.10 12:40 · $4.04" [ref=e24] [cursor=pointer]:
+          - /url: /?s=0ae2ae0b-f076-4671-ba47-585d8a1c5140
+          - generic [ref=e25]: Instalacja OpenSCAD na Ubuntu i macOS
+          - generic [ref=e26]: pokoj_dzieci_2.0 · 24.10 12:40 · $4.04
+      - listitem [ref=e27]:
+        - link "CMS na projekcie open-mercato workbox9_prgrm · 24.10 12:20 · $1.96" [ref=e28] [cursor=pointer]:
+          - /url: /?s=c2838d0a-4b2f-4a9b-a4ad-28d5432029fc
+          - generic [ref=e29]: CMS na projekcie open-mercato
+          - generic [ref=e30]: workbox9_prgrm · 24.10 12:20 · $1.96
+      - listitem [ref=e31]:
+        - link "Lewy panel sesji per projekt REPO_agent_vizualization · 24.10 11:07 · $4.12" [ref=e32] [cursor=pointer]:
+          - /url: /?s=af6af37b-470e-4ce7-87c7-07237997f09f
+          - generic [ref=e33]: Lewy panel sesji per projekt
+          - generic [ref=e34]: REPO_agent_vizualization · 24.10 11:07 · $4.12
+      - listitem [ref=e35]:
+        - link "Pogoda Kraków THE_MASTER_PLAN · 24.10 09:09 · $0.51" [ref=e36] [cursor=pointer]:
+          - /url: /?s=4a715cad-c362-4770-9234-a79f2ca6457b
+          - generic [ref=e37]: Pogoda Kraków
+          - generic [ref=e38]: THE_MASTER_PLAN · 24.10 09:09 · $0.51
+      - listitem [ref=e39]:
+        - link "Uproszczenie GUI i nowe widoki REPO_agent_vizualization · 23.10 17:23 · $20.8" [ref=e40] [cursor=pointer]:
+          - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e
+          - generic [ref=e41]: Uproszczenie GUI i nowe widoki
+          - generic [ref=e42]: REPO_agent_vizualization · 23.10 17:23 · $20.8
+      - listitem [ref=e43]:
+        - link "Komendy agent-viz w CSV REPO_agent_vizualization · 23.10 16:44 · $0.44" [ref=e44] [cursor=pointer]:
+          - /url: /?s=cfa1830e-a7a2-4db1-83df-a53f31e8390e
+          - generic [ref=e45]: Komendy agent-viz w CSV
+          - generic [ref=e46]: REPO_agent_vizualization · 23.10 16:44 · $0.44
+      - listitem [ref=e47]:
+        - link "mediapress_api_switch_dh2_supervisor Mediapress_api_switch_dh2 linear i VOD stage3 PROJECT_PRISMA_DH_2 · 23.10 16:38 · $65.4" [ref=e48] [cursor=pointer]:
+          - /url: /?s=3ba958d8-5938-427a-b87a-dca7ecd01e5e
+          - generic [ref=e49]: mediapress_api_switch_dh2_supervisor
+          - generic [ref=e50]: Mediapress_api_switch_dh2 linear i VOD stage3
+          - generic [ref=e51]: PROJECT_PRISMA_DH_2 · 23.10 16:38 · $65.4
+      - listitem [ref=e52]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 15:46 · $10.4" [ref=e53] [cursor=pointer]:
+          - /url: /?s=f22fe3e8-1f31-4bd3-96e4-ed0c7400a3e2
+          - generic [ref=e54]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e55]: PROJECT_PRISMA_DH_2 · 23.10 15:46 · $10.4
+      - listitem [ref=e56]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 15:46 · $10.7" [ref=e57] [cursor=pointer]:
+          - /url: /?s=0169c462-7277-41b2-9005-f427b900dc5b
+          - generic [ref=e58]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e59]: PROJECT_PRISMA_DH_2 · 23.10 15:46 · $10.7
+      - listitem [ref=e60]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 14:22 · $7.65" [ref=e61] [cursor=pointer]:
+          - /url: /?s=c5a02743-170a-4524-b881-3150e451453e
+          - generic [ref=e62]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e63]: PROJECT_PRISMA_DH_2 · 23.10 14:22 · $7.65
+      - listitem [ref=e64]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 14:22 · $9.15" [ref=e65] [cursor=pointer]:
+          - /url: /?s=71f4e1b1-92db-4ff0-91cf-516e67b8ff8e
+          - generic [ref=e66]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e67]: PROJECT_PRISMA_DH_2 · 23.10 14:22 · $9.15
+      - listitem [ref=e68]:
+        - link "preperPlan_dev Plan MAIN.MD vs ebook EMP THE_MASTER_PLAN · 23.10 14:03 · $34.6" [ref=e69] [cursor=pointer]:
+          - /url: /?s=0f3e67b8-7c7f-4966-9290-e44e99375883
+          - generic [ref=e70]: preperPlan_dev
+          - generic [ref=e71]: Plan MAIN.MD vs ebook EMP
+          - generic [ref=e72]: THE_MASTER_PLAN · 23.10 14:03 · $34.6
+      - listitem [ref=e73]:
+        - link "no conversation /model THE_MASTER_PLAN · 23.10 13:59" [ref=e74] [cursor=pointer]:
+          - /url: /?s=a6c0bf64-a05f-4b91-8b32-8149f4e00713
+          - generic [ref=e75]: no conversation /model
+          - text: THE_MASTER_PLAN · 23.10 13:59
+      - listitem [ref=e76]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:52 · $22.5" [ref=e77] [cursor=pointer]:
+          - /url: /?s=6449290d-6734-46d0-a766-0d2e6d2d4f81
+          - generic [ref=e78]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e79]: PROJECT_PRISMA_DH_2 · 23.10 12:52 · $22.5
+      - listitem [ref=e80]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:52 · $16.6" [ref=e81] [cursor=pointer]:
+          - /url: /?s=11355268-9898-4a7e-b5d0-988f6ba7bdac
+          - generic [ref=e82]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e83]: PROJECT_PRISMA_DH_2 · 23.10 12:52 · $16.6
+      - listitem [ref=e84]:
+        - link "no conversation /exit THE_MASTER_PLAN · 23.10 12:03" [ref=e85] [cursor=pointer]:
+          - /url: /?s=0e8ff333-8197-4820-9dcd-4331dd167ea4
+          - generic [ref=e86]: no conversation /exit
+          - text: THE_MASTER_PLAN · 23.10 12:03
+      - listitem [ref=e87]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:01 · $0.47" [ref=e88] [cursor=pointer]:
+          - /url: /?s=7334190d-aae4-4283-975b-546994f8da3a
+          - generic [ref=e89]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e90]: PROJECT_PRISMA_DH_2 · 23.10 12:01 · $0.47
+      - listitem [ref=e91]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:58 · $0.74" [ref=e92] [cursor=pointer]:
+          - /url: /?s=f946810b-c04e-4a5b-a4a9-7174686788f6
+          - generic [ref=e93]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e94]: PROJECT_PRISMA_DH_2 · 23.10 11:58 · $0.74
+      - listitem [ref=e95]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:40 · $11.8" [ref=e96] [cursor=pointer]:
+          - /url: /?s=6911e279-ce8e-4d84-b0d8-24c24d70e227
+          - generic [ref=e97]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e98]: PROJECT_PRISMA_DH_2 · 23.10 11:40 · $11.8
+      - listitem [ref=e99]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:40 · $12.9" [ref=e100] [cursor=pointer]:
+          - /url: /?s=69574883-90c6-43e7-a42d-66733781f434
+          - generic [ref=e101]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e102]: PROJECT_PRISMA_DH_2 · 23.10 11:40 · $12.9
+      - listitem [ref=e103]:
+        - link "test_collection_porcess Mediapress API switch – kolejka tekstów PROJECT_PRISMA_DH_2 · 23.10 10:25 · $11.5" [ref=e104] [cursor=pointer]:
+          - /url: /?s=5aa84bef-726e-469c-afb2-4b64dc9a638f
+          - generic [ref=e105]: test_collection_porcess
+          - generic [ref=e106]: Mediapress API switch – kolejka tekstów
+          - generic [ref=e107]: PROJECT_PRISMA_DH_2 · 23.10 10:25 · $11.5
+      - listitem [ref=e108]:
+        - link "mediapress_api_switch_dh2_linear_stage3 PROJECT_PRISMA_DH_2 · 23.10 10:02 · $35.8" [ref=e109] [cursor=pointer]:
+          - /url: /?s=f9d5c603-270a-4b5a-bb3f-5b860fcf523a
+          - generic [ref=e110]: mediapress_api_switch_dh2_linear_stage3
+          - generic [ref=e111]: PROJECT_PRISMA_DH_2 · 23.10 10:02 · $35.8
+      - listitem [ref=e112]:
+        - link "mediapress_api_switch_dh2_vod_stage3 PROJECT_PRISMA_DH_2 · 23.10 09:59 · $43.4" [ref=e113] [cursor=pointer]:
+          - /url: /?s=b682122e-2d5a-4a34-80fc-e4f0a36f13fa
+          - generic [ref=e114]: mediapress_api_switch_dh2_vod_stage3
+          - generic [ref=e115]: PROJECT_PRISMA_DH_2 · 23.10 09:59 · $43.4
+      - listitem [ref=e116]:
+        - link "preperPlan_hejter Podsumowanie PDF EMP vs Master Plan THE_MASTER_PLAN · 23.10 08:49 · $20.5" [ref=e117] [cursor=pointer]:
+          - /url: /?s=99d52c03-c14c-4000-a36c-520e0737c0ad
+          - generic [ref=e118]: preperPlan_hejter
+          - generic [ref=e119]: Podsumowanie PDF EMP vs Master Plan
+          - generic [ref=e120]: THE_MASTER_PLAN · 23.10 08:49 · $20.5
+      - listitem [ref=e121]:
+        - link "no conversation 7b85fe80 THE_MASTER_PLAN · 22.10 20:50" [ref=e122] [cursor=pointer]:
+          - /url: /?s=7b85fe80-5ff4-4814-b98d-f380afbb59ee
+          - generic [ref=e123]: no conversation 7b85fe80
+          - text: THE_MASTER_PLAN · 22.10 20:50
+      - listitem [ref=e124]:
+        - link "404 w PHP dev server workbox9 · 22.10 14:37 · $0.15" [ref=e125] [cursor=pointer]:
+          - /url: /?s=6a02c431-c16e-4de0-9206-d301931d65fb
+          - generic [ref=e126]: 404 w PHP dev server
+          - generic [ref=e127]: workbox9 · 22.10 14:37 · $0.15
+      - listitem [ref=e128]:
+        - link "Skille superpowers w Claude Code THE_MASTER_PLAN · 22.10 14:31 · $1.02" [ref=e129] [cursor=pointer]:
+          - /url: /?s=77f36aa2-07ff-4f58-8cd7-c0dd40e3a18c
+          - generic [ref=e130]: Skille superpowers w Claude Code
+          - generic [ref=e131]: THE_MASTER_PLAN · 22.10 14:31 · $1.02
+      - listitem [ref=e132]:
+        - link "Faza 3 MediaPress VOD dh2 PROJECT_PRISMA_DH_2 · 22.10 13:58 · $0.78" [ref=e133] [cursor=pointer]:
+          - /url: /?s=4f520e75-fc0c-474b-93f9-dd072da6aa55
+          - generic [ref=e134]: Faza 3 MediaPress VOD dh2
+          - generic [ref=e135]: PROJECT_PRISMA_DH_2 · 22.10 13:58 · $0.78
+      - listitem [ref=e136]:
+        - link "mediapress_api_switch_dh2_linear_stage_3 PROJECT_PRISMA_DH_2 · 22.10 13:58 · $0.46" [ref=e137] [cursor=pointer]:
+          - /url: /?s=5bbffdf7-9d61-47e9-81e0-8138e526a008
+          - generic [ref=e138]: mediapress_api_switch_dh2_linear_stage_3
+          - generic [ref=e139]: PROJECT_PRISMA_DH_2 · 22.10 13:58 · $0.46
+      - listitem [ref=e140]:
+        - link "Koncepcja przebudowy repozytorium workbox9 · 22.10 13:46 · $15.1" [ref=e141] [cursor=pointer]:
+          - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372
+          - generic [ref=e142]: Koncepcja przebudowy repozytorium
+          - generic [ref=e143]: workbox9 · 22.10 13:46 · $15.1
+      - listitem [ref=e144]:
+        - link "Changelog Claude Code THE_MASTER_PLAN · 22.10 13:44 · $1.24" [ref=e145] [cursor=pointer]:
+          - /url: /?s=784f4ffe-9d81-4538-9184-50df2857a88e
+          - generic [ref=e146]: Changelog Claude Code
+          - generic [ref=e147]: THE_MASTER_PLAN · 22.10 13:44 · $1.24
+      - listitem [ref=e148]:
+        - link "Dyktowanie nie działa THE_MASTER_PLAN · 22.10 13:16 · $0.11" [ref=e149] [cursor=pointer]:
+          - /url: /?s=4196f779-e99a-4645-9677-d5efbd18e814
+          - generic [ref=e150]: Dyktowanie nie działa
+          - generic [ref=e151]: THE_MASTER_PLAN · 22.10 13:16 · $0.11
+      - listitem [ref=e152]:
+        - link "mediapress_api_switch_dh2 part2 Kontroler feedmpcontent i źródło danych PROJECT_PRISMA_DH_2 · 22.10 12:53 · $28.8" [ref=e153] [cursor=pointer]:
+          - /url: /?s=d3b8bfe3-a3f8-44d9-a248-db1f0e05a134
+          - generic [ref=e154]: mediapress_api_switch_dh2 part2
+          - generic [ref=e155]: Kontroler feedmpcontent i źródło danych
+          - generic [ref=e156]: PROJECT_PRISMA_DH_2 · 22.10 12:53 · $28.8
+      - listitem [ref=e157]:
+        - link "mediapress_api_switch_dh2_vod Przełączenie VOD na API Mediapress workbox9 · 22.10 12:50 · $25.1" [ref=e158] [cursor=pointer]:
+          - /url: /?s=22dd90e6-c411-4cde-922c-e57b792ecf2f
+          - generic [ref=e159]: mediapress_api_switch_dh2_vod
+          - generic [ref=e160]: Przełączenie VOD na API Mediapress
+          - generic [ref=e161]: workbox9 · 22.10 12:50 · $25.1
+      - listitem [ref=e162]:
+        - link "no conversation /clear eduBombel · 22.10 09:19" [ref=e163] [cursor=pointer]:
+          - /url: /?s=8bbc746a-6149-48ce-96a6-79d9b3d6968e
+          - generic [ref=e164]: no conversation /clear
+          - text: eduBombel · 22.10 09:19
+      - listitem [ref=e165]:
+        - link "no conversation /clear eduBombel · 22.10 09:18" [ref=e166] [cursor=pointer]:
+          - /url: /?s=6faa49c9-cce9-46ed-86fa-1a313b8b4eff
+          - generic [ref=e167]: no conversation /clear
+          - text: eduBombel · 22.10 09:18
+      - listitem [ref=e168]:
+        - link "mercato_upgrader_1 Analiza Yodai i Open Mercato yodai · 22.10 09:17 · $42.1" [ref=e169] [cursor=pointer]:
+          - /url: /?s=f5d17b95-a199-4c64-a6d7-8446ca9d21e7
+          - generic [ref=e170]: mercato_upgrader_1
+          - generic [ref=e171]: Analiza Yodai i Open Mercato
+          - generic [ref=e172]: yodai · 22.10 09:17 · $42.1
+      - listitem [ref=e173]:
+        - link "Błąd 500 na stanmet-ropczyce.pl v2026-stanmet-ropczyce-pl · 21.10 21:55 · $4.41" [ref=e174] [cursor=pointer]:
+          - /url: /?s=f9d69f45-13c4-4f19-b21d-778c7d8fa006
+          - generic [ref=e175]: Błąd 500 na stanmet-ropczyce.pl
+          - generic [ref=e176]: v2026-stanmet-ropczyce-pl · 21.10 21:55 · $4.41
+      - listitem [ref=e177]:
+        - link "Header, footer i menu v2026-stanmet-ropczyce-pl · 21.10 21:34 · $6.36" [ref=e178] [cursor=pointer]:
+          - /url: /?s=9089619b-ee3e-4d35-828f-78260b028eb3
+          - generic [ref=e179]: Header, footer i menu
+          - generic [ref=e180]: v2026-stanmet-ropczyce-pl · 21.10 21:34 · $6.36
+      - listitem [ref=e181]:
+        - link "Poprawki layoutu z ui-polish.md v2026-stanmet-ropczyce-pl · 21.10 21:01 · $5.87" [ref=e182] [cursor=pointer]:
+          - /url: /?s=98e472e1-3ec6-44c8-b5aa-da68f5806ece
+          - generic [ref=e183]: Poprawki layoutu z ui-polish.md
+          - generic [ref=e184]: v2026-stanmet-ropczyce-pl · 21.10 21:01 · $5.87
+      - listitem [ref=e185]:
+        - link "Dokumentacja serwerów webd, mikrus i lh.pl workbox9_prgrm · 21.10 20:57 · $7.55" [ref=e186] [cursor=pointer]:
+          - /url: /?s=9e2d8139-3808-4cd3-8501-ee8b9a867c6c
+          - generic [ref=e187]: Dokumentacja serwerów webd, mikrus i lh.pl
+          - generic [ref=e188]: workbox9_prgrm · 21.10 20:57 · $7.55
+      - listitem [ref=e189]:
+        - link "Ikony kul smoczych po Android 19 eduBombel · 21.10 20:27 · $1.20" [ref=e190] [cursor=pointer]:
+          - /url: /?s=7c499039-c06f-49e6-b6d8-53ae68f825d6
+          - generic [ref=e191]: Ikony kul smoczych po Android 19
+          - generic [ref=e192]: eduBombel · 21.10 20:27 · $1.20
+      - listitem [ref=e193]:
+        - link "Dopieszczenie layoutu UI v2026-stanmet-ropczyce-pl · 21.10 20:24 · $1.73" [ref=e194] [cursor=pointer]:
+          - /url: /?s=14127e84-1e7c-45dd-abb8-1d22278dd8b8
+          - generic [ref=e195]: Dopieszczenie layoutu UI
+          - generic [ref=e196]: v2026-stanmet-ropczyce-pl · 21.10 20:24 · $1.73
+      - listitem [ref=e197]:
+        - link "Kategoria zmiękczeń i baza słownictwa eduBombel · 21.10 20:00 · $14.1" [ref=e198] [cursor=pointer]:
+          - /url: /?s=c2ce2485-2abf-44a3-a0ee-b8462e500b45
+          - generic [ref=e199]: Kategoria zmiękczeń i baza słownictwa
+          - generic [ref=e200]: eduBombel · 21.10 20:00 · $14.1
+      - listitem [ref=e201]:
+        - link "Zestaw wyjątki ortograficzne eduBombel · 21.10 19:52 · $2.50" [ref=e202] [cursor=pointer]:
+          - /url: /?s=45278834-2ac6-4b0e-a8b0-9950b6ba0a69
+          - generic [ref=e203]: Zestaw wyjątki ortograficzne
+          - generic [ref=e204]: eduBombel · 21.10 19:52 · $2.50
+      - listitem [ref=e205]:
+        - link "Mediapress_api_switch_dh2 w prisma_dh2 PROJECT_PRISMA_DH_2 · 21.10 19:25 · $25.0" [ref=e206] [cursor=pointer]:
+          - /url: /?s=392c93a6-fd10-49ce-99ad-dc701e651121
+          - generic [ref=e207]: Mediapress_api_switch_dh2 w prisma_dh2
+          - generic [ref=e208]: PROJECT_PRISMA_DH_2 · 21.10 19:25 · $25.0
+      - listitem [ref=e209]:
+        - link "Przegląd szaty graficznej aplikacji stanmet-ropczyce-pl · 21.10 19:23 · $0.55" [ref=e210] [cursor=pointer]:
+          - /url: /?s=67731843-de52-4f0d-807e-4384cf0924e0
+          - generic [ref=e211]: Przegląd szaty graficznej aplikacji
+          - generic [ref=e212]: stanmet-ropczyce-pl · 21.10 19:23 · $0.55
+      - listitem [ref=e213]:
+        - link "Stanmet-ropczyce.pl – szablon PHP workbox9_prgrm · 21.10 19:21 · $25.4" [ref=e214] [cursor=pointer]:
+          - /url: /?s=7db98e15-7ab6-40a7-b829-19cb3abb4fae
+          - generic [ref=e215]: Stanmet-ropczyce.pl – szablon PHP
+          - generic [ref=e216]: workbox9_prgrm · 21.10 19:21 · $25.4
+      - listitem [ref=e217]:
+        - link "clear eduBombel · 21.10 17:53 · $0.22" [ref=e218] [cursor=pointer]:
+          - /url: /?s=79bb973c-b37b-4b1b-85c6-d6acfaf1fd8b
+          - generic [ref=e219]: clear
+          - generic [ref=e220]: eduBombel · 21.10 17:53 · $0.22
+      - listitem [ref=e221]:
+        - link "luka_wyjasnienie Luki bezpieczeństwa w PHP agent_vizualization · 21.10 17:29 · $0.33" [ref=e222] [cursor=pointer]:
+          - /url: /?s=72b54893-44e0-4f12-8053-08f7e715514d
+          - generic [ref=e223]: luka_wyjasnienie
+          - generic [ref=e224]: Luki bezpieczeństwa w PHP
+          - generic [ref=e225]: agent_vizualization · 21.10 17:29 · $0.33
+      - listitem [ref=e226]:
+        - link "luka_wyjasnienie agent_vizualization · 21.10 17:29 · $0.17" [ref=e227] [cursor=pointer]:
+          - /url: /?s=16932dc5-d4be-440b-9be8-15cc814a6a06
+          - generic [ref=e228]: luka_wyjasnienie
+          - generic [ref=e229]: agent_vizualization · 21.10 17:29 · $0.17
+      - listitem [ref=e230]:
+        - link "no conversation /clear agent_vizualization · 21.10 16:45" [ref=e231] [cursor=pointer]:
+          - /url: /?s=77bf48de-33c8-4088-9c5e-17fd566f15eb
+          - generic [ref=e232]: no conversation /clear
+          - text: agent_vizualization · 21.10 16:45
+      - listitem [ref=e233]:
+        - link "no conversation /clear agent_vizualization · 21.10 16:35" [ref=e234] [cursor=pointer]:
+          - /url: /?s=814568f6-b06e-461c-918c-e03e613e69f8
+          - generic [ref=e235]: no conversation /clear
+          - text: agent_vizualization · 21.10 16:35
+      - listitem [ref=e236]:
+        - link "Wizualizacja pracy agentów agent_vizualization · 21.10 15:52 · $43.9" [ref=e237] [cursor=pointer]:
+          - /url: /?s=7928a304-17c4-4a05-b7da-7920e75bf9fc
+          - generic [ref=e238]: Wizualizacja pracy agentów
+          - generic [ref=e239]: agent_vizualization · 21.10 15:52 · $43.9
+      - listitem [ref=e240]:
+        - link "Pogoda w Londynie agent_vizualization · 21.10 15:38 · $0.43" [ref=e241] [cursor=pointer]:
+          - /url: /?s=753966fb-a7a8-45c0-95e5-639d35593676
+          - generic [ref=e242]: Pogoda w Londynie
+          - generic [ref=e243]: agent_vizualization · 21.10 15:38 · $0.43
+      - listitem [ref=e244]:
+        - link "Dostęp do plików .env w workbox9 agent_vizualization · 21.10 14:59 · $0.44" [ref=e245] [cursor=pointer]:
+          - /url: /?s=d026cf8e-ef86-4f4e-9274-6fa26a2b0109
+          - generic [ref=e246]: Dostęp do plików .env w workbox9
+          - generic [ref=e247]: agent_vizualization · 21.10 14:59 · $0.44
+      - listitem [ref=e248]:
+        - link "no conversation /analiza-sesji agent_vizualization · 21.10 14:39 · $0.42" [ref=e249] [cursor=pointer]:
+          - /url: /?s=8399d707-b4e4-412f-9f09-e7c926f027af
+          - generic [ref=e250]: no conversation /analiza-sesji
+          - generic [ref=e251]: agent_vizualization · 21.10 14:39 · $0.42
+      - listitem [ref=e252]:
+        - link "no conversation /analiza-sesji agent_vizualization · 21.10 14:36 · $0.42" [ref=e253] [cursor=pointer]:
+          - /url: /?s=1aff0a19-a171-447b-b28f-73235f25a23f
+          - generic [ref=e254]: no conversation /analiza-sesji
+          - generic [ref=e255]: agent_vizualization · 21.10 14:36 · $0.42
+      - listitem [ref=e256]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 13:56 · $0.01 hook" [ref=e257] [cursor=pointer]:
+          - /url: /?s=59a3f329-5cb6-42c9-93d5-48e02202b97d
+          - generic [ref=e258]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e259]:
+            - text: proj · 21.10 13:56 · $0.01
+            - generic [ref=e260]: hook
+      - listitem [ref=e261]:
+        - link "Incydenty bezpieczeństwa spowodowane przez AI agent_vizualization · 21.10 13:56 · $0.69" [ref=e262] [cursor=pointer]:
+          - /url: /?s=8f73abf7-b5fd-4ac8-b647-17982dd803f6
+          - generic [ref=e263]: Incydenty bezpieczeństwa spowodowane przez AI
+          - generic [ref=e264]: agent_vizualization · 21.10 13:56 · $0.69
+      - listitem [ref=e265]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 13:53 · $0.01" [ref=e266] [cursor=pointer]:
+          - /url: /?s=b6038a04-6c32-4c35-b906-f1891d8abcc0
+          - generic [ref=e267]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e268]: proj · 21.10 13:53 · $0.01
+      - listitem [ref=e269]:
+        - link "ZAM-6000_plan_wdrożenia_TV_tipps PROJECT_GROUP_PRISMA · 21.10 12:13 · $41.5" [ref=e270] [cursor=pointer]:
+          - /url: /?s=a13c94ac-669e-4c32-894d-2477934db105
+          - generic [ref=e271]: ZAM-6000_plan_wdrożenia_TV_tipps
+          - generic [ref=e272]: PROJECT_GROUP_PRISMA · 21.10 12:13 · $41.5
+      - listitem [ref=e273]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 12:02 · $0.01" [ref=e274] [cursor=pointer]:
+          - /url: /?s=58900880-d7be-49b5-ad94-982251635e46
+          - generic [ref=e275]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e276]: proj · 21.10 12:02 · $0.01
+      - listitem [ref=e277]:
+        - link "mp_api_switch_prisma2026 PROJECT_GROUP_PRISMA · 21.10 10:31 · $25.0" [ref=e278] [cursor=pointer]:
+          - /url: /?s=3b9765dc-c06a-414f-a3a8-4f44c4fa1d56
+          - generic [ref=e279]: mp_api_switch_prisma2026
+          - generic [ref=e280]: PROJECT_GROUP_PRISMA · 21.10 10:31 · $25.0
+      - listitem [ref=e281]:
+        - link "Błąd PHP z 2026-10-20 yodai · 21.10 10:21 · $0.62" [ref=e282] [cursor=pointer]:
+          - /url: /?s=8959f8ca-6551-4675-b8f0-80cfe26c3505
+          - generic [ref=e283]: Błąd PHP z 2026-10-20
+          - generic [ref=e284]: yodai · 21.10 10:21 · $0.62
+      - listitem [ref=e285]:
+        - link "Ocena moralności modeli AI yodai · 21.10 10:19 · $0.35" [ref=e286] [cursor=pointer]:
+          - /url: /?s=b12e6266-7d21-4c5d-a332-d64a3ee5cb2a
+          - generic [ref=e287]: Ocena moralności modeli AI
+          - generic [ref=e288]: yodai · 21.10 10:19 · $0.35
+      - listitem [ref=e289]:
+        - link "mercato_upgrader_2 Lista zadań 11_zadania_warte_dodania yodai · 20.10 17:03 · $5.21" [ref=e290] [cursor=pointer]:
+          - /url: /?s=2d9895d1-8719-478a-bb06-2c8f4077d57b
+          - generic [ref=e291]: mercato_upgrader_2
+          - generic [ref=e292]: Lista zadań 11_zadania_warte_dodania
+          - generic [ref=e293]: yodai · 20.10 17:03 · $5.21
+      - listitem [ref=e294]:
+        - link "no conversation /mobile yodai · 20.10 16:34" [ref=e295] [cursor=pointer]:
+          - /url: /?s=38915087-8fcf-4217-8f51-78e1b957d432
+          - generic [ref=e296]: no conversation /mobile
+          - text: yodai · 20.10 16:34
+      - listitem [ref=e297]:
+        - link "Import obrazków w screen PROJECT_GROUP_PRISMA · 20.10 12:03 · $0.56" [ref=e298] [cursor=pointer]:
+          - /url: /?s=ed5da0f9-6ff5-4bed-9955-8e36513c2531
+          - generic [ref=e299]: Import obrazków w screen
+          - generic [ref=e300]: PROJECT_GROUP_PRISMA · 20.10 12:03 · $0.56
+      - listitem [ref=e301]:
+        - link "full_import PROJECT_GROUP_PRISMA · 20.10 12:01" [ref=e302] [cursor=pointer]:
+          - /url: /?s=42f1e206-fe19-49c1-a851-b720a837dc38
+          - generic [ref=e303]: full_import
+          - text: PROJECT_GROUP_PRISMA · 20.10 12:01
+      - listitem [ref=e304]:
+        - link "full_import PROJECT_GROUP_PRISMA · 20.10 12:01 · $1.64" [ref=e305] [cursor=pointer]:
+          - /url: /?s=d355af07-e28f-4367-a58a-f4c3a5cfd8c5
+          - generic [ref=e306]: full_import
+          - generic [ref=e307]: PROJECT_GROUP_PRISMA · 20.10 12:01 · $1.64
+      - listitem [ref=e308]:
+        - link "full_import Full import na produkcji PROJECT_GROUP_PRISMA · 20.10 11:07 · $26.2" [ref=e309] [cursor=pointer]:
+          - /url: /?s=168f1b28-66cd-4710-a534-7deba6577de2
+          - generic [ref=e310]: full_import
+          - generic [ref=e311]: Full import na produkcji
+          - generic [ref=e312]: PROJECT_GROUP_PRISMA · 20.10 11:07 · $26.2
+      - listitem [ref=e313]:
+        - link "Chronologiczne ułożenie pliku Adamella.md yodai · 20.10 09:39 · $0.41" [ref=e314] [cursor=pointer]:
+          - /url: /?s=233cf9b7-3769-4e46-93dc-a949026292cc
+          - generic [ref=e315]: Chronologiczne ułożenie pliku Adamella.md
+          - generic [ref=e316]: yodai · 20.10 09:39 · $0.41
+      - listitem [ref=e317]:
+        - link "Usunięcie core.hooksPath z composer.json yodai · 20.10 00:17 · $4.46" [ref=e318] [cursor=pointer]:
+          - /url: /?s=66ecbbf5-c879-4c26-8acf-845aff14ad53
+          - generic [ref=e319]: Usunięcie core.hooksPath z composer.json
+          - generic [ref=e320]: yodai · 20.10 00:17 · $4.46
+      - listitem [ref=e321]:
+        - link "Orientacja w projekcie i dokumentacji open-mercato · 19.10 23:27 · $0.51" [ref=e322] [cursor=pointer]:
+          - /url: /?s=d3c13a45-27cb-4060-bc93-6281b2cc7660
+          - generic [ref=e323]: Orientacja w projekcie i dokumentacji
+          - generic [ref=e324]: open-mercato · 19.10 23:27 · $0.51
+      - listitem [ref=e325]:
+        - link "Nowy użytkownik yamil i CLI eduBombel · 19.10 23:20 · $39.4" [ref=e326] [cursor=pointer]:
+          - /url: /?s=40cac0f5-c5e4-4c72-8373-aa347001eedf
+          - generic [ref=e327]: Nowy użytkownik yamil i CLI
+          - generic [ref=e328]: eduBombel · 19.10 23:20 · $39.4
+      - listitem [ref=e329]:
+        - link "Wskaźnik predykcji kierunku ceny Bitcoina yodai · 19.10 23:03 · $1.13" [ref=e330] [cursor=pointer]:
+          - /url: /?s=69b3fb6c-e244-43e9-985c-7e0046d8a2bb
+          - generic [ref=e331]: Wskaźnik predykcji kierunku ceny Bitcoina
+          - generic [ref=e332]: yodai · 19.10 23:03 · $1.13
+      - listitem [ref=e333]:
+        - link "Mechanizm audytów prisma-dh2 w yodai yodai · 19.10 23:02 · $0.32" [ref=e334] [cursor=pointer]:
+          - /url: /?s=2f3b20c5-4128-46d9-b04f-9a421c38178e
+          - generic [ref=e335]: Mechanizm audytów prisma-dh2 w yodai
+          - generic [ref=e336]: yodai · 19.10 23:02 · $0.32
+      - listitem [ref=e337]:
+        - link "Brak faktury z Infkat w systemie progremo_ksiegowosc · 19.10 18:21 · $1.18" [ref=e338] [cursor=pointer]:
+          - /url: /?s=60fd6002-4c4b-4187-a902-cfc33691a7bf
+          - generic [ref=e339]: Brak faktury z Infkat w systemie
+          - generic [ref=e340]: progremo_ksiegowosc · 19.10 18:21 · $1.18
+      - listitem [ref=e341]:
+        - link "Anonimizacja mail1 i mail2 w .env progremo_ksiegowosc · 19.10 17:09 · $5.86" [ref=e342] [cursor=pointer]:
+          - /url: /?s=479865a2-8602-4ee4-a994-eb94c743ec75
+          - generic [ref=e343]: Anonimizacja mail1 i mail2 w .env
+          - generic [ref=e344]: progremo_ksiegowosc · 19.10 17:09 · $5.86
+      - listitem [ref=e345]:
+        - link "Koszty w infakt w tym miesiącu progremo_ksiegowosc · 19.10 17:07 · $37.5" [ref=e346] [cursor=pointer]:
+          - /url: /?s=1f13b1db-de60-476e-b15a-1cfdccd66ed1
+          - generic [ref=e347]: Koszty w infakt w tym miesiącu
+          - generic [ref=e348]: progremo_ksiegowosc · 19.10 17:07 · $37.5
+      - listitem [ref=e349]:
+        - link "ZAM-6000_plan_wdrożenia_TV_tipps ZAM-6000 plan wdrożenia TV tipps PROJECT_GROUP_PRISMA · 19.10 17:05 · $30.3" [ref=e350] [cursor=pointer]:
+          - /url: /?s=2d6eca79-1dd6-4f51-937b-3dd6b5eb5e5f
+          - generic [ref=e351]: ZAM-6000_plan_wdrożenia_TV_tipps
+          - generic [ref=e352]: ZAM-6000 plan wdrożenia TV tipps
+          - generic [ref=e353]: PROJECT_GROUP_PRISMA · 19.10 17:05 · $30.3
+      - listitem [ref=e354]:
+        - link "Standardy aplikacji yodai_app_standards.md yodai · 19.10 16:33 · $1.87" [ref=e355] [cursor=pointer]:
+          - /url: /?s=e2e77fc6-f21d-478c-86c1-e029b5d359f3
+          - generic [ref=e356]: Standardy aplikacji yodai_app_standards.md
+          - generic [ref=e357]: yodai · 19.10 16:33 · $1.87
+      - listitem [ref=e358]:
+        - link "Klient mail do bazy i API yodai · 19.10 10:17 · $1.90" [ref=e359] [cursor=pointer]:
+          - /url: /?s=2a03726f-2761-4c91-b9db-278da05ea649
+          - generic [ref=e360]: Klient mail do bazy i API
+          - generic [ref=e361]: yodai · 19.10 10:17 · $1.90
+      - listitem [ref=e362]:
+        - link "Przewijanie ekranu w tmux REPO_PRISMA_DH_2 · 19.10 08:07 · $0.19" [ref=e363] [cursor=pointer]:
+          - /url: /?s=322b708d-d032-48ab-acf8-94e00c02509a
+          - generic [ref=e364]: Przewijanie ekranu w tmux
+          - generic [ref=e365]: REPO_PRISMA_DH_2 · 19.10 08:07 · $0.19
+      - listitem [ref=e366]:
+        - link "Dostęp dziecka do gier eduBombel · 18.10 21:26 · $2.16" [ref=e367] [cursor=pointer]:
+          - /url: /?s=5892fe3e-6c73-4335-85a6-61013b51c86f
+          - generic [ref=e368]: Dostęp dziecka do gier
+          - generic [ref=e369]: eduBombel · 18.10 21:26 · $2.16
+      - listitem [ref=e370]:
+        - link "Zestawy danych gry Ortografia / Gol eduBombel · 18.10 21:25 · $3.79" [ref=e371] [cursor=pointer]:
+          - /url: /?s=16ea1c75-ea07-4fff-b061-5717d3badab8
+          - generic [ref=e372]: Zestawy danych gry Ortografia / Gol
+          - generic [ref=e373]: eduBombel · 18.10 21:25 · $3.79
+      - listitem [ref=e374]:
+        - link "Skrypt download-missing.py – pobieranie MKV workbox9 · 16.10 23:53 · $4.83" [ref=e375] [cursor=pointer]:
+          - /url: /?s=fc495ad4-c657-4053-bcee-08e8c44e1dca
+          - generic [ref=e376]: Skrypt download-missing.py – pobieranie MKV
+          - generic [ref=e377]: workbox9 · 16.10 23:53 · $4.83
+      - listitem [ref=e378]:
+        - link "Przesyłanie plików na MacBook Mam Krate workbox9 · 16.10 21:01 · $0.15" [ref=e379] [cursor=pointer]:
+          - /url: /?s=392603ee-be16-42f6-a2d4-5e331b4d08d1
+          - generic [ref=e380]: Przesyłanie plików na MacBook Mam Krate
+          - generic [ref=e381]: workbox9 · 16.10 21:01 · $0.15
+      - listitem [ref=e382]:
+        - link "Dump OFFLINE_DATABASE na dysku zewnętrznym workbox9 · 16.10 16:05 · $0.92" [ref=e383] [cursor=pointer]:
+          - /url: /?s=22d323c5-d173-40c3-98b4-48700bf12281
+          - generic [ref=e384]: Dump OFFLINE_DATABASE na dysku zewnętrznym
+          - generic [ref=e385]: workbox9 · 16.10 16:05 · $0.92
+      - listitem [ref=e386]:
+        - link "Nowe instancje gry flagi dla dzieci eduBombel · 16.10 14:18 · $0.33" [ref=e387] [cursor=pointer]:
+          - /url: /?s=10a7a8ed-f007-44e0-8804-62c658c442d2
+          - generic [ref=e388]: Nowe instancje gry flagi dla dzieci
+          - generic [ref=e389]: eduBombel · 16.10 14:18 · $0.33
+      - listitem [ref=e390]:
+        - link "Ticket 18664 w CRM Netzindianer PROJECT_GROUP_PRISMA · 16.10 13:58 · $0.96" [ref=e391] [cursor=pointer]:
+          - /url: /?s=400f67c7-da34-4cc7-9cc9-dc48969c8016
+          - generic [ref=e392]: Ticket 18664 w CRM Netzindianer
+          - generic [ref=e393]: PROJECT_GROUP_PRISMA · 16.10 13:58 · $0.96
+      - listitem [ref=e394]:
+        - link "Dane do gry Dragon Ball eduBombel · 16.10 13:34 · $26.8" [ref=e395] [cursor=pointer]:
+          - /url: /?s=787bc754-6cde-4df9-8ed5-594f26462ece
+          - generic [ref=e396]: Dane do gry Dragon Ball
+          - generic [ref=e397]: eduBombel · 16.10 13:34 · $26.8
+      - listitem [ref=e398]:
+        - link "ZAM-6000 plan wdrożenia TV tipps PROJECT_GROUP_PRISMA · 16.10 12:06 · $0.45" [ref=e399] [cursor=pointer]:
+          - /url: /?s=d3c8fd5b-524f-4383-9422-5a0e76d80a04
+          - generic [ref=e400]: ZAM-6000 plan wdrożenia TV tipps
+          - generic [ref=e401]: PROJECT_GROUP_PRISMA · 16.10 12:06 · $0.45
+      - listitem [ref=e402]:
+        - link "Import telschau ZAM-6000 PROJECT_GROUP_PRISMA · 16.10 12:01 · $1.10" [ref=e403] [cursor=pointer]:
+          - /url: /?s=6270c0f5-6c4a-4a17-958f-082f6bbfd999
+          - generic [ref=e404]: Import telschau ZAM-6000
+          - generic [ref=e405]: PROJECT_GROUP_PRISMA · 16.10 12:01 · $1.10
+      - listitem [ref=e406]:
+        - link "Zadania TV-Tipp, ticket 6000 PROJECT_GROUP_PRISMA · 16.10 11:48 · $18.9" [ref=e407] [cursor=pointer]:
+          - /url: /?s=089c7539-9dde-4b44-b616-c431c20fda58
+          - generic [ref=e408]: Zadania TV-Tipp, ticket 6000
+          - generic [ref=e409]: PROJECT_GROUP_PRISMA · 16.10 11:48 · $18.9
+      - listitem [ref=e410]:
+        - link "Kontekst edu bomble dla agentów eduBombel · 16.10 11:48 · $0.92" [ref=e411] [cursor=pointer]:
+          - /url: /?s=cc989d22-ebc2-4460-9e1e-4a4551504ddb
+          - generic [ref=e412]: Kontekst edu bomble dla agentów
+          - generic [ref=e413]: eduBombel · 16.10 11:48 · $0.92
+      - listitem [ref=e414]:
+        - link "Workbox_rebuild.md i naprawa linków LLM_CONTEXT · 16.10 11:30 · $3.51" [ref=e415] [cursor=pointer]:
+          - /url: /?s=b0033637-57ff-496c-ad7e-2fccc9b0e6b3
+          - generic [ref=e416]: Workbox_rebuild.md i naprawa linków
+          - generic [ref=e417]: LLM_CONTEXT · 16.10 11:30 · $3.51
+      - listitem [ref=e418]:
+        - link "Ortografia Dragon Ball dla Kuby eduBombel · 16.10 11:14 · $13.6" [ref=e419] [cursor=pointer]:
+          - /url: /?s=ac4011b1-6a29-4b68-82c9-3fd300ac918d
+          - generic [ref=e420]: Ortografia Dragon Ball dla Kuby
+          - generic [ref=e421]: eduBombel · 16.10 11:14 · $13.6
+      - listitem [ref=e422]:
+        - link "Ustawienia z załączonego zrzutu workbox9 · 16.10 11:12 · $0.53" [ref=e423] [cursor=pointer]:
+          - /url: /?s=142e9cdb-16b6-4098-a861-9855eb12bdac
+          - generic [ref=e424]: Ustawienia z załączonego zrzutu
+          - generic [ref=e425]: workbox9 · 16.10 11:12 · $0.53
+      - listitem [ref=e426]:
+        - link "Grafiki piłkarzy Gol za czytanie eduBombel · 16.10 10:33 · $6.98" [ref=e427] [cursor=pointer]:
+          - /url: /?s=c5ef44fd-7ad7-4560-97e2-b52fd0a6b07b
+          - generic [ref=e428]: Grafiki piłkarzy Gol za czytanie
+          - generic [ref=e429]: eduBombel · 16.10 10:33 · $6.98
+      - listitem [ref=e430]:
+        - link "Lokalizacja skilli yoda:* workbox9 · 16.10 09:16 · $6.59" [ref=e431] [cursor=pointer]:
+          - /url: /?s=4c3fd2d4-bbce-4606-bb97-171f5f80a6f8
+          - generic [ref=e432]: Lokalizacja skilli yoda:*
+          - generic [ref=e433]: workbox9 · 16.10 09:16 · $6.59
+      - listitem [ref=e434]:
+        - link "Repozytorium workbox_rebuild na GitHub · 16.10 09:05" [ref=e435] [cursor=pointer]:
+          - /url: /?s=786e4798-3891-4b27-9ca9-ac77f8e570f7
+          - generic [ref=e436]: Repozytorium workbox_rebuild na GitHub
+          - text: · 16.10 09:05
+      - listitem [ref=e437]:
+        - link "edubombel_archtekt eduBombel · 16.10 08:42" [ref=e438] [cursor=pointer]:
+          - /url: /?s=9a2aaece-9b57-43d1-800e-9cb4bfab2bd2
+          - generic [ref=e439]: edubombel_archtekt
+          - text: eduBombel · 16.10 08:42
+      - listitem [ref=e440]:
+        - link "edubombel_archtekt Przegląd aplikacji z @edubombel_dev eduBombel · 16.10 08:33 · $10.5" [ref=e441] [cursor=pointer]:
+          - /url: /?s=43e9c1c4-efd2-433c-8cb3-7be39ed506e8
+          - generic [ref=e442]: edubombel_archtekt
+          - generic [ref=e443]: Przegląd aplikacji z @edubombel_dev
+          - generic [ref=e444]: eduBombel · 16.10 08:33 · $10.5
+      - listitem [ref=e445]:
+        - link "edubombel_dev eduBombel · 15.10 17:19 · $8.71" [ref=e446] [cursor=pointer]:
+          - /url: /?s=0ff9bbc3-6012-4e5a-aa3e-891ff5cf3396
+          - generic [ref=e447]: edubombel_dev
+          - generic [ref=e448]: eduBombel · 15.10 17:19 · $8.71
+      - listitem [ref=e449]:
+        - link "no conversation bbe85a31 PROJECT_FP_ADAPTER · 15.10 17:06" [ref=e450] [cursor=pointer]:
+          - /url: /?s=bbe85a31-5572-4352-8ac5-bc62a74f461c
+          - generic [ref=e451]: no conversation bbe85a31
+          - text: PROJECT_FP_ADAPTER · 15.10 17:06
+      - listitem [ref=e452]:
+        - 'link "Jedną linią: czy na liście skilli masz autodeploy, autocommit i mieso? eduBombel · 15.10 16:57 · $0.27" [ref=e453] [cursor=pointer]':
+          - /url: /?s=b7594cdd-c9dd-443a-8b73-65fbfc5f0b06
+          - generic [ref=e454]: "Jedną linią: czy na liście skilli masz autodeploy, autocommit i mieso?"
+          - generic [ref=e455]: eduBombel · 15.10 16:57 · $0.27
+      - listitem [ref=e456]:
+        - 'link "Bez narzędzi: (1) jakie jest hasło testowe reguł projektu? (2) jaki przykład kl… PROJECT_FP_ADAPTER · 15.10 16:31 · $0.14" [ref=e457] [cursor=pointer]':
+          - /url: /?s=e3f794f5-fa42-4ce5-9070-1f2f692984b0
+          - generic [ref=e458]: "Bez narzędzi: (1) jakie jest hasło testowe reguł projektu? (2) jaki przykład kl…"
+          - generic [ref=e459]: PROJECT_FP_ADAPTER · 15.10 16:31 · $0.14
+      - listitem [ref=e460]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref… PROJECT_FP_ADAPTER · 15.10 16:31 · $0.14" [ref=e461] [cursor=pointer]':
+          - /url: /?s=0128260f-7182-47c3-b2fe-06d60cf9450c
+          - generic [ref=e462]: "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref…"
+          - generic [ref=e463]: PROJECT_FP_ADAPTER · 15.10 16:31 · $0.14
+      - listitem [ref=e464]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref… PROJECT_FP_ADAPTER · 15.10 16:30 · $0.14" [ref=e465] [cursor=pointer]':
+          - /url: /?s=952ab064-c3e5-4c67-bfbd-eaf77b21be58
+          - generic [ref=e466]: "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref…"
+          - generic [ref=e467]: PROJECT_FP_ADAPTER · 15.10 16:30 · $0.14
+      - listitem [ref=e468]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: jaki przykład nazwy klasy (z prefiks… PROJECT_FP_ADAPTER · 15.10 16:30 · $0.14" [ref=e469] [cursor=pointer]':
+          - /url: /?s=00f1b354-d0b6-4187-8342-fc6a3fd47997
+          - generic [ref=e470]: "Bez używania narzędzi, tylko z instrukcji: jaki przykład nazwy klasy (z prefiks…"
+          - generic [ref=e471]: PROJECT_FP_ADAPTER · 15.10 16:30 · $0.14
+      - listitem [ref=e472]:
+        - 'link "Jedną linią: czy masz skille flux, zammad, mieso oraz komendę master? Wypisz te… PROJECT_FP_ADAPTER · 15.10 16:25 · $0.16" [ref=e473] [cursor=pointer]':
+          - /url: /?s=f228bda2-d7ac-4f85-bca0-615168bf7edb
+          - generic [ref=e474]: "Jedną linią: czy masz skille flux, zammad, mieso oraz komendę master? Wypisz te…"
+          - generic [ref=e475]: PROJECT_FP_ADAPTER · 15.10 16:25 · $0.16
+      - listitem [ref=e476]:
+        - link "Pasek statusu dizalssz workbox9 · 15.10 16:20 · $0.10" [ref=e477] [cursor=pointer]:
+          - /url: /?s=0ee3357f-ac84-4eae-b419-254d6ae4b738
+          - generic [ref=e478]: Pasek statusu dizalssz
+          - generic [ref=e479]: workbox9 · 15.10 16:20 · $0.10
+      - listitem [ref=e480]:
+        - 'link "Odpowiedz jedną linią: czy widzisz skill ''mieso'' i komendę ''makebyplan''? Jaki m… workbox9_swzk · 15.10 16:19 · $0.10" [ref=e481] [cursor=pointer]':
+          - /url: /?s=2c931a2c-06d9-4075-8fa2-6d9e9be397bb
+          - generic [ref=e482]: "Odpowiedz jedną linią: czy widzisz skill 'mieso' i komendę 'makebyplan'? Jaki m…"
+          - generic [ref=e483]: workbox9_swzk · 15.10 16:19 · $0.10
+      - listitem [ref=e484]:
+        - 'link "Odpowiedz jedną linią: czy widzisz skill ''mieso'' i komendę ''makebyplan'' na liśc… workbox9_swzk · 15.10 16:18 · $0.18" [ref=e485] [cursor=pointer]':
+          - /url: /?s=0e85119c-4a2d-45ad-8c11-ee242d205370
+          - generic [ref=e486]: "Odpowiedz jedną linią: czy widzisz skill 'mieso' i komendę 'makebyplan' na liśc…"
+          - generic [ref=e487]: workbox9_swzk · 15.10 16:18 · $0.18
+      - listitem [ref=e488]:
+        - link "Czyszczenie plików prywatności w Claude .claude · 15.10 15:42 · $0.74" [ref=e489] [cursor=pointer]:
+          - /url: /?s=5f2c1456-3db1-4b79-8938-26766d322fdb
+          - generic [ref=e490]: Czyszczenie plików prywatności w Claude
+          - generic [ref=e491]: .claude · 15.10 15:42 · $0.74
+  - main [ref=e492]:
+    - generic [ref=e493]:
+      - generic [ref=e494]:
+        - heading "Overview" [level=1] [ref=e495]
+        - generic [ref=e496]: what is fine and what needs attention · 74 sessions in scope
+      - generic [ref=e497]:
+        - combobox "period" [ref=e498]:
+          - option "last 24 hours"
+          - option "last 7 days" [selected]
+          - option "last 30 days"
+          - option "all time"
+        - combobox "project = working directory of the session" [ref=e499]:
+          - option "all projects (23)" [selected]
+          - option "eduBombel · 18"
+          - option "PROJECT_PRISMA_DH_2 · 14"
+          - option "PROJECT_GROUP_PRISMA · 11"
+          - option "yodai · 11"
+          - option "agent_vizualization · 10"
+          - option "THE_MASTER_PLAN · 9"
+          - option "workbox9 · 9"
+          - option "PROJECT_FP_ADAPTER · 6"
+          - option "REPO_agent_vizualization · 5"
+          - option "v2026-stanmet-ropczyce-pl · 4"
+          - option "PROJECT_PRISMA_DH_2 · 4"
+          - option "progremo_ksiegowosc · 3"
+          - option "workbox9_prgrm · 3"
+          - option "workbox9_swzk · 2"
+          - option "proj · 2"
+          - option "pokoj_dzieci_2.0 · 1"
+          - option "REPO_PRISMA_DH_2 · 1"
+          - option "proj · 1"
+          - option ".claude · 1"
+          - option "stanmet-ropczyce-pl · 1"
+          - option "? · 1"
+          - option "LLM_CONTEXT · 1"
+          - option "open-mercato · 1"
+        - generic [ref=e500]: cost = Anthropic API prices, a yardstick for comparing — not your bill
+      - generic [ref=e501]:
+        - article [ref=e502]:
+          - generic [ref=e503]:
+            - heading "Cost" [level=2] [ref=e504]
+            - generic [ref=e505]: needs attention · 53
+          - list [ref=e506]:
+            - listitem [ref=e507]:
+              - group [ref=e508]:
+                - generic "▸ Expensive turns 19 in 14 sessions" [ref=e509] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e510]: Expensive turns
+                  - generic [ref=e511]: "19"
+                  - generic [ref=e512]: in 14 sessions
+            - listitem [ref=e513]:
+              - group [ref=e514]:
+                - generic "▸ Expensive tool results 15 in 10 sessions" [ref=e515] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e516]: Expensive tool results
+                  - generic [ref=e517]: "15"
+                  - generic [ref=e518]: in 10 sessions
+            - listitem [ref=e519]:
+              - group [ref=e520]:
+                - generic "▸ Huge context 19 in 19 sessions" [ref=e521] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e522]: Huge context
+                  - generic [ref=e523]: "19"
+                  - generic [ref=e524]: in 19 sessions
+          - heading "most expensive" [level=3] [ref=e525]
+          - list [ref=e526]:
+            - listitem [ref=e527]:
+              - link "$17.1 nie pytaj o commity w tym watku 67% new context · 53 model calls mercato_upgrader_1 · 20.10 00:22" [ref=e528] [cursor=pointer]:
+                - /url: /?s=f5d17b95-a199-4c64-a6d7-8446ca9d21e7&turn=14&view=commands&sort=cost
+                - generic [ref=e529]: $17.1
+                - generic [ref=e530]: nie pytaj o commity w tym watku
+                - generic [ref=e531]: 67% new context · 53 model calls
+                - generic [ref=e532]: mercato_upgrader_1 · 20.10 00:22
+            - listitem [ref=e533]:
+              - 'link "$15.5 mam nowe zrodlo: RESERACHES/OFFLINE-EBOOK-PROMOCYJNY-PORADNIK-PRZETRWANIA-EMP.pdf czy jeset cos czego jeszcze nie mamy w maste planie ? .. zrob plik podsumowujacy wyciag mieso z rozdzialow i zrob streszcenie .. a nastpenie liste rzeczy o … 45% new context · 155 model calls preperPlan_hejter · 22.10 20:55" [ref=e534] [cursor=pointer]':
+                - /url: /?s=99d52c03-c14c-4000-a36c-520e0737c0ad&turn=1&view=commands&sort=cost
+                - generic [ref=e535]: $15.5
+                - generic [ref=e536]: "mam nowe zrodlo: RESERACHES/OFFLINE-EBOOK-PROMOCYJNY-PORADNIK-PRZETRWANIA-EMP.pdf czy jeset cos czego jeszcze nie mamy w maste planie ? .. zrob plik podsumowujacy wyciag mieso z rozdzialow i zrob streszcenie .. a nastpenie liste rzeczy o …"
+                - generic [ref=e537]: 45% new context · 155 model calls
+                - generic [ref=e538]: preperPlan_hejter · 22.10 20:55
+            - listitem [ref=e539]:
+              - link "$13.2 ok 52% cache read · 243 model calls Nowy użytkownik yamil i CLI · 19.10 12:05" [ref=e540] [cursor=pointer]:
+                - /url: /?s=40cac0f5-c5e4-4c72-8373-aa347001eedf&turn=21&view=commands&sort=cost
+                - generic [ref=e541]: $13.2
+                - generic [ref=e542]: ok
+                - generic [ref=e543]: 52% cache read · 243 model calls
+                - generic [ref=e544]: Nowy użytkownik yamil i CLI · 19.10 12:05
+            - listitem [ref=e545]:
+              - 'link "$11.8 jedziemy z tyn wydrozeniem: DOC_PRISMA/TASKS_TODO/Tipp_import/zam-6000-tv-tipps/zam-6000-plan-wdrozenia.llm.md 60% cache read · 149 model calls ZAM-6000_plan_wdrożenia_TV_tipps · 19.10 17:12" [ref=e546] [cursor=pointer]':
+                - /url: /?s=a13c94ac-669e-4c32-894d-2477934db105&turn=1&view=commands&sort=cost
+                - generic [ref=e547]: $11.8
+                - generic [ref=e548]: "jedziemy z tyn wydrozeniem: DOC_PRISMA/TASKS_TODO/Tipp_import/zam-6000-tv-tipps/zam-6000-plan-wdrozenia.llm.md"
+                - generic [ref=e549]: 60% cache read · 149 model calls
+                - generic [ref=e550]: ZAM-6000_plan_wdrożenia_TV_tipps · 19.10 17:12
+            - listitem [ref=e551]:
+              - link "$10.1 supervisora info, żeby zatrzymać się po 5. Także jak zrobiłeś 5, to się zatrzymaj i zaraz będą dalsze instrukcje. 77% cache read · 98 model calls mediapress_api_switch_dh2_vod_stage3 · 22.10 14:22" [ref=e552] [cursor=pointer]:
+                - /url: /?s=b682122e-2d5a-4a34-80fc-e4f0a36f13fa&turn=5&view=commands&sort=cost
+                - generic [ref=e553]: $10.1
+                - generic [ref=e554]: supervisora info, żeby zatrzymać się po 5. Także jak zrobiłeś 5, to się zatrzymaj i zaraz będą dalsze instrukcje.
+                - generic [ref=e555]: 77% cache read · 98 model calls
+                - generic [ref=e556]: mediapress_api_switch_dh2_vod_stage3 · 22.10 14:22
+            - listitem [ref=e557]:
+              - 'link "$8.48 Jesteś sesją VOD projektu MediaPress API switch (dh2), faza 4: walidacja L2. Faza 4 dotyka tylko blueprintu. Przeczytaj procedurę i zrób to, co mówi sekcja „Start sesji”: ~/SK/workbox9/workbox9_netzi/PROJECT_PRISMA_GROUP/PROJECT_PRISMA_DH_2/DOC_PRISMA_DH_2/TASKS_TODO/mediapress_api_switch_dh2/media… 70% cache read · 125 model calls mediapress_api_switch_dh2_vod_stage3_pa… · 23.10 14:55" [ref=e558] [cursor=pointer]':
+                - /url: /?s=f22fe3e8-1f31-4bd3-96e4-ed0c7400a3e2&turn=1&view=commands&sort=cost
+                - generic [ref=e559]: $8.48
+                - generic [ref=e560]: "Jesteś sesją VOD projektu MediaPress API switch (dh2), faza 4: walidacja L2. Faza 4 dotyka tylko blueprintu. Przeczytaj procedurę i zrób to, co mówi sekcja „Start sesji”: ~/SK/workbox9/workbox9_netzi/PROJECT_PRISMA_GROUP/PROJECT_PRISMA_DH_2/DOC_PRISMA_DH_2/TASKS_TODO/mediapress_api_switch_dh2/media…"
+                - generic [ref=e561]: 70% cache read · 125 model calls
+                - generic [ref=e562]: mediapress_api_switch_dh2_vod_stage3_pa… · 23.10 14:55
+          - paragraph [ref=e563]: $844 in 74 sessions · 22 compactions
+        - article [ref=e564]:
+          - generic [ref=e565]:
+            - heading "Security" [level=2] [ref=e566]
+            - generic [ref=e567]: check now · 30
+          - list [ref=e568]:
+            - listitem [ref=e569]:
+              - group [ref=e570]:
+                - generic "▸ Access to protected paths 21 in 15 sessions" [ref=e571] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e572]: Access to protected paths
+                  - generic [ref=e573]: "21"
+                  - generic [ref=e574]: in 15 sessions
+            - listitem [ref=e575]:
+              - group [ref=e576]:
+                - generic "▸ Blocked by auto mode 9 in 5 sessions" [ref=e577] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e578]: Blocked by auto mode
+                  - generic [ref=e579]: "9"
+                  - generic [ref=e580]: in 5 sessions
+          - heading "most important" [level=3] [ref=e581]
+          - list [ref=e582]:
+            - listitem [ref=e583]:
+              - 'link "cd ~/SK/REPOS_PRGRM/REPO_open-mercato-app && grep -rn \"open-mercato-app\" --exclude-dir=node_modules --exclude=yarn.lock . | head; cat docker-compose.yml | grep -nE \"image:|ports|- \\\"|container_name|n… block-secrets.sh: ''.env'' CMS na projekcie open-mercato · 24.10 11:51" [ref=e584] [cursor=pointer]':
+                - /url: /?s=c2838d0a-4b2f-4a9b-a4ad-28d5432029fc&turn=4&view=blocked&pev=toolu_01KAL94S7ZpXeGY8SoaYiGrE
+                - generic [ref=e585]: cd ~/SK/REPOS_PRGRM/REPO_open-mercato-app && grep -rn "open-mercato-app" --exclude-dir=node_modules --exclude=yarn.lock . | head; cat docker-compose.yml | grep -nE "image:|ports|- \"|container_name|n…
+                - generic [ref=e586]: "block-secrets.sh: '.env'"
+                - generic [ref=e587]: CMS na projekcie open-mercato · 24.10 11:51
+            - listitem [ref=e588]:
+              - 'link "cd ~/SK/REPOS_NETZI/REPO_PRISMA_DH_2/context/MediapressApiResearch/vodPropertyDetails; python3 -I - <<''EOF'' p=''Content.seasonId.md'' s=open(p).read() a=s.index(''## TLDR'') b=s.index(''Aplikacje: dh2'') s… auto mode mediapress_api_switch_dh2_vod_stage3_pa… · 23.10 13:35" [ref=e589] [cursor=pointer]':
+                - /url: /?s=c5a02743-170a-4524-b881-3150e451453e&view=blocked&pev=toolu_01AGEQTCUxvQykaEnGNHE6aF
+                - generic [ref=e590]: "cd ~/SK/REPOS_NETZI/REPO_PRISMA_DH_2/context/MediapressApiResearch/vodPropertyDetails; python3 -I - <<'EOF' p='Content.seasonId.md' s=open(p).read() a=s.index('## TLDR') b=s.index('Aplikacje: dh2') s…"
+                - generic [ref=e591]: auto mode
+                - generic [ref=e592]: mediapress_api_switch_dh2_vod_stage3_pa… · 23.10 13:35
+            - listitem [ref=e593]:
+              - 'link "grep -rn \"guests()\\|''Guests''\" src tests | head; composer pc > /private/tmp/claude-501/-Users-Sebastian-SK-workbox9-workbox9-netzi-PROJECT-PRISMA-GROUP-PROJECT-PRISMA-DH-2/11355268-9898-4a7e-b5d0-988f… auto mode: Irreversible Local Destruction mediapress_api_switch_dh2_linear_stage3… · 23.10 12:29" [ref=e594] [cursor=pointer]':
+                - /url: /?s=11355268-9898-4a7e-b5d0-988f6ba7bdac&view=blocked&pev=toolu_01A6hoCDyrvChuFhbrjsWLu4
+                - generic [ref=e595]: grep -rn "guests()\|'Guests'" src tests | head; composer pc > /private/tmp/claude-501/-Users-Sebastian-SK-workbox9-workbox9-netzi-PROJECT-PRISMA-GROUP-PROJECT-PRISMA-DH-2/11355268-9898-4a7e-b5d0-988f…
+                - generic [ref=e596]: "auto mode: Irreversible Local Destruction"
+                - generic [ref=e597]: mediapress_api_switch_dh2_linear_stage3… · 23.10 12:29
+            - listitem [ref=e598]:
+              - 'link "sed -n 460,470p src/MediaPress/Application/Model/Content.php; sed -n 526,541p src/MediaPress/Application/Model/Content.php; rm src/MediaPress/Application/Model/Classification.php && grep -rnw \"Classi… auto mode: Irreversible Local Destruction mediapress_api_switch_dh2_linear_stage3… · 23.10 12:15" [ref=e599] [cursor=pointer]':
+                - /url: /?s=11355268-9898-4a7e-b5d0-988f6ba7bdac&view=blocked&pev=toolu_012ZHXmiJoDvzATFs8hZNhh5
+                - generic [ref=e600]: sed -n 460,470p src/MediaPress/Application/Model/Content.php; sed -n 526,541p src/MediaPress/Application/Model/Content.php; rm src/MediaPress/Application/Model/Classification.php && grep -rnw "Classi…
+                - generic [ref=e601]: "auto mode: Irreversible Local Destruction"
+                - generic [ref=e602]: mediapress_api_switch_dh2_linear_stage3… · 23.10 12:15
+            - listitem [ref=e603]:
+              - 'link "S=/private/tmp/claude-501/-Users-Sebastian-SK-workbox9-workbox9-netzi-PROJECT-PRISMA-GROUP-PROJECT-PRISMA-DH-2/5aa84bef-726e-469c-afb2-4b64dc9a638f/scratchpad && W=$S/wt_texts && git worktree add --d… block-secrets.sh: ''.env'' test_collection_porcess · 23.10 10:15" [ref=e604] [cursor=pointer]':
+                - /url: /?s=5aa84bef-726e-469c-afb2-4b64dc9a638f&turn=4&view=blocked&pev=toolu_01H33nK3Gfu2QauvotJ6otHL
+                - generic [ref=e605]: S=/private/tmp/claude-501/-Users-Sebastian-SK-workbox9-workbox9-netzi-PROJECT-PRISMA-GROUP-PROJECT-PRISMA-DH-2/5aa84bef-726e-469c-afb2-4b64dc9a638f/scratchpad && W=$S/wt_texts && git worktree add --d…
+                - generic [ref=e606]: "block-secrets.sh: '.env'"
+                - generic [ref=e607]: test_collection_porcess · 23.10 10:15
+            - listitem [ref=e608]:
+              - 'link "f=~/.claude/settings.json; s=/private/tmp/claude-501/-Users-Sebastian-SK-workbox9-workbox9-priv-THE-MASTER-PLAN/784f4ffe-9d81-4538-9184-50df2857a88e/scratchpad/settings.new.json; jq ''del(.autoMode)'' … auto mode: Self-Modification Changelog Claude Code · 22.10 13:33" [ref=e609] [cursor=pointer]':
+                - /url: /?s=784f4ffe-9d81-4538-9184-50df2857a88e&turn=3&view=blocked&pev=toolu_01RABQrbSBksYtVUJ6ZgEjem
+                - generic [ref=e610]: f=~/.claude/settings.json; s=/private/tmp/claude-501/-Users-Sebastian-SK-workbox9-workbox9-priv-THE-MASTER-PLAN/784f4ffe-9d81-4538-9184-50df2857a88e/scratchpad/settings.new.json; jq 'del(.autoMode)' …
+                - generic [ref=e611]: "auto mode: Self-Modification"
+                - generic [ref=e612]: Changelog Claude Code · 22.10 13:33
+          - paragraph [ref=e613]: "not alarming: hook pattern only in command text 65 · permissions.deny 20 · rejected by you 3"
+        - article [ref=e614]:
+          - generic [ref=e615]:
+            - heading "Agents" [level=2] [ref=e616]
+            - generic [ref=e617]: needs attention · 57
+          - list [ref=e618]:
+            - listitem [ref=e619]:
+              - group [ref=e620]:
+                - generic "▸ Agent messages blocked 20 in 5 sessions" [ref=e621] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e622]: Agent messages blocked
+                  - generic [ref=e623]: "20"
+                  - generic [ref=e624]: in 5 sessions
+            - listitem [ref=e625]:
+              - group [ref=e626]:
+                - generic "▸ Subagent failures ✓" [ref=e627] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e628]: Subagent failures
+                  - generic [ref=e629]: ✓
+            - listitem [ref=e630]:
+              - group [ref=e631]:
+                - generic "▸ Interrupted by you 17 in 15 sessions" [ref=e632] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e633]: Interrupted by you
+                  - generic [ref=e634]: "17"
+                  - generic [ref=e635]: in 15 sessions
+            - listitem [ref=e636]:
+              - group [ref=e637]:
+                - generic "▸ Usage limits hit 12 in 8 sessions" [ref=e638] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e639]: Usage limits hit
+                  - generic [ref=e640]: "12"
+                  - generic [ref=e641]: in 8 sessions
+            - listitem [ref=e642]:
+              - group [ref=e643]:
+                - generic "▸ API errors 5 in 5 sessions" [ref=e644] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e645]: API errors
+                  - generic [ref=e646]: "5"
+                  - generic [ref=e647]: in 5 sessions
+            - listitem [ref=e648]:
+              - group [ref=e649]:
+                - generic "▸ Many tool errors 3 in 3 sessions" [ref=e650] [cursor=pointer]:
+                  - text: ▸
+                  - generic [ref=e651]: Many tool errors
+                  - generic [ref=e652]: "3"
+                  - generic [ref=e653]: in 3 sessions
+          - heading "most important" [level=3] [ref=e654]
+          - list [ref=e655]:
+            - listitem [ref=e656]:
+              - 'link "API Error: Can''t reach the API server — check your internet or DNS (ENOTFOUND) Lewy panel sesji per projekt · 23.10 19:05" [ref=e657] [cursor=pointer]':
+                - /url: /?s=af6af37b-470e-4ce7-87c7-07237997f09f&turn=8&view=messages
+                - generic [ref=e658]: "API Error: Can't reach the API server — check your internet or DNS (ENOTFOUND)"
+                - generic [ref=e659]: Lewy panel sesji per projekt · 23.10 19:05
+            - listitem [ref=e660]:
+              - 'link "API Error: Your computer went to sleep mid-response. The response above may be incomplete. Uproszczenie GUI i nowe widoki · 23.10 17:23" [ref=e661] [cursor=pointer]':
+                - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&turn=30&view=messages
+                - generic [ref=e662]: "API Error: Your computer went to sleep mid-response. The response above may be incomplete."
+                - generic [ref=e663]: Uproszczenie GUI i nowe widoki · 23.10 17:23
+            - listitem [ref=e664]:
+              - link "3.5% 3.5% of tool calls failed (3 of 86) file not found, edit conflicts, refused permissions… Lewy panel sesji per projekt · 23.10 17:01" [ref=e665] [cursor=pointer]:
+                - /url: /?s=af6af37b-470e-4ce7-87c7-07237997f09f&view=commands&status=failed
+                - generic [ref=e666]: 3.5%
+                - generic [ref=e667]: 3.5% of tool calls failed (3 of 86)
+                - generic [ref=e668]: file not found, edit conflicts, refused permissions…
+                - generic [ref=e669]: Lewy panel sesji per projekt · 23.10 17:01
+            - listitem [ref=e670]:
+              - link "Not logged in · Please run /login mediapress_api_switch_dh2_supervisor · 23.10 15:49" [ref=e671] [cursor=pointer]:
+                - /url: /?s=3ba958d8-5938-427a-b87a-dca7ecd01e5e&turn=97&view=messages
+                - generic [ref=e672]: Not logged in · Please run /login
+                - generic [ref=e673]: mediapress_api_switch_dh2_supervisor · 23.10 15:49
+            - listitem [ref=e674]:
+              - link "You've hit your session limit · resets 6:30pm (Europe/Warsaw) mediapress_api_switch_dh2_supervisor · 23.10 15:48" [ref=e675] [cursor=pointer]:
+                - /url: /?s=3ba958d8-5938-427a-b87a-dca7ecd01e5e&turn=96&view=messages
+                - generic [ref=e676]: You've hit your session limit · resets 6:30pm (Europe/Warsaw)
+                - generic [ref=e677]: mediapress_api_switch_dh2_supervisor · 23.10 15:48
+            - listitem [ref=e678]:
+              - link "You've hit your weekly limit · resets 9am (Europe/Warsaw) mediapress_api_switch_dh2_vod_stage3_pa… · 23.10 12:52" [ref=e679] [cursor=pointer]:
+                - /url: /?s=6449290d-6734-46d0-a766-0d2e6d2d4f81&view=messages
+                - generic [ref=e680]: You've hit your weekly limit · resets 9am (Europe/Warsaw)
+                - generic [ref=e681]: mediapress_api_switch_dh2_vod_stage3_pa… · 23.10 12:52
+          - paragraph [ref=e682]: tool errors 71 of 11010 calls · retries after an error 90
+      - heading "Sessions to look at 41 of 74 sessions have signals" [level=2] [ref=e683]
+      - table [ref=e684]:
+        - rowgroup [ref=e685]:
+          - row "session project $ Cost Security Agents last" [ref=e686]:
+            - columnheader "session" [ref=e687]
+            - columnheader "project" [ref=e688]
+            - columnheader "$" [ref=e689]
+            - columnheader "Cost" [ref=e690]
+            - columnheader "Security" [ref=e691]
+            - columnheader "Agents" [ref=e692]
+            - columnheader "last" [ref=e693]
+        - rowgroup [ref=e694]:
+          - row "ZAM-6000_plan_wdrożenia_TV_tipps PROJECT_GROUP_PRISMA $41.5 7 5 1 21.10 11:17" [ref=e695] [cursor=pointer]:
+            - cell "ZAM-6000_plan_wdrożenia_TV_tipps" [ref=e696]:
+              - link "ZAM-6000_plan_wdrożenia_TV_tipps" [ref=e697]:
+                - /url: /?s=a13c94ac-669e-4c32-894d-2477934db105
+            - cell "PROJECT_GROUP_PRISMA" [ref=e698]
+            - cell "$41.5" [ref=e699]
+            - cell "7" [ref=e700]
+            - cell "5" [ref=e701]
+            - cell "1" [ref=e702]
+            - cell "21.10 11:17" [ref=e703]
+          - row "mercato_upgrader_1 yodai $42.1 5 4 11 20.10 17:00" [ref=e704] [cursor=pointer]:
+            - cell "mercato_upgrader_1" [ref=e705]:
+              - link "mercato_upgrader_1" [ref=e706]:
+                - /url: /?s=f5d17b95-a199-4c64-a6d7-8446ca9d21e7
+            - cell "yodai" [ref=e707]
+            - cell "$42.1" [ref=e708]
+            - cell "5" [ref=e709]
+            - cell "4" [ref=e710]
+            - cell "11" [ref=e711]
+            - cell "20.10 17:00" [ref=e712]
+          - row "Koszty w infakt w tym miesiącu progremo_ksiegowosc $37.5 2 2 3 19.10 17:06" [ref=e713] [cursor=pointer]:
+            - cell "Koszty w infakt w tym miesiącu" [ref=e714]:
+              - link "Koszty w infakt w tym miesiącu" [ref=e715]:
+                - /url: /?s=1f13b1db-de60-476e-b15a-1cfdccd66ed1
+            - cell "progremo_ksiegowosc" [ref=e716]
+            - cell "$37.5" [ref=e717]
+            - cell "2" [ref=e718]
+            - cell "2" [ref=e719]
+            - cell "3" [ref=e720]
+            - cell "19.10 17:06" [ref=e721]
+          - row "Stanmet-ropczyce.pl – szablon PHP workbox9_prgrm $25.4 3 2 2 21.10 19:20" [ref=e722] [cursor=pointer]:
+            - cell "Stanmet-ropczyce.pl – szablon PHP" [ref=e723]:
+              - link "Stanmet-ropczyce.pl – szablon PHP" [ref=e724]:
+                - /url: /?s=7db98e15-7ab6-40a7-b829-19cb3abb4fae
+            - cell "workbox9_prgrm" [ref=e725]
+            - cell "$25.4" [ref=e726]
+            - cell "3" [ref=e727]
+            - cell "2" [ref=e728]
+            - cell "2" [ref=e729]
+            - cell "21.10 19:20" [ref=e730]
+          - row "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 $16.6 2 2 1 23.10 12:52" [ref=e731] [cursor=pointer]:
+            - cell "mediapress_api_switch_dh2_linear_stage3_part4" [ref=e732]:
+              - link "mediapress_api_switch_dh2_linear_stage3_part4" [ref=e733]:
+                - /url: /?s=11355268-9898-4a7e-b5d0-988f6ba7bdac
+            - cell "PROJECT_PRISMA_DH_2" [ref=e734]
+            - cell "$16.6" [ref=e735]
+            - cell "2" [ref=e736]
+            - cell "2" [ref=e737]
+            - cell "1" [ref=e738]
+            - cell "23.10 12:52" [ref=e739]
+          - row "mercato_upgrader_2 yodai $5.21 · 2 · 20.10 17:00" [ref=e740] [cursor=pointer]:
+            - cell "mercato_upgrader_2" [ref=e741]:
+              - link "mercato_upgrader_2" [ref=e742]:
+                - /url: /?s=2d9895d1-8719-478a-bb06-2c8f4077d57b
+            - cell "yodai" [ref=e743]
+            - cell "$5.21" [ref=e744]
+            - cell "·" [ref=e745]
+            - cell "2" [ref=e746]
+            - cell "·" [ref=e747]
+            - cell "20.10 17:00" [ref=e748]
+          - row "Koncepcja przebudowy repozytorium workbox9 $15.1 1 1 6 22.10 13:45" [ref=e749] [cursor=pointer]:
+            - cell "Koncepcja przebudowy repozytorium" [ref=e750]:
+              - link "Koncepcja przebudowy repozytorium" [ref=e751]:
+                - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372
+            - cell "workbox9" [ref=e752]
+            - cell "$15.1" [ref=e753]
+            - cell "1" [ref=e754]
+            - cell "1" [ref=e755]
+            - cell "6" [ref=e756]
+            - cell "22.10 13:45" [ref=e757]
+          - row "test_collection_porcess PROJECT_PRISMA_DH_2 $11.5 1 1 1 23.10 10:20" [ref=e758] [cursor=pointer]:
+            - cell "test_collection_porcess" [ref=e759]:
+              - link "test_collection_porcess" [ref=e760]:
+                - /url: /?s=5aa84bef-726e-469c-afb2-4b64dc9a638f
+            - cell "PROJECT_PRISMA_DH_2" [ref=e761]
+            - cell "$11.5" [ref=e762]
+            - cell "1" [ref=e763]
+            - cell "1" [ref=e764]
+            - cell "1" [ref=e765]
+            - cell "23.10 10:20" [ref=e766]
+          - row "Mediapress_api_switch_dh2 w prisma_dh2 PROJECT_PRISMA_DH_2 $25.0 1 1 · 21.10 18:30" [ref=e767] [cursor=pointer]:
+            - cell "Mediapress_api_switch_dh2 w prisma_dh2" [ref=e768]:
+              - link "Mediapress_api_switch_dh2 w prisma_dh2" [ref=e769]:
+                - /url: /?s=392c93a6-fd10-49ce-99ad-dc701e651121
+            - cell "PROJECT_PRISMA_DH_2" [ref=e770]
+            - cell "$25.0" [ref=e771]
+            - cell "1" [ref=e772]
+            - cell "1" [ref=e773]
+            - cell "·" [ref=e774]
+            - cell "21.10 18:30" [ref=e775]
+          - row "Kategoria zmiękczeń i baza słownictwa eduBombel $14.1 · 1 1 21.10 20:00" [ref=e776] [cursor=pointer]:
+            - cell "Kategoria zmiękczeń i baza słownictwa" [ref=e777]:
+              - link "Kategoria zmiękczeń i baza słownictwa" [ref=e778]:
+                - /url: /?s=c2ce2485-2abf-44a3-a0ee-b8462e500b45
+            - cell "eduBombel" [ref=e779]
+            - cell "$14.1" [ref=e780]
+            - cell "·" [ref=e781]
+            - cell "1" [ref=e782]
+            - cell "1" [ref=e783]
+            - cell "21.10 20:00" [ref=e784]
+          - row "Dokumentacja serwerów webd, mikrus i lh.pl workbox9_prgrm $7.55 · 1 1 21.10 20:51" [ref=e785] [cursor=pointer]:
+            - cell "Dokumentacja serwerów webd, mikrus i lh.pl" [ref=e786]:
+              - link "Dokumentacja serwerów webd, mikrus i lh.pl" [ref=e787]:
+                - /url: /?s=9e2d8139-3808-4cd3-8501-ee8b9a867c6c
+            - cell "workbox9_prgrm" [ref=e788]
+            - cell "$7.55" [ref=e789]
+            - cell "·" [ref=e790]
+            - cell "1" [ref=e791]
+            - cell "1" [ref=e792]
+            - cell "21.10 20:51" [ref=e793]
+          - row "ZAM-6000_plan_wdrożenia_TV_tipps PROJECT_GROUP_PRISMA $30.3 · 1 · 19.10 17:05" [ref=e794] [cursor=pointer]:
+            - cell "ZAM-6000_plan_wdrożenia_TV_tipps" [ref=e795]:
+              - link "ZAM-6000_plan_wdrożenia_TV_tipps" [ref=e796]:
+                - /url: /?s=2d6eca79-1dd6-4f51-937b-3dd6b5eb5e5f
+            - cell "PROJECT_GROUP_PRISMA" [ref=e797]
+            - cell "$30.3" [ref=e798]
+            - cell "·" [ref=e799]
+            - cell "1" [ref=e800]
+            - cell "·" [ref=e801]
+            - cell "19.10 17:05" [ref=e802]
+          - row "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 $7.65 · 1 · 23.10 14:22" [ref=e803] [cursor=pointer]:
+            - cell "mediapress_api_switch_dh2_vod_stage3_part4" [ref=e804]:
+              - link "mediapress_api_switch_dh2_vod_stage3_part4" [ref=e805]:
+                - /url: /?s=c5a02743-170a-4524-b881-3150e451453e
+            - cell "PROJECT_PRISMA_DH_2" [ref=e806]
+            - cell "$7.65" [ref=e807]
+            - cell "·" [ref=e808]
+            - cell "1" [ref=e809]
+            - cell "·" [ref=e810]
+            - cell "23.10 14:22" [ref=e811]
+          - row "Poprawki layoutu z ui-polish.md v2026-stanmet-ropczyce-pl $5.87 · 1 · 21.10 21:00" [ref=e812] [cursor=pointer]:
+            - cell "Poprawki layoutu z ui-polish.md" [ref=e813]:
+              - link "Poprawki layoutu z ui-polish.md" [ref=e814]:
+                - /url: /?s=98e472e1-3ec6-44c8-b5aa-da68f5806ece
+            - cell "v2026-stanmet-ropczyce-pl" [ref=e815]
+            - cell "$5.87" [ref=e816]
+            - cell "·" [ref=e817]
+            - cell "1" [ref=e818]
+            - cell "·" [ref=e819]
+            - cell "21.10 21:00" [ref=e820]
+          - row "Usunięcie core.hooksPath z composer.json yodai $4.46 · 1 · 20.10 00:17" [ref=e821] [cursor=pointer]:
+            - cell "Usunięcie core.hooksPath z composer.json" [ref=e822]:
+              - link "Usunięcie core.hooksPath z composer.json" [ref=e823]:
+                - /url: /?s=66ecbbf5-c879-4c26-8acf-845aff14ad53
+            - cell "yodai" [ref=e824]
+            - cell "$4.46" [ref=e825]
+            - cell "·" [ref=e826]
+            - cell "1" [ref=e827]
+            - cell "·" [ref=e828]
+            - cell "20.10 00:17" [ref=e829]

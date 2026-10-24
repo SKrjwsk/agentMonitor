@@ -22,7 +22,7 @@ final class SummaryStore
      * Wersja reguł parsera. Podbij przy zmianie parsera/modelu: agregaty sesji z transkryptem przeliczą się same,
      * a archiwalne (transkrypt usunięty) zostaną. Nigdy nie usuwaj var/summary, żeby „przeliczyć” — to archiwum.
      */
-    public const PARSER = '6';
+    public const PARSER = '11';
 
     public const OPS = [Touch::READ, Touch::CONTEXT, Touch::EDIT, Touch::WRITE, Touch::SEARCH, Touch::LIST, Touch::EXEC];
 
@@ -66,6 +66,31 @@ final class SummaryStore
             $d = json_decode((string) file_get_contents($file), true);
             if (is_array($d) && HookLog::validSessionId((string) ($d['session_id'] ?? ''))) {
                 $out[] = $d;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Wyjście modelu per sesja do lewego panelu — z zapisanych agregatów, bez przeliczania (agregat bywa sprzed
+     * ostatnich wywołań, stąd `upTo` = czas ostatniego policzonego wywołania). Agregaty sprzed `PARSER` 6 nie mają tokenów.
+     *
+     * @param list<string> $ids
+     * @return array<string, array{usd: ?float, output: int, partial: bool, upTo: ?string}> `usd` = null w agregatach sprzed `PARSER` 7
+     */
+    public static function tokenTotals(array $ids): array
+    {
+        $out = [];
+        foreach ($ids as $id) {
+            $file = self::dir() . '/' . $id . '.json';
+            if (!HookLog::validSessionId($id) || !is_file($file)) {
+                continue;
+            }
+            $d = json_decode((string) file_get_contents($file), true);
+            $t = $d['tokens']['total'] ?? null;
+            if (is_array($t) && ($t['calls'] ?? 0) > 0) {
+                $out[$id] = ['usd' => isset($t['usd']) && $t['calls'] > ($t['unpriced'] ?? 0) ? (float) $t['usd'] : null, 'output' => (int) $t['output'], 'partial' => ($t['output_partial'] ?? 0) > 0, 'upTo' => $d['last'] ?? null];
             }
         }
 
@@ -133,6 +158,8 @@ final class SummaryStore
             'agents_active' => count($active),
             'blocked' => $blocked,
             'tokens' => self::tokens($session, $cutoff),
+            // strona startowa „Overview” — sygnały do obejrzenia (Signals), zostają w archiwum po usunięciu transkryptu
+            'signals' => \Viz\Signals::of($session, $cutoff),
             'commands' => array_map(static fn (array $c): array => ['agents' => count($c['agents'])] + $c, $commands),
             'files' => array_values(array_map(static fn (array $f): array => [
                 'path' => $f['path'], 'ops' => $f['ops'], 'agents' => count($f['agents']), 'last' => $f['last'],
@@ -143,12 +170,13 @@ final class SummaryStore
     /**
      * Zużycie tokenów sesji (od `cutoff`): suma i rozbicie per model. Liczniki osobno — patrz Session::tokens.
      * `output_partial` = odpowiedzi bez końcowego usage (wyjście zaniżone, subagenci w Claude Code ≤ 2.1.300).
+     * `usd` = koszt według cennika API (Pricing, od `PARSER` 7); `unpriced` = odpowiedzi modelu spoza cennika.
      *
-     * @return array{total: array<string, int>, models: array<string, array<string, int>>}
+     * @return array{total: array<string, int|float>, models: array<string, array<string, int|float>>}
      */
     private static function tokens(\Viz\Model\Session $session, ?string $cutoff): array
     {
-        $zero = ['calls' => 0, 'subagent_calls' => 0, 'output_partial' => 0, 'output' => 0, 'cache_write' => 0, 'cache_read' => 0, 'input' => 0];
+        $zero = ['calls' => 0, 'subagent_calls' => 0, 'output_partial' => 0, 'output' => 0, 'cache_write' => 0, 'cache_read' => 0, 'input' => 0, 'usd' => 0.0, 'unpriced' => 0];
         $total = $zero;
         $models = [];
         foreach ($session->usage as $u) {
@@ -158,6 +186,7 @@ final class SummaryStore
             $row = [
                 'calls' => 1, 'subagent_calls' => $u['agent'] === \Viz\Model\Agent::MAIN ? 0 : 1, 'output_partial' => $u['final'] ? 0 : 1,
                 'output' => $u['output'], 'cache_write' => $u['cacheWrite'], 'cache_read' => $u['cacheRead'], 'input' => $u['input'],
+                'usd' => $u['cost'] === null ? 0.0 : array_sum($u['cost']), 'unpriced' => $u['cost'] === null ? 1 : 0,
             ];
             $models[$u['model']] ??= $zero;
             foreach ($row as $k => $v) {

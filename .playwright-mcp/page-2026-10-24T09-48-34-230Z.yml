@@ -1,0 +1,1373 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Σ All sessions" [ref=e4] [cursor=pointer]:
+      - /url: /?s=all
+    - generic [ref=e5]:
+      - strong [ref=e6]: Sessions
+      - link "● follow latest" [ref=e7] [cursor=pointer]:
+        - /url: /?follow=1
+      - button "EN" [ref=e8] [cursor=pointer]
+      - button "◐" [ref=e9] [cursor=pointer]
+    - combobox "show sessions of one project (working directory of the session)" [ref=e11]:
+      - option "all projects (117)" [selected]
+      - option "REPO_agent_vizualization · 4"
+      - option "workbox9_prgrm · 3"
+      - option "THE_MASTER_PLAN · 9"
+      - option "PROJECT_PRISMA_GROUP/PROJECT_PRISMA_DH_2 · 14"
+      - option "workbox9 · 9"
+      - option "PROJECT_GROUP_PRISMA/PROJECT_PRISMA_DH_2 · 4"
+      - option "eduBombel · 18"
+      - option "yodai · 11"
+      - option "v2026-stanmet-ropczyce-pl · 4"
+      - option "stanmet-ropczyce-pl · 1"
+      - option "agent_vizualization · 10"
+      - option "m3/proj · 2"
+      - option "PROJECT_GROUP_PRISMA · 11"
+      - option "m0/proj · 1"
+      - option "open-mercato · 1"
+      - option "progremo_ksiegowosc · 3"
+      - option "REPO_PRISMA_DH_2 · 1"
+      - option "LLM_CONTEXT · 1"
+      - option "? · 1"
+      - option "PROJECT_FP_ADAPTER · 6"
+      - option "workbox9_swzk · 2"
+      - option ".claude · 1"
+    - list [ref=e12]:
+      - listitem [ref=e13]:
+        - link "Wizualizacja zużycia tokenów REPO_agent_vizualization · 24.10 11:48 · 16k out active" [ref=e14] [cursor=pointer]:
+          - /url: /?s=39f1c150-f79e-49f8-a275-24e39711fc44
+          - generic [ref=e15]: Wizualizacja zużycia tokenów
+          - generic [ref=e16]:
+            - text: REPO_agent_vizualization · 24.10 11:48 · 16k out
+            - generic [ref=e17]: active
+      - listitem [ref=e18]:
+        - link "CMS na projekcie open-mercato workbox9_prgrm · 24.10 11:48 active" [ref=e19] [cursor=pointer]:
+          - /url: /?s=c2838d0a-4b2f-4a9b-a4ad-28d5432029fc
+          - generic [ref=e20]: CMS na projekcie open-mercato
+          - generic [ref=e21]:
+            - text: workbox9_prgrm · 24.10 11:48
+            - generic [ref=e22]: active
+      - listitem [ref=e23]:
+        - link "Lewy panel sesji per projekt REPO_agent_vizualization · 24.10 11:07 · 53k out" [ref=e24] [cursor=pointer]:
+          - /url: /?s=af6af37b-470e-4ce7-87c7-07237997f09f
+          - generic [ref=e25]: Lewy panel sesji per projekt
+          - generic [ref=e26]: REPO_agent_vizualization · 24.10 11:07 · 53k out
+      - listitem [ref=e27]:
+        - link "Pogoda Kraków THE_MASTER_PLAN · 24.10 09:09 · 2k out" [ref=e28] [cursor=pointer]:
+          - /url: /?s=4a715cad-c362-4770-9234-a79f2ca6457b
+          - generic [ref=e29]: Pogoda Kraków
+          - generic [ref=e30]: THE_MASTER_PLAN · 24.10 09:09 · 2k out
+      - listitem [ref=e31]:
+        - link "Uproszczenie GUI i nowe widoki REPO_agent_vizualization · 23.10 17:23 · $20.8" [ref=e32] [cursor=pointer]:
+          - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e
+          - generic [ref=e33]: Uproszczenie GUI i nowe widoki
+          - generic [ref=e34]: REPO_agent_vizualization · 23.10 17:23 · $20.8
+      - listitem [ref=e35]:
+        - link "Komendy agent-viz w CSV REPO_agent_vizualization · 23.10 16:44 · 7k out" [ref=e36] [cursor=pointer]:
+          - /url: /?s=cfa1830e-a7a2-4db1-83df-a53f31e8390e
+          - generic [ref=e37]: Komendy agent-viz w CSV
+          - generic [ref=e38]: REPO_agent_vizualization · 23.10 16:44 · 7k out
+      - listitem [ref=e39]:
+        - link "mediapress_api_switch_dh2_supervisor Mediapress_api_switch_dh2 linear i VOD stage3 PROJECT_PRISMA_DH_2 · 23.10 16:38 · 713k out" [ref=e40] [cursor=pointer]:
+          - /url: /?s=3ba958d8-5938-427a-b87a-dca7ecd01e5e
+          - generic [ref=e41]: mediapress_api_switch_dh2_supervisor
+          - generic [ref=e42]: Mediapress_api_switch_dh2 linear i VOD stage3
+          - generic [ref=e43]: PROJECT_PRISMA_DH_2 · 23.10 16:38 · 713k out
+      - listitem [ref=e44]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 15:46 · 172k out" [ref=e45] [cursor=pointer]:
+          - /url: /?s=f22fe3e8-1f31-4bd3-96e4-ed0c7400a3e2
+          - generic [ref=e46]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e47]: PROJECT_PRISMA_DH_2 · 23.10 15:46 · 172k out
+      - listitem [ref=e48]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 15:46 · 168k out" [ref=e49] [cursor=pointer]:
+          - /url: /?s=0169c462-7277-41b2-9005-f427b900dc5b
+          - generic [ref=e50]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e51]: PROJECT_PRISMA_DH_2 · 23.10 15:46 · 168k out
+      - listitem [ref=e52]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 14:22 · 130k out" [ref=e53] [cursor=pointer]:
+          - /url: /?s=c5a02743-170a-4524-b881-3150e451453e
+          - generic [ref=e54]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e55]: PROJECT_PRISMA_DH_2 · 23.10 14:22 · 130k out
+      - listitem [ref=e56]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 14:22 · 153k out" [ref=e57] [cursor=pointer]:
+          - /url: /?s=71f4e1b1-92db-4ff0-91cf-516e67b8ff8e
+          - generic [ref=e58]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e59]: PROJECT_PRISMA_DH_2 · 23.10 14:22 · 153k out
+      - listitem [ref=e60]:
+        - link "preperPlan_dev Plan MAIN.MD vs ebook EMP THE_MASTER_PLAN · 23.10 14:03 · ≥266k out" [ref=e61] [cursor=pointer]:
+          - /url: /?s=0f3e67b8-7c7f-4966-9290-e44e99375883
+          - generic [ref=e62]: preperPlan_dev
+          - generic [ref=e63]: Plan MAIN.MD vs ebook EMP
+          - generic [ref=e64]: THE_MASTER_PLAN · 23.10 14:03 · ≥266k out
+      - listitem [ref=e65]:
+        - link "no conversation /model THE_MASTER_PLAN · 23.10 13:59" [ref=e66] [cursor=pointer]:
+          - /url: /?s=a6c0bf64-a05f-4b91-8b32-8149f4e00713
+          - generic [ref=e67]: no conversation /model
+          - text: THE_MASTER_PLAN · 23.10 13:59
+      - listitem [ref=e68]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:52 · 288k out" [ref=e69] [cursor=pointer]:
+          - /url: /?s=6449290d-6734-46d0-a766-0d2e6d2d4f81
+          - generic [ref=e70]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e71]: PROJECT_PRISMA_DH_2 · 23.10 12:52 · 288k out
+      - listitem [ref=e72]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:52 · 184k out" [ref=e73] [cursor=pointer]:
+          - /url: /?s=11355268-9898-4a7e-b5d0-988f6ba7bdac
+          - generic [ref=e74]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e75]: PROJECT_PRISMA_DH_2 · 23.10 12:52 · 184k out
+      - listitem [ref=e76]:
+        - link "no conversation /exit THE_MASTER_PLAN · 23.10 12:03" [ref=e77] [cursor=pointer]:
+          - /url: /?s=0e8ff333-8197-4820-9dcd-4331dd167ea4
+          - generic [ref=e78]: no conversation /exit
+          - text: THE_MASTER_PLAN · 23.10 12:03
+      - listitem [ref=e79]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:01 · 1k out" [ref=e80] [cursor=pointer]:
+          - /url: /?s=7334190d-aae4-4283-975b-546994f8da3a
+          - generic [ref=e81]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e82]: PROJECT_PRISMA_DH_2 · 23.10 12:01 · 1k out
+      - listitem [ref=e83]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:58 · 13k out" [ref=e84] [cursor=pointer]:
+          - /url: /?s=f946810b-c04e-4a5b-a4a9-7174686788f6
+          - generic [ref=e85]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e86]: PROJECT_PRISMA_DH_2 · 23.10 11:58 · 13k out
+      - listitem [ref=e87]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:40 · 184k out" [ref=e88] [cursor=pointer]:
+          - /url: /?s=6911e279-ce8e-4d84-b0d8-24c24d70e227
+          - generic [ref=e89]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e90]: PROJECT_PRISMA_DH_2 · 23.10 11:40 · 184k out
+      - listitem [ref=e91]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:40 · ≥188k out" [ref=e92] [cursor=pointer]:
+          - /url: /?s=69574883-90c6-43e7-a42d-66733781f434
+          - generic [ref=e93]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e94]: PROJECT_PRISMA_DH_2 · 23.10 11:40 · ≥188k out
+      - listitem [ref=e95]:
+        - link "test_collection_porcess Mediapress API switch – kolejka tekstów PROJECT_PRISMA_DH_2 · 23.10 10:25 · 133k out" [ref=e96] [cursor=pointer]:
+          - /url: /?s=5aa84bef-726e-469c-afb2-4b64dc9a638f
+          - generic [ref=e97]: test_collection_porcess
+          - generic [ref=e98]: Mediapress API switch – kolejka tekstów
+          - generic [ref=e99]: PROJECT_PRISMA_DH_2 · 23.10 10:25 · 133k out
+      - listitem [ref=e100]:
+        - link "mediapress_api_switch_dh2_linear_stage3 PROJECT_PRISMA_DH_2 · 23.10 10:02 · ≥540k out" [ref=e101] [cursor=pointer]:
+          - /url: /?s=f9d5c603-270a-4b5a-bb3f-5b860fcf523a
+          - generic [ref=e102]: mediapress_api_switch_dh2_linear_stage3
+          - generic [ref=e103]: PROJECT_PRISMA_DH_2 · 23.10 10:02 · ≥540k out
+      - listitem [ref=e104]:
+        - link "mediapress_api_switch_dh2_vod_stage3 PROJECT_PRISMA_DH_2 · 23.10 09:59 · ≥654k out" [ref=e105] [cursor=pointer]:
+          - /url: /?s=b682122e-2d5a-4a34-80fc-e4f0a36f13fa
+          - generic [ref=e106]: mediapress_api_switch_dh2_vod_stage3
+          - generic [ref=e107]: PROJECT_PRISMA_DH_2 · 23.10 09:59 · ≥654k out
+      - listitem [ref=e108]:
+        - link "preperPlan_hejter Podsumowanie PDF EMP vs Master Plan THE_MASTER_PLAN · 23.10 08:49 · 297k out" [ref=e109] [cursor=pointer]:
+          - /url: /?s=99d52c03-c14c-4000-a36c-520e0737c0ad
+          - generic [ref=e110]: preperPlan_hejter
+          - generic [ref=e111]: Podsumowanie PDF EMP vs Master Plan
+          - generic [ref=e112]: THE_MASTER_PLAN · 23.10 08:49 · 297k out
+      - listitem [ref=e113]:
+        - link "no conversation 7b85fe80 THE_MASTER_PLAN · 22.10 20:50" [ref=e114] [cursor=pointer]:
+          - /url: /?s=7b85fe80-5ff4-4814-b98d-f380afbb59ee
+          - generic [ref=e115]: no conversation 7b85fe80
+          - text: THE_MASTER_PLAN · 22.10 20:50
+      - listitem [ref=e116]:
+        - link "404 w PHP dev server workbox9 · 22.10 14:37 · 521 out" [ref=e117] [cursor=pointer]:
+          - /url: /?s=6a02c431-c16e-4de0-9206-d301931d65fb
+          - generic [ref=e118]: 404 w PHP dev server
+          - generic [ref=e119]: workbox9 · 22.10 14:37 · 521 out
+      - listitem [ref=e120]:
+        - link "Skille superpowers w Claude Code THE_MASTER_PLAN · 22.10 14:31 · 27k out" [ref=e121] [cursor=pointer]:
+          - /url: /?s=77f36aa2-07ff-4f58-8cd7-c0dd40e3a18c
+          - generic [ref=e122]: Skille superpowers w Claude Code
+          - generic [ref=e123]: THE_MASTER_PLAN · 22.10 14:31 · 27k out
+      - listitem [ref=e124]:
+        - link "Faza 3 MediaPress VOD dh2 PROJECT_PRISMA_DH_2 · 22.10 13:58 · 6k out" [ref=e125] [cursor=pointer]:
+          - /url: /?s=4f520e75-fc0c-474b-93f9-dd072da6aa55
+          - generic [ref=e126]: Faza 3 MediaPress VOD dh2
+          - generic [ref=e127]: PROJECT_PRISMA_DH_2 · 22.10 13:58 · 6k out
+      - listitem [ref=e128]:
+        - link "mediapress_api_switch_dh2_linear_stage_3 PROJECT_PRISMA_DH_2 · 22.10 13:58 · 5k out" [ref=e129] [cursor=pointer]:
+          - /url: /?s=5bbffdf7-9d61-47e9-81e0-8138e526a008
+          - generic [ref=e130]: mediapress_api_switch_dh2_linear_stage_3
+          - generic [ref=e131]: PROJECT_PRISMA_DH_2 · 22.10 13:58 · 5k out
+      - listitem [ref=e132]:
+        - link "Koncepcja przebudowy repozytorium workbox9 · 22.10 13:46 · ≥194k out" [ref=e133] [cursor=pointer]:
+          - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372
+          - generic [ref=e134]: Koncepcja przebudowy repozytorium
+          - generic [ref=e135]: workbox9 · 22.10 13:46 · ≥194k out
+      - listitem [ref=e136]:
+        - link "Changelog Claude Code THE_MASTER_PLAN · 22.10 13:44 · 27k out" [ref=e137] [cursor=pointer]:
+          - /url: /?s=784f4ffe-9d81-4538-9184-50df2857a88e
+          - generic [ref=e138]: Changelog Claude Code
+          - generic [ref=e139]: THE_MASTER_PLAN · 22.10 13:44 · 27k out
+      - listitem [ref=e140]:
+        - link "Dyktowanie nie działa THE_MASTER_PLAN · 22.10 13:16 · 778 out" [ref=e141] [cursor=pointer]:
+          - /url: /?s=4196f779-e99a-4645-9677-d5efbd18e814
+          - generic [ref=e142]: Dyktowanie nie działa
+          - generic [ref=e143]: THE_MASTER_PLAN · 22.10 13:16 · 778 out
+      - listitem [ref=e144]:
+        - link "mediapress_api_switch_dh2 part2 Kontroler feedmpcontent i źródło danych PROJECT_PRISMA_DH_2 · 22.10 12:53 · 361k out" [ref=e145] [cursor=pointer]:
+          - /url: /?s=d3b8bfe3-a3f8-44d9-a248-db1f0e05a134
+          - generic [ref=e146]: mediapress_api_switch_dh2 part2
+          - generic [ref=e147]: Kontroler feedmpcontent i źródło danych
+          - generic [ref=e148]: PROJECT_PRISMA_DH_2 · 22.10 12:53 · 361k out
+      - listitem [ref=e149]:
+        - link "mediapress_api_switch_dh2_vod Przełączenie VOD na API Mediapress workbox9 · 22.10 12:50 · ≥259k out" [ref=e150] [cursor=pointer]:
+          - /url: /?s=22dd90e6-c411-4cde-922c-e57b792ecf2f
+          - generic [ref=e151]: mediapress_api_switch_dh2_vod
+          - generic [ref=e152]: Przełączenie VOD na API Mediapress
+          - generic [ref=e153]: workbox9 · 22.10 12:50 · ≥259k out
+      - listitem [ref=e154]:
+        - link "no conversation /clear eduBombel · 22.10 09:19" [ref=e155] [cursor=pointer]:
+          - /url: /?s=8bbc746a-6149-48ce-96a6-79d9b3d6968e
+          - generic [ref=e156]: no conversation /clear
+          - text: eduBombel · 22.10 09:19
+      - listitem [ref=e157]:
+        - link "no conversation /clear eduBombel · 22.10 09:18" [ref=e158] [cursor=pointer]:
+          - /url: /?s=6faa49c9-cce9-46ed-86fa-1a313b8b4eff
+          - generic [ref=e159]: no conversation /clear
+          - text: eduBombel · 22.10 09:18
+      - listitem [ref=e160]:
+        - link "mercato_upgrader_1 Analiza Yodai i Open Mercato yodai · 22.10 09:17 · ≥229k out" [ref=e161] [cursor=pointer]:
+          - /url: /?s=f5d17b95-a199-4c64-a6d7-8446ca9d21e7
+          - generic [ref=e162]: mercato_upgrader_1
+          - generic [ref=e163]: Analiza Yodai i Open Mercato
+          - generic [ref=e164]: yodai · 22.10 09:17 · ≥229k out
+      - listitem [ref=e165]:
+        - link "Błąd 500 na stanmet-ropczyce.pl v2026-stanmet-ropczyce-pl · 21.10 21:55 · 58k out" [ref=e166] [cursor=pointer]:
+          - /url: /?s=f9d69f45-13c4-4f19-b21d-778c7d8fa006
+          - generic [ref=e167]: Błąd 500 na stanmet-ropczyce.pl
+          - generic [ref=e168]: v2026-stanmet-ropczyce-pl · 21.10 21:55 · 58k out
+      - listitem [ref=e169]:
+        - link "Header, footer i menu v2026-stanmet-ropczyce-pl · 21.10 21:34 · 77k out" [ref=e170] [cursor=pointer]:
+          - /url: /?s=9089619b-ee3e-4d35-828f-78260b028eb3
+          - generic [ref=e171]: Header, footer i menu
+          - generic [ref=e172]: v2026-stanmet-ropczyce-pl · 21.10 21:34 · 77k out
+      - listitem [ref=e173]:
+        - link "Poprawki layoutu z ui-polish.md v2026-stanmet-ropczyce-pl · 21.10 21:01 · 91k out" [ref=e174] [cursor=pointer]:
+          - /url: /?s=98e472e1-3ec6-44c8-b5aa-da68f5806ece
+          - generic [ref=e175]: Poprawki layoutu z ui-polish.md
+          - generic [ref=e176]: v2026-stanmet-ropczyce-pl · 21.10 21:01 · 91k out
+      - listitem [ref=e177]:
+        - link "Dokumentacja serwerów webd, mikrus i lh.pl workbox9_prgrm · 21.10 20:57 · 82k out" [ref=e178] [cursor=pointer]:
+          - /url: /?s=9e2d8139-3808-4cd3-8501-ee8b9a867c6c
+          - generic [ref=e179]: Dokumentacja serwerów webd, mikrus i lh.pl
+          - generic [ref=e180]: workbox9_prgrm · 21.10 20:57 · 82k out
+      - listitem [ref=e181]:
+        - link "Ikony kul smoczych po Android 19 eduBombel · 21.10 20:27 · 15k out" [ref=e182] [cursor=pointer]:
+          - /url: /?s=7c499039-c06f-49e6-b6d8-53ae68f825d6
+          - generic [ref=e183]: Ikony kul smoczych po Android 19
+          - generic [ref=e184]: eduBombel · 21.10 20:27 · 15k out
+      - listitem [ref=e185]:
+        - link "Dopieszczenie layoutu UI v2026-stanmet-ropczyce-pl · 21.10 20:24 · 21k out" [ref=e186] [cursor=pointer]:
+          - /url: /?s=14127e84-1e7c-45dd-abb8-1d22278dd8b8
+          - generic [ref=e187]: Dopieszczenie layoutu UI
+          - generic [ref=e188]: v2026-stanmet-ropczyce-pl · 21.10 20:24 · 21k out
+      - listitem [ref=e189]:
+        - link "Kategoria zmiękczeń i baza słownictwa eduBombel · 21.10 20:00 · ≥150k out" [ref=e190] [cursor=pointer]:
+          - /url: /?s=c2ce2485-2abf-44a3-a0ee-b8462e500b45
+          - generic [ref=e191]: Kategoria zmiękczeń i baza słownictwa
+          - generic [ref=e192]: eduBombel · 21.10 20:00 · ≥150k out
+      - listitem [ref=e193]:
+        - link "Zestaw wyjątki ortograficzne eduBombel · 21.10 19:52 · 41k out" [ref=e194] [cursor=pointer]:
+          - /url: /?s=45278834-2ac6-4b0e-a8b0-9950b6ba0a69
+          - generic [ref=e195]: Zestaw wyjątki ortograficzne
+          - generic [ref=e196]: eduBombel · 21.10 19:52 · 41k out
+      - listitem [ref=e197]:
+        - link "Mediapress_api_switch_dh2 w prisma_dh2 PROJECT_PRISMA_DH_2 · 21.10 19:25 · 241k out" [ref=e198] [cursor=pointer]:
+          - /url: /?s=392c93a6-fd10-49ce-99ad-dc701e651121
+          - generic [ref=e199]: Mediapress_api_switch_dh2 w prisma_dh2
+          - generic [ref=e200]: PROJECT_PRISMA_DH_2 · 21.10 19:25 · 241k out
+      - listitem [ref=e201]:
+        - link "Przegląd szaty graficznej aplikacji stanmet-ropczyce-pl · 21.10 19:23 · 5k out" [ref=e202] [cursor=pointer]:
+          - /url: /?s=67731843-de52-4f0d-807e-4384cf0924e0
+          - generic [ref=e203]: Przegląd szaty graficznej aplikacji
+          - generic [ref=e204]: stanmet-ropczyce-pl · 21.10 19:23 · 5k out
+      - listitem [ref=e205]:
+        - link "Stanmet-ropczyce.pl – szablon PHP workbox9_prgrm · 21.10 19:21 · ≥352k out" [ref=e206] [cursor=pointer]:
+          - /url: /?s=7db98e15-7ab6-40a7-b829-19cb3abb4fae
+          - generic [ref=e207]: Stanmet-ropczyce.pl – szablon PHP
+          - generic [ref=e208]: workbox9_prgrm · 21.10 19:21 · ≥352k out
+      - listitem [ref=e209]:
+        - link "clear eduBombel · 21.10 17:53 · 202 out" [ref=e210] [cursor=pointer]:
+          - /url: /?s=79bb973c-b37b-4b1b-85c6-d6acfaf1fd8b
+          - generic [ref=e211]: clear
+          - generic [ref=e212]: eduBombel · 21.10 17:53 · 202 out
+      - listitem [ref=e213]:
+        - link "luka_wyjasnienie Luki bezpieczeństwa w PHP agent_vizualization · 21.10 17:29 · 4k out" [ref=e214] [cursor=pointer]:
+          - /url: /?s=72b54893-44e0-4f12-8053-08f7e715514d
+          - generic [ref=e215]: luka_wyjasnienie
+          - generic [ref=e216]: Luki bezpieczeństwa w PHP
+          - generic [ref=e217]: agent_vizualization · 21.10 17:29 · 4k out
+      - listitem [ref=e218]:
+        - link "luka_wyjasnienie agent_vizualization · 21.10 17:29 · 74 out" [ref=e219] [cursor=pointer]:
+          - /url: /?s=16932dc5-d4be-440b-9be8-15cc814a6a06
+          - generic [ref=e220]: luka_wyjasnienie
+          - generic [ref=e221]: agent_vizualization · 21.10 17:29 · 74 out
+      - listitem [ref=e222]:
+        - link "no conversation /clear agent_vizualization · 21.10 16:45" [ref=e223] [cursor=pointer]:
+          - /url: /?s=77bf48de-33c8-4088-9c5e-17fd566f15eb
+          - generic [ref=e224]: no conversation /clear
+          - text: agent_vizualization · 21.10 16:45
+      - listitem [ref=e225]:
+        - link "no conversation /clear agent_vizualization · 21.10 16:35" [ref=e226] [cursor=pointer]:
+          - /url: /?s=814568f6-b06e-461c-918c-e03e613e69f8
+          - generic [ref=e227]: no conversation /clear
+          - text: agent_vizualization · 21.10 16:35
+      - listitem [ref=e228]:
+        - link "Wizualizacja pracy agentów agent_vizualization · 21.10 15:52 · 527k out" [ref=e229] [cursor=pointer]:
+          - /url: /?s=7928a304-17c4-4a05-b7da-7920e75bf9fc
+          - generic [ref=e230]: Wizualizacja pracy agentów
+          - generic [ref=e231]: agent_vizualization · 21.10 15:52 · 527k out
+      - listitem [ref=e232]:
+        - link "Pogoda w Londynie agent_vizualization · 21.10 15:38 · 2k out" [ref=e233] [cursor=pointer]:
+          - /url: /?s=753966fb-a7a8-45c0-95e5-639d35593676
+          - generic [ref=e234]: Pogoda w Londynie
+          - generic [ref=e235]: agent_vizualization · 21.10 15:38 · 2k out
+      - listitem [ref=e236]:
+        - link "Dostęp do plików .env w workbox9 agent_vizualization · 21.10 14:59 · 3k out" [ref=e237] [cursor=pointer]:
+          - /url: /?s=d026cf8e-ef86-4f4e-9274-6fa26a2b0109
+          - generic [ref=e238]: Dostęp do plików .env w workbox9
+          - generic [ref=e239]: agent_vizualization · 21.10 14:59 · 3k out
+      - listitem [ref=e240]:
+        - link "no conversation /analiza-sesji agent_vizualization · 21.10 14:39 · 8k out" [ref=e241] [cursor=pointer]:
+          - /url: /?s=8399d707-b4e4-412f-9f09-e7c926f027af
+          - generic [ref=e242]: no conversation /analiza-sesji
+          - generic [ref=e243]: agent_vizualization · 21.10 14:39 · 8k out
+      - listitem [ref=e244]:
+        - link "no conversation /analiza-sesji agent_vizualization · 21.10 14:36 · 7k out" [ref=e245] [cursor=pointer]:
+          - /url: /?s=1aff0a19-a171-447b-b28f-73235f25a23f
+          - generic [ref=e246]: no conversation /analiza-sesji
+          - generic [ref=e247]: agent_vizualization · 21.10 14:36 · 7k out
+      - listitem [ref=e248]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 13:56 · 3k out hook" [ref=e249] [cursor=pointer]:
+          - /url: /?s=59a3f329-5cb6-42c9-93d5-48e02202b97d
+          - generic [ref=e250]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e251]:
+            - text: proj · 21.10 13:56 · 3k out
+            - generic [ref=e252]: hook
+      - listitem [ref=e253]:
+        - link "Incydenty bezpieczeństwa spowodowane przez AI agent_vizualization · 21.10 13:56 · 3k out" [ref=e254] [cursor=pointer]:
+          - /url: /?s=8f73abf7-b5fd-4ac8-b647-17982dd803f6
+          - generic [ref=e255]: Incydenty bezpieczeństwa spowodowane przez AI
+          - generic [ref=e256]: agent_vizualization · 21.10 13:56 · 3k out
+      - listitem [ref=e257]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 13:53 · 2k out" [ref=e258] [cursor=pointer]:
+          - /url: /?s=b6038a04-6c32-4c35-b906-f1891d8abcc0
+          - generic [ref=e259]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e260]: proj · 21.10 13:53 · 2k out
+      - listitem [ref=e261]:
+        - link "ZAM-6000_plan_wdrożenia_TV_tipps PROJECT_GROUP_PRISMA · 21.10 12:13 · 315k out" [ref=e262] [cursor=pointer]:
+          - /url: /?s=a13c94ac-669e-4c32-894d-2477934db105
+          - generic [ref=e263]: ZAM-6000_plan_wdrożenia_TV_tipps
+          - generic [ref=e264]: PROJECT_GROUP_PRISMA · 21.10 12:13 · 315k out
+      - listitem [ref=e265]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 12:02 · 2k out" [ref=e266] [cursor=pointer]:
+          - /url: /?s=58900880-d7be-49b5-ad94-982251635e46
+          - generic [ref=e267]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e268]: proj · 21.10 12:02 · 2k out
+      - listitem [ref=e269]:
+        - link "mp_api_switch_prisma2026 PROJECT_GROUP_PRISMA · 21.10 10:31 · ≥308k out" [ref=e270] [cursor=pointer]:
+          - /url: /?s=3b9765dc-c06a-414f-a3a8-4f44c4fa1d56
+          - generic [ref=e271]: mp_api_switch_prisma2026
+          - generic [ref=e272]: PROJECT_GROUP_PRISMA · 21.10 10:31 · ≥308k out
+      - listitem [ref=e273]:
+        - link "Błąd PHP z 2026-10-20 yodai · 21.10 10:21 · 7k out" [ref=e274] [cursor=pointer]:
+          - /url: /?s=8959f8ca-6551-4675-b8f0-80cfe26c3505
+          - generic [ref=e275]: Błąd PHP z 2026-10-20
+          - generic [ref=e276]: yodai · 21.10 10:21 · 7k out
+      - listitem [ref=e277]:
+        - link "Ocena moralności modeli AI yodai · 21.10 10:19 · 4k out" [ref=e278] [cursor=pointer]:
+          - /url: /?s=b12e6266-7d21-4c5d-a332-d64a3ee5cb2a
+          - generic [ref=e279]: Ocena moralności modeli AI
+          - generic [ref=e280]: yodai · 21.10 10:19 · 4k out
+      - listitem [ref=e281]:
+        - link "mercato_upgrader_2 Lista zadań 11_zadania_warte_dodania yodai · 20.10 17:03 · 32k out" [ref=e282] [cursor=pointer]:
+          - /url: /?s=2d9895d1-8719-478a-bb06-2c8f4077d57b
+          - generic [ref=e283]: mercato_upgrader_2
+          - generic [ref=e284]: Lista zadań 11_zadania_warte_dodania
+          - generic [ref=e285]: yodai · 20.10 17:03 · 32k out
+      - listitem [ref=e286]:
+        - link "no conversation /mobile yodai · 20.10 16:34" [ref=e287] [cursor=pointer]:
+          - /url: /?s=38915087-8fcf-4217-8f51-78e1b957d432
+          - generic [ref=e288]: no conversation /mobile
+          - text: yodai · 20.10 16:34
+      - listitem [ref=e289]:
+        - link "Import obrazków w screen PROJECT_GROUP_PRISMA · 20.10 12:03 · 2k out" [ref=e290] [cursor=pointer]:
+          - /url: /?s=ed5da0f9-6ff5-4bed-9955-8e36513c2531
+          - generic [ref=e291]: Import obrazków w screen
+          - generic [ref=e292]: PROJECT_GROUP_PRISMA · 20.10 12:03 · 2k out
+      - listitem [ref=e293]:
+        - link "full_import PROJECT_GROUP_PRISMA · 20.10 12:01" [ref=e294] [cursor=pointer]:
+          - /url: /?s=42f1e206-fe19-49c1-a851-b720a837dc38
+          - generic [ref=e295]: full_import
+          - text: PROJECT_GROUP_PRISMA · 20.10 12:01
+      - listitem [ref=e296]:
+        - link "full_import PROJECT_GROUP_PRISMA · 20.10 12:01 · 15k out" [ref=e297] [cursor=pointer]:
+          - /url: /?s=d355af07-e28f-4367-a58a-f4c3a5cfd8c5
+          - generic [ref=e298]: full_import
+          - generic [ref=e299]: PROJECT_GROUP_PRISMA · 20.10 12:01 · 15k out
+      - listitem [ref=e300]:
+        - link "full_import Full import na produkcji PROJECT_GROUP_PRISMA · 20.10 11:07 · 237k out" [ref=e301] [cursor=pointer]:
+          - /url: /?s=168f1b28-66cd-4710-a534-7deba6577de2
+          - generic [ref=e302]: full_import
+          - generic [ref=e303]: Full import na produkcji
+          - generic [ref=e304]: PROJECT_GROUP_PRISMA · 20.10 11:07 · 237k out
+      - listitem [ref=e305]:
+        - link "Chronologiczne ułożenie pliku Adamella.md yodai · 20.10 09:39 · 2k out" [ref=e306] [cursor=pointer]:
+          - /url: /?s=233cf9b7-3769-4e46-93dc-a949026292cc
+          - generic [ref=e307]: Chronologiczne ułożenie pliku Adamella.md
+          - generic [ref=e308]: yodai · 20.10 09:39 · 2k out
+      - listitem [ref=e309]:
+        - link "Usunięcie core.hooksPath z composer.json yodai · 20.10 00:17 · 59k out" [ref=e310] [cursor=pointer]:
+          - /url: /?s=66ecbbf5-c879-4c26-8acf-845aff14ad53
+          - generic [ref=e311]: Usunięcie core.hooksPath z composer.json
+          - generic [ref=e312]: yodai · 20.10 00:17 · 59k out
+      - listitem [ref=e313]:
+        - link "Orientacja w projekcie i dokumentacji open-mercato · 19.10 23:27 · 8k out" [ref=e314] [cursor=pointer]:
+          - /url: /?s=d3c13a45-27cb-4060-bc93-6281b2cc7660
+          - generic [ref=e315]: Orientacja w projekcie i dokumentacji
+          - generic [ref=e316]: open-mercato · 19.10 23:27 · 8k out
+      - listitem [ref=e317]:
+        - link "Nowy użytkownik yamil i CLI eduBombel · 19.10 23:20 · ≥249k out" [ref=e318] [cursor=pointer]:
+          - /url: /?s=40cac0f5-c5e4-4c72-8373-aa347001eedf
+          - generic [ref=e319]: Nowy użytkownik yamil i CLI
+          - generic [ref=e320]: eduBombel · 19.10 23:20 · ≥249k out
+      - listitem [ref=e321]:
+        - link "Wskaźnik predykcji kierunku ceny Bitcoina yodai · 19.10 23:03 · 12k out" [ref=e322] [cursor=pointer]:
+          - /url: /?s=69b3fb6c-e244-43e9-985c-7e0046d8a2bb
+          - generic [ref=e323]: Wskaźnik predykcji kierunku ceny Bitcoina
+          - generic [ref=e324]: yodai · 19.10 23:03 · 12k out
+      - listitem [ref=e325]:
+        - link "Mechanizm audytów prisma-dh2 w yodai yodai · 19.10 23:02 · 4k out" [ref=e326] [cursor=pointer]:
+          - /url: /?s=2f3b20c5-4128-46d9-b04f-9a421c38178e
+          - generic [ref=e327]: Mechanizm audytów prisma-dh2 w yodai
+          - generic [ref=e328]: yodai · 19.10 23:02 · 4k out
+      - listitem [ref=e329]:
+        - link "Brak faktury z Infkat w systemie progremo_ksiegowosc · 19.10 18:21 · 16k out" [ref=e330] [cursor=pointer]:
+          - /url: /?s=60fd6002-4c4b-4187-a902-cfc33691a7bf
+          - generic [ref=e331]: Brak faktury z Infkat w systemie
+          - generic [ref=e332]: progremo_ksiegowosc · 19.10 18:21 · 16k out
+      - listitem [ref=e333]:
+        - link "Anonimizacja mail1 i mail2 w .env progremo_ksiegowosc · 19.10 17:09 · 83k out" [ref=e334] [cursor=pointer]:
+          - /url: /?s=479865a2-8602-4ee4-a994-eb94c743ec75
+          - generic [ref=e335]: Anonimizacja mail1 i mail2 w .env
+          - generic [ref=e336]: progremo_ksiegowosc · 19.10 17:09 · 83k out
+      - listitem [ref=e337]:
+        - link "Koszty w infakt w tym miesiącu progremo_ksiegowosc · 19.10 17:07 · ≥389k out" [ref=e338] [cursor=pointer]:
+          - /url: /?s=1f13b1db-de60-476e-b15a-1cfdccd66ed1
+          - generic [ref=e339]: Koszty w infakt w tym miesiącu
+          - generic [ref=e340]: progremo_ksiegowosc · 19.10 17:07 · ≥389k out
+      - listitem [ref=e341]:
+        - link "ZAM-6000_plan_wdrożenia_TV_tipps ZAM-6000 plan wdrożenia TV tipps PROJECT_GROUP_PRISMA · 19.10 17:05 · ≥263k out" [ref=e342] [cursor=pointer]:
+          - /url: /?s=2d6eca79-1dd6-4f51-937b-3dd6b5eb5e5f
+          - generic [ref=e343]: ZAM-6000_plan_wdrożenia_TV_tipps
+          - generic [ref=e344]: ZAM-6000 plan wdrożenia TV tipps
+          - generic [ref=e345]: PROJECT_GROUP_PRISMA · 19.10 17:05 · ≥263k out
+      - listitem [ref=e346]:
+        - link "Standardy aplikacji yodai_app_standards.md yodai · 19.10 16:33 · 28k out" [ref=e347] [cursor=pointer]:
+          - /url: /?s=e2e77fc6-f21d-478c-86c1-e029b5d359f3
+          - generic [ref=e348]: Standardy aplikacji yodai_app_standards.md
+          - generic [ref=e349]: yodai · 19.10 16:33 · 28k out
+      - listitem [ref=e350]:
+        - link "Klient mail do bazy i API yodai · 19.10 10:17 · 37k out" [ref=e351] [cursor=pointer]:
+          - /url: /?s=2a03726f-2761-4c91-b9db-278da05ea649
+          - generic [ref=e352]: Klient mail do bazy i API
+          - generic [ref=e353]: yodai · 19.10 10:17 · 37k out
+      - listitem [ref=e354]:
+        - link "Przewijanie ekranu w tmux REPO_PRISMA_DH_2 · 19.10 08:07 · 226 out" [ref=e355] [cursor=pointer]:
+          - /url: /?s=322b708d-d032-48ab-acf8-94e00c02509a
+          - generic [ref=e356]: Przewijanie ekranu w tmux
+          - generic [ref=e357]: REPO_PRISMA_DH_2 · 19.10 08:07 · 226 out
+      - listitem [ref=e358]:
+        - link "Dostęp dziecka do gier eduBombel · 18.10 21:26 · 48k out" [ref=e359] [cursor=pointer]:
+          - /url: /?s=5892fe3e-6c73-4335-85a6-61013b51c86f
+          - generic [ref=e360]: Dostęp dziecka do gier
+          - generic [ref=e361]: eduBombel · 18.10 21:26 · 48k out
+      - listitem [ref=e362]:
+        - link "Zestawy danych gry Ortografia / Gol eduBombel · 18.10 21:25 · ≥84k out" [ref=e363] [cursor=pointer]:
+          - /url: /?s=16ea1c75-ea07-4fff-b061-5717d3badab8
+          - generic [ref=e364]: Zestawy danych gry Ortografia / Gol
+          - generic [ref=e365]: eduBombel · 18.10 21:25 · ≥84k out
+      - listitem [ref=e366]:
+        - link "Skrypt download-missing.py – pobieranie MKV workbox9 · 16.10 23:53 · 63k out" [ref=e367] [cursor=pointer]:
+          - /url: /?s=fc495ad4-c657-4053-bcee-08e8c44e1dca
+          - generic [ref=e368]: Skrypt download-missing.py – pobieranie MKV
+          - generic [ref=e369]: workbox9 · 16.10 23:53 · 63k out
+      - listitem [ref=e370]:
+        - link "Przesyłanie plików na MacBook Mam Krate workbox9 · 16.10 21:01 · 2k out" [ref=e371] [cursor=pointer]:
+          - /url: /?s=392603ee-be16-42f6-a2d4-5e331b4d08d1
+          - generic [ref=e372]: Przesyłanie plików na MacBook Mam Krate
+          - generic [ref=e373]: workbox9 · 16.10 21:01 · 2k out
+      - listitem [ref=e374]:
+        - link "Dump OFFLINE_DATABASE na dysku zewnętrznym workbox9 · 16.10 16:05 · 22k out" [ref=e375] [cursor=pointer]:
+          - /url: /?s=22d323c5-d173-40c3-98b4-48700bf12281
+          - generic [ref=e376]: Dump OFFLINE_DATABASE na dysku zewnętrznym
+          - generic [ref=e377]: workbox9 · 16.10 16:05 · 22k out
+      - listitem [ref=e378]:
+        - link "Nowe instancje gry flagi dla dzieci eduBombel · 16.10 14:18 · 3k out" [ref=e379] [cursor=pointer]:
+          - /url: /?s=10a7a8ed-f007-44e0-8804-62c658c442d2
+          - generic [ref=e380]: Nowe instancje gry flagi dla dzieci
+          - generic [ref=e381]: eduBombel · 16.10 14:18 · 3k out
+      - listitem [ref=e382]:
+        - link "Ticket 18664 w CRM Netzindianer PROJECT_GROUP_PRISMA · 16.10 13:58 · 13k out" [ref=e383] [cursor=pointer]:
+          - /url: /?s=400f67c7-da34-4cc7-9cc9-dc48969c8016
+          - generic [ref=e384]: Ticket 18664 w CRM Netzindianer
+          - generic [ref=e385]: PROJECT_GROUP_PRISMA · 16.10 13:58 · 13k out
+      - listitem [ref=e386]:
+        - link "Dane do gry Dragon Ball eduBombel · 16.10 13:34 · ≥233k out" [ref=e387] [cursor=pointer]:
+          - /url: /?s=787bc754-6cde-4df9-8ed5-594f26462ece
+          - generic [ref=e388]: Dane do gry Dragon Ball
+          - generic [ref=e389]: eduBombel · 16.10 13:34 · ≥233k out
+      - listitem [ref=e390]:
+        - link "ZAM-6000 plan wdrożenia TV tipps PROJECT_GROUP_PRISMA · 16.10 12:06 · 4k out" [ref=e391] [cursor=pointer]:
+          - /url: /?s=d3c8fd5b-524f-4383-9422-5a0e76d80a04
+          - generic [ref=e392]: ZAM-6000 plan wdrożenia TV tipps
+          - generic [ref=e393]: PROJECT_GROUP_PRISMA · 16.10 12:06 · 4k out
+      - listitem [ref=e394]:
+        - link "Import telschau ZAM-6000 PROJECT_GROUP_PRISMA · 16.10 12:01 · 8k out" [ref=e395] [cursor=pointer]:
+          - /url: /?s=6270c0f5-6c4a-4a17-958f-082f6bbfd999
+          - generic [ref=e396]: Import telschau ZAM-6000
+          - generic [ref=e397]: PROJECT_GROUP_PRISMA · 16.10 12:01 · 8k out
+      - listitem [ref=e398]:
+        - link "Zadania TV-Tipp, ticket 6000 PROJECT_GROUP_PRISMA · 16.10 11:48 · ≥110k out" [ref=e399] [cursor=pointer]:
+          - /url: /?s=089c7539-9dde-4b44-b616-c431c20fda58
+          - generic [ref=e400]: Zadania TV-Tipp, ticket 6000
+          - generic [ref=e401]: PROJECT_GROUP_PRISMA · 16.10 11:48 · ≥110k out
+      - listitem [ref=e402]:
+        - link "Kontekst edu bomble dla agentów eduBombel · 16.10 11:48 · 9k out" [ref=e403] [cursor=pointer]:
+          - /url: /?s=cc989d22-ebc2-4460-9e1e-4a4551504ddb
+          - generic [ref=e404]: Kontekst edu bomble dla agentów
+          - generic [ref=e405]: eduBombel · 16.10 11:48 · 9k out
+      - listitem [ref=e406]:
+        - link "Workbox_rebuild.md i naprawa linków LLM_CONTEXT · 16.10 11:30 · ≥39k out" [ref=e407] [cursor=pointer]:
+          - /url: /?s=b0033637-57ff-496c-ad7e-2fccc9b0e6b3
+          - generic [ref=e408]: Workbox_rebuild.md i naprawa linków
+          - generic [ref=e409]: LLM_CONTEXT · 16.10 11:30 · ≥39k out
+      - listitem [ref=e410]:
+        - link "Ortografia Dragon Ball dla Kuby eduBombel · 16.10 11:14 · ≥127k out" [ref=e411] [cursor=pointer]:
+          - /url: /?s=ac4011b1-6a29-4b68-82c9-3fd300ac918d
+          - generic [ref=e412]: Ortografia Dragon Ball dla Kuby
+          - generic [ref=e413]: eduBombel · 16.10 11:14 · ≥127k out
+      - listitem [ref=e414]:
+        - link "Ustawienia z załączonego zrzutu workbox9 · 16.10 11:12 · 8k out" [ref=e415] [cursor=pointer]:
+          - /url: /?s=142e9cdb-16b6-4098-a861-9855eb12bdac
+          - generic [ref=e416]: Ustawienia z załączonego zrzutu
+          - generic [ref=e417]: workbox9 · 16.10 11:12 · 8k out
+      - listitem [ref=e418]:
+        - link "Grafiki piłkarzy Gol za czytanie eduBombel · 16.10 10:33 · 98k out" [ref=e419] [cursor=pointer]:
+          - /url: /?s=c5ef44fd-7ad7-4560-97e2-b52fd0a6b07b
+          - generic [ref=e420]: Grafiki piłkarzy Gol za czytanie
+          - generic [ref=e421]: eduBombel · 16.10 10:33 · 98k out
+      - listitem [ref=e422]:
+        - link "Lokalizacja skilli yoda:* workbox9 · 16.10 09:16 · ≥84k out" [ref=e423] [cursor=pointer]:
+          - /url: /?s=4c3fd2d4-bbce-4606-bb97-171f5f80a6f8
+          - generic [ref=e424]: Lokalizacja skilli yoda:*
+          - generic [ref=e425]: workbox9 · 16.10 09:16 · ≥84k out
+      - listitem [ref=e426]:
+        - link "Repozytorium workbox_rebuild na GitHub · 16.10 09:05" [ref=e427] [cursor=pointer]:
+          - /url: /?s=786e4798-3891-4b27-9ca9-ac77f8e570f7
+          - generic [ref=e428]: Repozytorium workbox_rebuild na GitHub
+          - text: · 16.10 09:05
+      - listitem [ref=e429]:
+        - link "edubombel_archtekt eduBombel · 16.10 08:42" [ref=e430] [cursor=pointer]:
+          - /url: /?s=9a2aaece-9b57-43d1-800e-9cb4bfab2bd2
+          - generic [ref=e431]: edubombel_archtekt
+          - text: eduBombel · 16.10 08:42
+      - listitem [ref=e432]:
+        - link "edubombel_archtekt Przegląd aplikacji z @edubombel_dev eduBombel · 16.10 08:33 · ≥60k out" [ref=e433] [cursor=pointer]:
+          - /url: /?s=43e9c1c4-efd2-433c-8cb3-7be39ed506e8
+          - generic [ref=e434]: edubombel_archtekt
+          - generic [ref=e435]: Przegląd aplikacji z @edubombel_dev
+          - generic [ref=e436]: eduBombel · 16.10 08:33 · ≥60k out
+      - listitem [ref=e437]:
+        - link "edubombel_dev eduBombel · 15.10 17:19 · 109k out" [ref=e438] [cursor=pointer]:
+          - /url: /?s=0ff9bbc3-6012-4e5a-aa3e-891ff5cf3396
+          - generic [ref=e439]: edubombel_dev
+          - generic [ref=e440]: eduBombel · 15.10 17:19 · 109k out
+      - listitem [ref=e441]:
+        - link "no conversation bbe85a31 PROJECT_FP_ADAPTER · 15.10 17:06" [ref=e442] [cursor=pointer]:
+          - /url: /?s=bbe85a31-5572-4352-8ac5-bc62a74f461c
+          - generic [ref=e443]: no conversation bbe85a31
+          - text: PROJECT_FP_ADAPTER · 15.10 17:06
+      - listitem [ref=e444]:
+        - 'link "Jedną linią: czy na liście skilli masz autodeploy, autocommit i mieso? eduBombel · 15.10 16:57 · 307 out" [ref=e445] [cursor=pointer]':
+          - /url: /?s=b7594cdd-c9dd-443a-8b73-65fbfc5f0b06
+          - generic [ref=e446]: "Jedną linią: czy na liście skilli masz autodeploy, autocommit i mieso?"
+          - generic [ref=e447]: eduBombel · 15.10 16:57 · 307 out
+      - listitem [ref=e448]:
+        - 'link "Bez narzędzi: (1) jakie jest hasło testowe reguł projektu? (2) jaki przykład kl… PROJECT_FP_ADAPTER · 15.10 16:31 · 233 out" [ref=e449] [cursor=pointer]':
+          - /url: /?s=e3f794f5-fa42-4ce5-9070-1f2f692984b0
+          - generic [ref=e450]: "Bez narzędzi: (1) jakie jest hasło testowe reguł projektu? (2) jaki przykład kl…"
+          - generic [ref=e451]: PROJECT_FP_ADAPTER · 15.10 16:31 · 233 out
+      - listitem [ref=e452]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref… PROJECT_FP_ADAPTER · 15.10 16:31 · 439 out" [ref=e453] [cursor=pointer]':
+          - /url: /?s=0128260f-7182-47c3-b2fe-06d60cf9450c
+          - generic [ref=e454]: "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref…"
+          - generic [ref=e455]: PROJECT_FP_ADAPTER · 15.10 16:31 · 439 out
+      - listitem [ref=e456]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref… PROJECT_FP_ADAPTER · 15.10 16:30 · 505 out" [ref=e457] [cursor=pointer]':
+          - /url: /?s=952ab064-c3e5-4c67-bfbd-eaf77b21be58
+          - generic [ref=e458]: "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref…"
+          - generic [ref=e459]: PROJECT_FP_ADAPTER · 15.10 16:30 · 505 out
+      - listitem [ref=e460]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: jaki przykład nazwy klasy (z prefiks… PROJECT_FP_ADAPTER · 15.10 16:30 · 411 out" [ref=e461] [cursor=pointer]':
+          - /url: /?s=00f1b354-d0b6-4187-8342-fc6a3fd47997
+          - generic [ref=e462]: "Bez używania narzędzi, tylko z instrukcji: jaki przykład nazwy klasy (z prefiks…"
+          - generic [ref=e463]: PROJECT_FP_ADAPTER · 15.10 16:30 · 411 out
+      - listitem [ref=e464]:
+        - 'link "Jedną linią: czy masz skille flux, zammad, mieso oraz komendę master? Wypisz te… PROJECT_FP_ADAPTER · 15.10 16:25 · 1k out" [ref=e465] [cursor=pointer]':
+          - /url: /?s=f228bda2-d7ac-4f85-bca0-615168bf7edb
+          - generic [ref=e466]: "Jedną linią: czy masz skille flux, zammad, mieso oraz komendę master? Wypisz te…"
+          - generic [ref=e467]: PROJECT_FP_ADAPTER · 15.10 16:25 · 1k out
+      - listitem [ref=e468]:
+        - link "Pasek statusu dizalssz workbox9 · 15.10 16:20 · 316 out" [ref=e469] [cursor=pointer]:
+          - /url: /?s=0ee3357f-ac84-4eae-b419-254d6ae4b738
+          - generic [ref=e470]: Pasek statusu dizalssz
+          - generic [ref=e471]: workbox9 · 15.10 16:20 · 316 out
+      - listitem [ref=e472]:
+        - 'link "Odpowiedz jedną linią: czy widzisz skill ''mieso'' i komendę ''makebyplan''? Jaki m… workbox9_swzk · 15.10 16:19 · 139 out" [ref=e473] [cursor=pointer]':
+          - /url: /?s=2c931a2c-06d9-4075-8fa2-6d9e9be397bb
+          - generic [ref=e474]: "Odpowiedz jedną linią: czy widzisz skill 'mieso' i komendę 'makebyplan'? Jaki m…"
+          - generic [ref=e475]: workbox9_swzk · 15.10 16:19 · 139 out
+      - listitem [ref=e476]:
+        - 'link "Odpowiedz jedną linią: czy widzisz skill ''mieso'' i komendę ''makebyplan'' na liśc… workbox9_swzk · 15.10 16:18 · 117 out" [ref=e477] [cursor=pointer]':
+          - /url: /?s=0e85119c-4a2d-45ad-8c11-ee242d205370
+          - generic [ref=e478]: "Odpowiedz jedną linią: czy widzisz skill 'mieso' i komendę 'makebyplan' na liśc…"
+          - generic [ref=e479]: workbox9_swzk · 15.10 16:18 · 117 out
+      - listitem [ref=e480]:
+        - link "Czyszczenie plików prywatności w Claude .claude · 15.10 15:42 · ≥19k out" [ref=e481] [cursor=pointer]:
+          - /url: /?s=5f2c1456-3db1-4b79-8938-26766d322fdb
+          - generic [ref=e482]: Czyszczenie plików prywatności w Claude
+          - generic [ref=e483]: .claude · 15.10 15:42 · ≥19k out
+  - main [ref=e484]:
+    - generic [ref=e1200]:
+      - generic [ref=e1201]:
+        - generic [ref=e1202]:
+          - heading "Uproszczenie GUI i nowe widoki" [level=1] [ref=e1203]
+          - generic "7c6f1f3d-21cb-4c56-962b-c89ff99f797e" [ref=e1204]:
+            - text: ~/SK/REPOS_PRGRM/REPO_agent_vizualization ·
+            - strong [ref=e1205]: transcript
+          - link "⇩ CSV" [ref=e1206] [cursor=pointer]:
+            - /url: /export.csv?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&sort=cost
+          - button "⇩ dump" [ref=e1208] [cursor=pointer]
+          - generic [ref=e1209] [cursor=pointer]:
+            - checkbox "live" [ref=e1210]
+            - text: live
+        - navigation [ref=e1211]:
+          - link "Files read 73" [ref=e1212] [cursor=pointer]:
+            - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e
+          - link "Files changed 41" [ref=e1213] [cursor=pointer]:
+            - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&view=changed
+          - link "Commands 136" [ref=e1214] [cursor=pointer]:
+            - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&view=commands
+          - link "Blocked 3" [ref=e1215] [cursor=pointer]:
+            - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&view=blocked
+          - link "Messages 30" [ref=e1216] [cursor=pointer]:
+            - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&view=messages
+          - link "Timeline" [ref=e1217] [cursor=pointer]:
+            - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&view=timeline
+          - link "Graph" [ref=e1218] [cursor=pointer]:
+            - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&view=graph
+          - link "Log" [ref=e1219] [cursor=pointer]:
+            - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&view=log
+        - generic [ref=e1220]:
+          - combobox [ref=e1223]:
+            - option "all agents (1)" [selected]
+            - option "main · $20.8"
+          - combobox "turn = from a user prompt to the next one · $ = cost of all agents in the turn at API prices" [ref=e1225]:
+            - option "all turns (30)" [selected]
+            - option "1 · 15:55 · przyjrzyj sie GUI tej aplikacji .. jest zbyt zloz… · $0.78"
+            - option "2 · 15:59 · tak wdrazaj · $0.33"
+            - option "3 · 15:59 · wytlymacz mi jeszcze temat przycinania · $4.77"
+            - option "4 · 16:16 · czym jest button 'project only' i 'problems only'… · $0.08"
+            - option "5 · 16:17 · jak definiowane sa problematycze komendy ? · $0.16"
+            - option "6 · 16:17 · labele Read -> Files read .. Chanted -> Files Cha… · $0.14"
+            - 'option "7 · 16:18 · dobra idzmy po panelach .. najpierw panel lewy: … · $1.45"'
+            - option "8 · 16:39 · ok jeszcze jedno mamby skrpyt blokujace niezepiez… · $0.25"
+            - option "9 · 16:40 · mozesz tez podejc inaczej · $0.00"
+            - option "10 · 16:40 · zamist sam doapsowaywca · $0.18"
+            - option "11 · 16:40 · to sprawdz rozmowy pod kate zablkowane przez to · $0.00"
+            - option "12 · 16:40 · i logu co osatlo zblkowane przez ten skrpyt · $0.21"
+            - option "13 · 16:40 · dzieki temi bezie dynaminzie jak cos tam dojdzie · $0.20"
+            - option "14 · 16:41 · czy sa jkaies inne mechznimy zlkujace ?? moze wyz… · $0.00"
+            - option "15 · 16:41 · filt 'blocekd commands' · $0.41"
+            - option "16 · 16:42 · problem only .. ta nazwa chyba juz nie bedzie pot… · $0.26"
+            - option "17 · 16:42 · potencjalnie niebezpieczne sa w skrypcie blokujac… · $1.90"
+            - option "18 · 16:57 · sprawdz czy w module summary sa wdrozone nowe zmi… · $1.31"
+            - option "19 · 17:02 · na tym widoku http://localhost:8090/summary?days=… · $0.63"
+            - option "20 · 17:04 · jeszcze mnijea 'call' a wieksza 'session' · $0.38"
+            - option "21 · 17:05 · zastanawima sie czy widoku dla sumarise i pers re… · $0.13"
+            - option "22 · 17:06 · ok · $3.56"
+            - option "23 · 17:14 · jak klikne w jakis plikk albo konede to sie wysle… · $0.49"
+            - option "24 · 17:15 · w widoku jednej secji nie ma eksportu do csv .. w… · $1.43"
+            - option "25 · 17:17 · pisz jednak po polsku -- wsyzstko co jest element… · $0.00"
+            - option "26 · 17:17 · tlumaczenia zotta - · $0.00"
+            - option "27 · 17:17 · po prsotu tlmacznie en - en · $0.14"
+            - option "28 · 17:17 · mechanizm juz niest to sie prdyzda · $0.00"
+            - option "29 · 17:18 · dodamy wersje jezykowe kiedys · $0.00"
+            - option "30 · 17:18 · albo do razu ?? · $1.62"
+          - combobox "where the file came from" [ref=e1226]:
+            - option "all sources" [selected]
+            - option "agent tools only"
+            - option "injected context only"
+          - link "project only" [ref=e1227] [cursor=pointer]:
+            - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&sort=cost&scope=project
+          - combobox "executed = ran (also Bash with exit code ≠ 0) · blocked = stopped by a hook, a permissions.deny rule, auto mode or you · failed = tool error, e.g. file does not exist" [ref=e1228]:
+            - option "all calls (241)" [selected]
+            - option "executed (236)"
+            - option "blocked (3)"
+            - option "failed (2)"
+          - group [ref=e1229]:
+            - 'generic "cost: $20.8" [ref=e1230] [cursor=pointer]'
+          - group [ref=e1231]:
+            - 'generic "parser: 2% blind" [ref=e1232] [cursor=pointer]'
+      - generic [ref=e1233]:
+        - generic [ref=e1234]:
+          - generic [ref=e1235]:
+            - generic [ref=e1236]: files whose content reached an agent (read with a tool unless marked) · click a row → calls that touched it
+            - link "+ searched / listed / run" [ref=e1237] [cursor=pointer]:
+              - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&sort=cost&more=1
+          - table [ref=e1238]:
+            - rowgroup [ref=e1239]:
+              - row "file reads cost ▾ how first last" [ref=e1240]:
+                - columnheader "file" [ref=e1241]:
+                  - link "file" [ref=e1242] [cursor=pointer]:
+                    - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&sort=path
+                - columnheader "reads" [ref=e1243]:
+                  - link "reads" [ref=e1244] [cursor=pointer]:
+                    - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&sort=count
+                - columnheader "cost ▾" [ref=e1245]:
+                  - link "cost ▾" [ref=e1246] [cursor=pointer]:
+                    - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&sort=cost
+                - columnheader "how" [ref=e1247]
+                - columnheader "first" [ref=e1248]:
+                  - link "first" [ref=e1249] [cursor=pointer]:
+                    - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&sort=first
+                - columnheader "last" [ref=e1250]:
+                  - link "last" [ref=e1251] [cursor=pointer]:
+                    - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e&sort=last
+            - rowgroup [ref=e1252]:
+              - row "src/Web/App.php 6 $0.76 injected ×1 + read again modified 15:55:57 17:17:46" [ref=e1253] [cursor=pointer]:
+                - cell "src/Web/App.php" [ref=e1254]
+                - cell "6" [ref=e1255]
+                - cell "$0.76" [ref=e1256]
+                - cell "injected ×1 + read again modified" [ref=e1257]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×5" [ref=e1258]: injected ×1 + read again
+                  - generic [ref=e1259]: modified
+                - cell "15:55:57" [ref=e1260]
+                - cell "17:17:46" [ref=e1261]
+              - row "public/assets/app.js 2 $0.33 15:55:57 17:19:35" [ref=e1262] [cursor=pointer]:
+                - cell "public/assets/app.js" [ref=e1263]
+                - cell "2" [ref=e1264]
+                - cell "$0.33" [ref=e1265]
+                - cell [ref=e1266]
+                - cell "15:55:57" [ref=e1267]
+                - cell "17:19:35" [ref=e1268]
+              - row "public/assets/app.css 1 $0.27 modified 15:55:57 17:16:28" [ref=e1269] [cursor=pointer]:
+                - cell "public/assets/app.css" [ref=e1270]
+                - cell "1" [ref=e1271]
+                - cell "$0.27" [ref=e1272]
+                - cell "modified" [ref=e1273]:
+                  - generic [ref=e1274]: modified
+                - cell "15:55:57" [ref=e1275]
+                - cell "17:16:28" [ref=e1276]
+              - row "tests/run.php 4 $0.20 injected ×2 + read again fragment only modified 15:59:13 17:18:33" [ref=e1277] [cursor=pointer]:
+                - cell "tests/run.php" [ref=e1278]
+                - cell "4" [ref=e1279]
+                - cell "$0.20" [ref=e1280]
+                - cell "injected ×2 + read again fragment only modified" [ref=e1281]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×2" [ref=e1282]: injected ×2 + read again
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1283]: fragment only
+                  - generic [ref=e1284]: modified
+                - cell "15:59:13" [ref=e1285]
+                - cell "17:18:33" [ref=e1286]
+              - row "~/.claude/hooks/block-secrets.sh 1 $0.20 16:39:51 16:39:56" [ref=e1287] [cursor=pointer]:
+                - cell "~/.claude/hooks/block-secrets.sh" [ref=e1288]
+                - cell "1" [ref=e1289]
+                - cell "$0.20" [ref=e1290]
+                - cell [ref=e1291]
+                - cell "16:39:51" [ref=e1292]
+                - cell "16:39:56" [ref=e1293]
+              - row "src/Source/SessionIndex.php 3 $0.18 injected ×1 + read again modified 16:18:58 16:20:50" [ref=e1294] [cursor=pointer]:
+                - cell "src/Source/SessionIndex.php" [ref=e1295]
+                - cell "3" [ref=e1296]
+                - cell "$0.18" [ref=e1297]
+                - cell "injected ×1 + read again modified" [ref=e1298]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×2" [ref=e1299]: injected ×1 + read again
+                  - generic [ref=e1300]: modified
+                - cell "16:18:58" [ref=e1301]
+                - cell "16:20:50" [ref=e1302]
+              - row "templates/session.php 3 $0.18 modified 15:55:57 17:11:58" [ref=e1303] [cursor=pointer]:
+                - cell "templates/session.php" [ref=e1304]
+                - cell "3" [ref=e1305]
+                - cell "$0.18" [ref=e1306]
+                - cell "modified" [ref=e1307]:
+                  - generic [ref=e1308]: modified
+                - cell "15:55:57" [ref=e1309]
+                - cell "17:11:58" [ref=e1310]
+              - row "~/.claude/settings.json 2 $0.15 16:39:56 16:39:56" [ref=e1311] [cursor=pointer]:
+                - cell "~/.claude/settings.json" [ref=e1312]
+                - cell "2" [ref=e1313]
+                - cell "$0.15" [ref=e1314]
+                - cell [ref=e1315]
+                - cell "16:39:56" [ref=e1316]
+                - cell "16:39:56" [ref=e1317]
+              - row "milestones.llm.md 1 $0.14 fragment only modified 15:55:57 17:12:35" [ref=e1318] [cursor=pointer]:
+                - cell "milestones.llm.md" [ref=e1319]: milestones.llm.md
+                - cell "1" [ref=e1320]
+                - cell "$0.14" [ref=e1321]
+                - cell "fragment only modified" [ref=e1322]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1323]: fragment only
+                  - generic [ref=e1324]: modified
+                - cell "15:55:57" [ref=e1325]
+                - cell "17:12:35" [ref=e1326]
+              - row "templates/summary.php 1 $0.12 fragment only modified 16:06:36 17:11:16" [ref=e1327] [cursor=pointer]:
+                - cell "templates/summary.php" [ref=e1328]
+                - cell "1" [ref=e1329]
+                - cell "$0.12" [ref=e1330]
+                - cell "fragment only modified" [ref=e1331]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1332]: fragment only
+                  - generic [ref=e1333]: modified
+                - cell "16:06:36" [ref=e1334]
+                - cell "17:11:16" [ref=e1335]
+              - row "src/Source/TranscriptReader.php 2 $0.12 injected ×1 + read again modified 15:56:40 16:42:38" [ref=e1336] [cursor=pointer]:
+                - cell "src/Source/TranscriptReader.php" [ref=e1337]
+                - cell "2" [ref=e1338]
+                - cell "$0.12" [ref=e1339]
+                - cell "injected ×1 + read again modified" [ref=e1340]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×1" [ref=e1341]: injected ×1 + read again
+                  - generic [ref=e1342]: modified
+                - cell "15:56:40" [ref=e1343]
+                - cell "16:42:38" [ref=e1344]
+              - row "templates/layout.php 3 $0.11 15:55:57 17:19:10" [ref=e1345] [cursor=pointer]:
+                - cell "templates/layout.php" [ref=e1346]
+                - cell "3" [ref=e1347]
+                - cell "$0.11" [ref=e1348]
+                - cell [ref=e1349]
+                - cell "15:55:57" [ref=e1350]
+                - cell "17:19:10" [ref=e1351]
+              - row "src/Model/Event.php 1 $0.10 15:56:40 16:42:38" [ref=e1352] [cursor=pointer]:
+                - cell "src/Model/Event.php" [ref=e1353]
+                - cell "1" [ref=e1354]
+                - cell "$0.10" [ref=e1355]
+                - cell [ref=e1356]
+                - cell "15:56:40" [ref=e1357]
+                - cell "16:42:38" [ref=e1358]
+              - row "src/Model/Session.php 1 $0.10 15:56:40 15:59:11" [ref=e1359] [cursor=pointer]:
+                - cell "src/Model/Session.php" [ref=e1360]
+                - cell "1" [ref=e1361]
+                - cell "$0.10" [ref=e1362]
+                - cell [ref=e1363]
+                - cell "15:56:40" [ref=e1364]
+                - cell "15:59:11" [ref=e1365]
+              - row "templates/touch.php 1 $0.10 15:55:57 17:11:58" [ref=e1366] [cursor=pointer]:
+                - cell "templates/touch.php" [ref=e1367]
+                - cell "1" [ref=e1368]
+                - cell "$0.10" [ref=e1369]
+                - cell [ref=e1370]
+                - cell "15:55:57" [ref=e1371]
+                - cell "17:11:58" [ref=e1372]
+              - row ".playwright-mcp/logs.png 1 $0.09 15:56:30 15:56:30" [ref=e1373] [cursor=pointer]:
+                - cell ".playwright-mcp/logs.png" [ref=e1374]
+                - cell "1" [ref=e1375]
+                - cell "$0.09" [ref=e1376]
+                - cell [ref=e1377]
+                - cell "15:56:30" [ref=e1378]
+                - cell "15:56:30" [ref=e1379]
+              - row "templates/tree.php 1 $0.09 modified 15:56:02 16:03:36" [ref=e1380] [cursor=pointer]:
+                - cell "templates/tree.php" [ref=e1381]
+                - cell "1" [ref=e1382]
+                - cell "$0.09" [ref=e1383]
+                - cell "modified" [ref=e1384]:
+                  - generic [ref=e1385]: modified
+                - cell "15:56:02" [ref=e1386]
+                - cell "16:03:36" [ref=e1387]
+              - row "templates/commands-pane.php 1 $0.09 modified 15:56:02 16:06:05" [ref=e1388] [cursor=pointer]:
+                - cell "templates/commands-pane.php" [ref=e1389]
+                - cell "1" [ref=e1390]
+                - cell "$0.09" [ref=e1391]
+                - cell "modified" [ref=e1392]:
+                  - generic [ref=e1393]: modified
+                - cell "15:56:02" [ref=e1394]
+                - cell "16:06:05" [ref=e1395]
+              - row "templates/prompts-pane.php 1 $0.09 modified 15:56:02 16:03:36" [ref=e1396] [cursor=pointer]:
+                - cell "templates/prompts-pane.php" [ref=e1397]
+                - cell "1" [ref=e1398]
+                - cell "$0.09" [ref=e1399]
+                - cell "modified" [ref=e1400]:
+                  - generic [ref=e1401]: modified
+                - cell "15:56:02" [ref=e1402]
+                - cell "16:03:36" [ref=e1403]
+              - row ".playwright-mcp/timeline.png 1 $0.09 15:56:35 15:56:35" [ref=e1404] [cursor=pointer]:
+                - cell ".playwright-mcp/timeline.png" [ref=e1405]
+                - cell "1" [ref=e1406]
+                - cell "$0.09" [ref=e1407]
+                - cell [ref=e1408]
+                - cell "15:56:35" [ref=e1409]
+                - cell "15:56:35" [ref=e1410]
+              - row ".playwright-mcp/new-summary.jpg 1 $0.09 16:08:47 16:08:47" [ref=e1411] [cursor=pointer]:
+                - cell ".playwright-mcp/new-summary.jpg" [ref=e1412]
+                - cell "1" [ref=e1413]
+                - cell "$0.09" [ref=e1414]
+                - cell [ref=e1415]
+                - cell "16:08:47" [ref=e1416]
+                - cell "16:08:47" [ref=e1417]
+              - row "src/Summary/SummaryStore.php 1 $0.09 fragment only 16:19:44 16:44:27" [ref=e1418] [cursor=pointer]:
+                - cell "src/Summary/SummaryStore.php" [ref=e1419]
+                - cell "1" [ref=e1420]
+                - cell "$0.09" [ref=e1421]
+                - cell "fragment only" [ref=e1422]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1423]: fragment only
+                - cell "16:19:44" [ref=e1424]
+                - cell "16:44:27" [ref=e1425]
+              - row "src/Problems.php 3 $0.09 fragment only 15:59:13 16:43:34" [ref=e1426] [cursor=pointer]:
+                - cell "src/Problems.php" [ref=e1427]
+                - cell "3" [ref=e1428]
+                - cell "$0.09" [ref=e1429]
+                - cell "fragment only" [ref=e1430]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1431]: fragment only
+                - cell "15:59:13" [ref=e1432]
+                - cell "16:43:34" [ref=e1433]
+              - row "README.md 1 $0.09 fragment only modified 16:09:14 17:12:19" [ref=e1434] [cursor=pointer]:
+                - cell "README.md" [ref=e1435]: README.md
+                - cell "1" [ref=e1436]
+                - cell "$0.09" [ref=e1437]
+                - cell "fragment only modified" [ref=e1438]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1439]: fragment only
+                  - generic [ref=e1440]: modified
+                - cell "16:09:14" [ref=e1441]
+                - cell "17:12:19" [ref=e1442]
+              - row ".playwright-mcp/new-read.png 1 $0.08 16:07:28 16:07:28" [ref=e1443] [cursor=pointer]:
+                - cell ".playwright-mcp/new-read.png" [ref=e1444]
+                - cell "1" [ref=e1445]
+                - cell "$0.08" [ref=e1446]
+                - cell [ref=e1447]
+                - cell "16:07:28" [ref=e1448]
+                - cell "16:07:28" [ref=e1449]
+              - row ".playwright-mcp/new-drawer.png 1 $0.08 16:07:36 16:07:36" [ref=e1450] [cursor=pointer]:
+                - cell ".playwright-mcp/new-drawer.png" [ref=e1451]
+                - cell "1" [ref=e1452]
+                - cell "$0.08" [ref=e1453]
+                - cell [ref=e1454]
+                - cell "16:07:36" [ref=e1455]
+                - cell "16:07:36" [ref=e1456]
+              - row ".playwright-mcp/new-messages.png 1 $0.08 16:08:02 16:08:02" [ref=e1457] [cursor=pointer]:
+                - cell ".playwright-mcp/new-messages.png" [ref=e1458]
+                - cell "1" [ref=e1459]
+                - cell "$0.08" [ref=e1460]
+                - cell [ref=e1461]
+                - cell "16:08:02" [ref=e1462]
+                - cell "16:08:02" [ref=e1463]
+              - row ".playwright-mcp/new-commands.png 1 $0.07 16:08:08 16:08:08" [ref=e1464] [cursor=pointer]:
+                - cell ".playwright-mcp/new-commands.png" [ref=e1465]
+                - cell "1" [ref=e1466]
+                - cell "$0.07" [ref=e1467]
+                - cell [ref=e1468]
+                - cell "16:08:08" [ref=e1469]
+                - cell "16:08:08" [ref=e1470]
+              - row ".playwright-mcp/new-changed.png 1 $0.07 16:08:17 16:08:17" [ref=e1471] [cursor=pointer]:
+                - cell ".playwright-mcp/new-changed.png" [ref=e1472]
+                - cell "1" [ref=e1473]
+                - cell "$0.07" [ref=e1474]
+                - cell [ref=e1475]
+                - cell "16:08:17" [ref=e1476]
+                - cell "16:08:17" [ref=e1477]
+              - row ".playwright-mcp/new-changed2.png 1 $0.07 16:08:29 16:08:29" [ref=e1478] [cursor=pointer]:
+                - cell ".playwright-mcp/new-changed2.png" [ref=e1479]
+                - cell "1" [ref=e1480]
+                - cell "$0.07" [ref=e1481]
+                - cell [ref=e1482]
+                - cell "16:08:29" [ref=e1483]
+                - cell "16:08:29" [ref=e1484]
+              - row "templates/graph.php 1 $0.07 modified 15:55:57 17:11:58" [ref=e1485] [cursor=pointer]:
+                - cell "templates/graph.php" [ref=e1486]
+                - cell "1" [ref=e1487]
+                - cell "$0.07" [ref=e1488]
+                - cell "modified" [ref=e1489]:
+                  - generic [ref=e1490]: modified
+                - cell "15:55:57" [ref=e1491]
+                - cell "17:11:58" [ref=e1492]
+              - row "templates/files.php 5 $0.07 injected ×2 + read again modified 15:55:57 17:20:13" [ref=e1493] [cursor=pointer]:
+                - cell "templates/files.php" [ref=e1494]
+                - cell "5" [ref=e1495]
+                - cell "$0.07" [ref=e1496]
+                - cell "injected ×2 + read again modified" [ref=e1497]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×3" [ref=e1498]: injected ×2 + read again
+                  - generic [ref=e1499]: modified
+                - cell "15:55:57" [ref=e1500]
+                - cell "17:20:13" [ref=e1501]
+              - row "templates/timeline.php 1 $0.07 modified 15:55:57 17:11:58" [ref=e1502] [cursor=pointer]:
+                - cell "templates/timeline.php" [ref=e1503]
+                - cell "1" [ref=e1504]
+                - cell "$0.07" [ref=e1505]
+                - cell "modified" [ref=e1506]:
+                  - generic [ref=e1507]: modified
+                - cell "15:55:57" [ref=e1508]
+                - cell "17:11:58" [ref=e1509]
+              - row "CLAUDE.md 3 $0.07 injected ×2 + read again modified 15:55:52 17:12:19" [ref=e1510] [cursor=pointer]:
+                - cell "CLAUDE.md" [ref=e1511]: CLAUDE.md
+                - cell "3" [ref=e1512]
+                - cell "$0.07" [ref=e1513]
+                - cell "injected ×2 + read again modified" [ref=e1514]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×1" [ref=e1515]: injected ×2 + read again
+                  - generic [ref=e1516]: modified
+                - cell "15:55:52" [ref=e1517]
+                - cell "17:12:19" [ref=e1518]
+              - row ".playwright-mcp/blocked-summary.jpg 1 $0.07 16:46:02 16:46:02" [ref=e1519] [cursor=pointer]:
+                - cell ".playwright-mcp/blocked-summary.jpg" [ref=e1520]
+                - cell "1" [ref=e1521]
+                - cell "$0.07" [ref=e1522]
+                - cell [ref=e1523]
+                - cell "16:46:02" [ref=e1524]
+                - cell "16:46:02" [ref=e1525]
+              - row "templates/head-session.php 4 $0.06 fragment only 15:55:57 17:19:50" [ref=e1526] [cursor=pointer]:
+                - cell "templates/head-session.php" [ref=e1527]
+                - cell "4" [ref=e1528]
+                - cell "$0.06" [ref=e1529]
+                - cell "fragment only" [ref=e1530]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1531]: fragment only
+                - cell "15:55:57" [ref=e1532]
+                - cell "17:19:50" [ref=e1533]
+              - row "public/assets/toolkit/Hx.js 3 $0.06 fragment only 16:00:22 16:02:53" [ref=e1534] [cursor=pointer]:
+                - cell "public/assets/toolkit/Hx.js" [ref=e1535]
+                - cell "3" [ref=e1536]
+                - cell "$0.06" [ref=e1537]
+                - cell "fragment only" [ref=e1538]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1539]: fragment only
+                - cell "16:00:22" [ref=e1540]
+                - cell "16:02:53" [ref=e1541]
+              - row "src/Stats.php 1 $0.06 15:59:13 15:59:13" [ref=e1542] [cursor=pointer]:
+                - cell "src/Stats.php" [ref=e1543]
+                - cell "1" [ref=e1544]
+                - cell "$0.06" [ref=e1545]
+                - cell [ref=e1546]
+                - cell "15:59:13" [ref=e1547]
+                - cell "15:59:13" [ref=e1548]
+              - row "src/Web/Tree.php 1 $0.06 modified 15:59:13 16:03:36" [ref=e1549] [cursor=pointer]:
+                - cell "src/Web/Tree.php" [ref=e1550]
+                - cell "1" [ref=e1551]
+                - cell "$0.06" [ref=e1552]
+                - cell "modified" [ref=e1553]:
+                  - generic [ref=e1554]: modified
+                - cell "15:59:13" [ref=e1555]
+                - cell "16:03:36" [ref=e1556]
+              - row "src/Web/FileTable.php 1 $0.06 injected fragment only modified 15:55:57 17:11:58" [ref=e1557] [cursor=pointer]:
+                - cell "src/Web/FileTable.php" [ref=e1558]
+                - cell "1" [ref=e1559]
+                - cell "$0.06" [ref=e1560]
+                - cell "injected fragment only modified" [ref=e1561]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file)" [ref=e1562]: injected
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1563]: fragment only
+                  - generic [ref=e1564]: modified
+                - cell "15:55:57" [ref=e1565]
+                - cell "17:11:58" [ref=e1566]
+              - row ".playwright-mcp/sidebar.jpg 1 $0.06 16:21:06 16:21:06" [ref=e1567] [cursor=pointer]:
+                - cell ".playwright-mcp/sidebar.jpg" [ref=e1568]
+                - cell "1" [ref=e1569]
+                - cell "$0.06" [ref=e1570]
+                - cell [ref=e1571]
+                - cell "16:21:06" [ref=e1572]
+                - cell "16:21:06" [ref=e1573]
+              - row ".playwright-mcp/new-timeline.jpg 1 $0.05 16:08:47 16:08:47" [ref=e1574] [cursor=pointer]:
+                - cell ".playwright-mcp/new-timeline.jpg" [ref=e1575]
+                - cell "1" [ref=e1576]
+                - cell "$0.05" [ref=e1577]
+                - cell [ref=e1578]
+                - cell "16:08:47" [ref=e1579]
+                - cell "16:08:47" [ref=e1580]
+              - row "templates/summary-commands.php 2 $0.05 fragment only modified 16:04:35 17:11:16" [ref=e1581] [cursor=pointer]:
+                - cell "templates/summary-commands.php" [ref=e1582]
+                - cell "2" [ref=e1583]
+                - cell "$0.05" [ref=e1584]
+                - cell "fragment only modified" [ref=e1585]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1586]: fragment only
+                  - generic [ref=e1587]: modified
+                - cell "16:04:35" [ref=e1588]
+                - cell "17:11:16" [ref=e1589]
+              - row "templates/drawer.php 3 $0.05 injected ×1 + read again modified 15:55:57 17:16:28" [ref=e1590] [cursor=pointer]:
+                - cell "templates/drawer.php" [ref=e1591]
+                - cell "3" [ref=e1592]
+                - cell "$0.05" [ref=e1593]
+                - cell "injected ×1 + read again modified" [ref=e1594]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×2" [ref=e1595]: injected ×1 + read again
+                  - generic [ref=e1596]: modified
+                - cell "15:55:57" [ref=e1597]
+                - cell "17:16:28" [ref=e1598]
+              - row "public/assets/graph.js 1 $0.05 fragment only 15:55:57 17:18:15" [ref=e1599] [cursor=pointer]:
+                - cell "public/assets/graph.js" [ref=e1600]
+                - cell "1" [ref=e1601]
+                - cell "$0.05" [ref=e1602]
+                - cell "fragment only" [ref=e1603]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1604]: fragment only
+                - cell "15:55:57" [ref=e1605]
+                - cell "17:18:15" [ref=e1606]
+              - row "templates/summary-rows.php 2 $0.05 injected ×1 + read again modified 16:06:13 17:11:16" [ref=e1607] [cursor=pointer]:
+                - cell "templates/summary-rows.php" [ref=e1608]
+                - cell "2" [ref=e1609]
+                - cell "$0.05" [ref=e1610]
+                - cell "injected ×1 + read again modified" [ref=e1611]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×1" [ref=e1612]: injected ×1 + read again
+                  - generic [ref=e1613]: modified
+                - cell "16:06:13" [ref=e1614]
+                - cell "17:11:16" [ref=e1615]
+              - row ".playwright-mcp/sum-before.jpg 1 $0.04 16:57:20 16:57:20" [ref=e1616] [cursor=pointer]:
+                - cell ".playwright-mcp/sum-before.jpg" [ref=e1617]
+                - cell "1" [ref=e1618]
+                - cell "$0.04" [ref=e1619]
+                - cell [ref=e1620]
+                - cell "16:57:20" [ref=e1621]
+                - cell "16:57:20" [ref=e1622]
+              - row ".playwright-mcp/sum-after.jpg 1 $0.04 16:58:42 16:58:42" [ref=e1623] [cursor=pointer]:
+                - cell ".playwright-mcp/sum-after.jpg" [ref=e1624]
+                - cell "1" [ref=e1625]
+                - cell "$0.04" [ref=e1626]
+                - cell [ref=e1627]
+                - cell "16:58:42" [ref=e1628]
+                - cell "16:58:42" [ref=e1629]
+              - row ".playwright-mcp/sum-cmd.jpg 1 $0.04 16:58:55 16:58:55" [ref=e1630] [cursor=pointer]:
+                - cell ".playwright-mcp/sum-cmd.jpg" [ref=e1631]
+                - cell "1" [ref=e1632]
+                - cell "$0.04" [ref=e1633]
+                - cell [ref=e1634]
+                - cell "16:58:55" [ref=e1635]
+                - cell "16:58:55" [ref=e1636]
+              - row "src/Summary/Ranking.php 1 $0.04 fragment only 16:19:44 17:07:15" [ref=e1637] [cursor=pointer]:
+                - cell "src/Summary/Ranking.php" [ref=e1638]
+                - cell "1" [ref=e1639]
+                - cell "$0.04" [ref=e1640]
+                - cell "fragment only" [ref=e1641]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1642]: fragment only
+                - cell "16:19:44" [ref=e1643]
+                - cell "17:07:15" [ref=e1644]
+              - row ".playwright-mcp/blocked2.jpg 1 $0.04 17:02:55 17:02:55" [ref=e1645] [cursor=pointer]:
+                - cell ".playwright-mcp/blocked2.jpg" [ref=e1646]
+                - cell "1" [ref=e1647]
+                - cell "$0.04" [ref=e1648]
+                - cell [ref=e1649]
+                - cell "17:02:55" [ref=e1650]
+                - cell "17:02:55" [ref=e1651]
+              - row ".playwright-mcp/all-read.jpg 1 $0.04 17:12:11 17:12:11" [ref=e1652] [cursor=pointer]:
+                - cell ".playwright-mcp/all-read.jpg" [ref=e1653]
+                - cell "1" [ref=e1654]
+                - cell "$0.04" [ref=e1655]
+                - cell [ref=e1656]
+                - cell "17:12:11" [ref=e1657]
+                - cell "17:12:11" [ref=e1658]
+              - row ".playwright-mcp/blocked3.jpg 1 $0.04 17:04:28 17:04:28" [ref=e1659] [cursor=pointer]:
+                - cell ".playwright-mcp/blocked3.jpg" [ref=e1660]
+                - cell "1" [ref=e1661]
+                - cell "$0.04" [ref=e1662]
+                - cell [ref=e1663]
+                - cell "17:04:28" [ref=e1664]
+                - cell "17:04:28" [ref=e1665]
+              - row "public/assets/toolkit/Util.js 1 $0.03 fragment only 16:00:36 17:10:52" [ref=e1666] [cursor=pointer]:
+                - cell "public/assets/toolkit/Util.js" [ref=e1667]
+                - cell "1" [ref=e1668]
+                - cell "$0.03" [ref=e1669]
+                - cell "fragment only" [ref=e1670]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1671]: fragment only
+                - cell "16:00:36" [ref=e1672]
+                - cell "17:10:52" [ref=e1673]
+              - row ".playwright-mcp/blocked-session.jpg 1 $0.03 16:46:03 16:46:03" [ref=e1674] [cursor=pointer]:
+                - cell ".playwright-mcp/blocked-session.jpg" [ref=e1675]
+                - cell "1" [ref=e1676]
+                - cell "$0.03" [ref=e1677]
+                - cell [ref=e1678]
+                - cell "16:46:03" [ref=e1679]
+                - cell "16:46:03" [ref=e1680]
+              - row "src/Summary/CommandRanking.php 1 $0.03 fragment only 16:19:44 17:07:15" [ref=e1681] [cursor=pointer]:
+                - cell "src/Summary/CommandRanking.php" [ref=e1682]
+                - cell "1" [ref=e1683]
+                - cell "$0.03" [ref=e1684]
+                - cell "fragment only" [ref=e1685]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1686]: fragment only
+                - cell "16:19:44" [ref=e1687]
+                - cell "17:07:15" [ref=e1688]
+              - row "templates/head-all.php 2 $0.02 injected ×1 + read again modified 15:55:57 17:20:13" [ref=e1689] [cursor=pointer]:
+                - cell "templates/head-all.php" [ref=e1690]
+                - cell "2" [ref=e1691]
+                - cell "$0.02" [ref=e1692]
+                - cell "injected ×1 + read again modified" [ref=e1693]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×1" [ref=e1694]: injected ×1 + read again
+                  - generic [ref=e1695]: modified
+                - cell "15:55:57" [ref=e1696]
+                - cell "17:20:13" [ref=e1697]
+              - row ".playwright-mcp/d-file.jpg 1 $0.02 17:17:54 17:17:54" [ref=e1698] [cursor=pointer]:
+                - cell ".playwright-mcp/d-file.jpg" [ref=e1699]
+                - cell "1" [ref=e1700]
+                - cell "$0.02" [ref=e1701]
+                - cell [ref=e1702]
+                - cell "17:17:54" [ref=e1703]
+                - cell "17:17:54" [ref=e1704]
+              - row "templates/commands.php 4 $0.02 injected ×2 + read again fragment only modified 15:55:57 17:11:58" [ref=e1705] [cursor=pointer]:
+                - cell "templates/commands.php" [ref=e1706]
+                - cell "4" [ref=e1707]
+                - cell "$0.02" [ref=e1708]
+                - cell "injected ×2 + read again fragment only modified" [ref=e1709]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×2" [ref=e1710]: injected ×2 + read again
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1711]: fragment only
+                  - generic [ref=e1712]: modified
+                - cell "15:55:57" [ref=e1713]
+                - cell "17:11:58" [ref=e1714]
+              - row ".playwright-mcp/d-call.jpg 1 $0.02 17:17:55 17:17:55" [ref=e1715] [cursor=pointer]:
+                - cell ".playwright-mcp/d-call.jpg" [ref=e1716]
+                - cell "1" [ref=e1717]
+                - cell "$0.02" [ref=e1718]
+                - cell [ref=e1719]
+                - cell "17:17:55" [ref=e1720]
+                - cell "17:17:55" [ref=e1721]
+              - row "templates/summary-blocked.php 2 $0.02 injected ×1 + read again modified 16:45:24 17:11:16" [ref=e1722] [cursor=pointer]:
+                - cell "templates/summary-blocked.php" [ref=e1723]
+                - cell "2" [ref=e1724]
+                - cell "$0.02" [ref=e1725]
+                - cell "injected ×1 + read again modified" [ref=e1726]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file); an agent also read it with a tool ×1" [ref=e1727]: injected ×1 + read again
+                  - generic [ref=e1728]: modified
+                - cell "16:45:24" [ref=e1729]
+                - cell "17:11:16" [ref=e1730]
+              - row ".playwright-mcp/sess-blocked.jpg 1 $0.02 17:12:12 17:12:12" [ref=e1731] [cursor=pointer]:
+                - cell ".playwright-mcp/sess-blocked.jpg" [ref=e1732]
+                - cell "1" [ref=e1733]
+                - cell "$0.02" [ref=e1734]
+                - cell [ref=e1735]
+                - cell "17:12:12" [ref=e1736]
+                - cell "17:12:12" [ref=e1737]
+              - row "src/Model/Agent.php 1 $0.01 15:56:40 15:56:40" [ref=e1738] [cursor=pointer]:
+                - cell "src/Model/Agent.php" [ref=e1739]
+                - cell "1" [ref=e1740]
+                - cell "$0.01" [ref=e1741]
+                - cell [ref=e1742]
+                - cell "15:56:40" [ref=e1743]
+                - cell "15:56:40" [ref=e1744]
+              - row "~/.claude/proj…3-c14c-4000-a36c-520e0737c0ad/subagents/agent-aa82650af40f0b559.jsonl 1 $0.01 fragment only 16:01:24 16:01:24" [ref=e1745] [cursor=pointer]:
+                - cell "~/.claude/proj…3-c14c-4000-a36c-520e0737c0ad/subagents/agent-aa82650af40f0b559.jsonl" [ref=e1746]
+                - cell "1" [ref=e1747]
+                - cell "$0.01" [ref=e1748]
+                - cell "fragment only" [ref=e1749]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1750]: fragment only
+                - cell "16:01:24" [ref=e1751]
+                - cell "16:01:24" [ref=e1752]
+              - row "public/index.php 1 $0.01 17:07:15 17:18:33" [ref=e1753] [cursor=pointer]:
+                - cell "public/index.php" [ref=e1754]
+                - cell "1" [ref=e1755]
+                - cell "$0.01" [ref=e1756]
+                - cell [ref=e1757]
+                - cell "17:07:15" [ref=e1758]
+                - cell "17:18:33" [ref=e1759]
+              - row "templates/drawer-all.php 1 $0.01 injected fragment only modified 15:55:57 17:16:29" [ref=e1760] [cursor=pointer]:
+                - cell "templates/drawer-all.php" [ref=e1761]
+                - cell "1" [ref=e1762]
+                - cell "$0.01" [ref=e1763]
+                - cell "injected fragment only modified" [ref=e1764]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file)" [ref=e1765]: injected
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1766]: fragment only
+                  - generic [ref=e1767]: modified
+                - cell "15:55:57" [ref=e1768]
+                - cell "17:16:29" [ref=e1769]
+              - row "src/Web/functions.php 1 $0.01 modified 15:55:57 17:18:33" [ref=e1770] [cursor=pointer]:
+                - cell "src/Web/functions.php" [ref=e1771]
+                - cell "1" [ref=e1772]
+                - cell "$0.01" [ref=e1773]
+                - cell "modified" [ref=e1774]:
+                  - generic [ref=e1775]: modified
+                - cell "15:55:57" [ref=e1776]
+                - cell "17:18:33" [ref=e1777]
+              - row "src/Source/HookLog.php 1 $0.01 fragment only 16:41:45 16:41:45" [ref=e1778] [cursor=pointer]:
+                - cell "src/Source/HookLog.php" [ref=e1779]
+                - cell "1" [ref=e1780]
+                - cell "$0.01" [ref=e1781]
+                - cell "fragment only" [ref=e1782]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1783]: fragment only
+                - cell "16:41:45" [ref=e1784]
+                - cell "16:41:45" [ref=e1785]
+              - row "templates/log.php 1 $0.01 injected fragment only modified 15:55:57 17:11:58" [ref=e1786] [cursor=pointer]:
+                - cell "templates/log.php" [ref=e1787]
+                - cell "1" [ref=e1788]
+                - cell "$0.01" [ref=e1789]
+                - cell "injected fragment only modified" [ref=e1790]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file)" [ref=e1791]: injected
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1792]: fragment only
+                  - generic [ref=e1793]: modified
+                - cell "15:55:57" [ref=e1794]
+                - cell "17:11:58" [ref=e1795]
+              - row "templates/messages.php 1 $0.01 injected fragment only modified 15:55:57 17:16:29" [ref=e1796] [cursor=pointer]:
+                - cell "templates/messages.php" [ref=e1797]
+                - cell "1" [ref=e1798]
+                - cell "$0.01" [ref=e1799]
+                - cell "injected fragment only modified" [ref=e1800]:
+                  - generic "loaded into context by Claude Code (CLAUDE.md, rules, @file)" [ref=e1801]: injected
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1802]: fragment only
+                  - generic [ref=e1803]: modified
+                - cell "15:55:57" [ref=e1804]
+                - cell "17:16:29" [ref=e1805]
+              - row "bin/dump.php 1 $0.01 fragment only 16:01:13 17:18:33" [ref=e1806] [cursor=pointer]:
+                - cell "bin/dump.php" [ref=e1807]
+                - cell "1" [ref=e1808]
+                - cell "$0.01" [ref=e1809]
+                - cell "fragment only" [ref=e1810]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1811]: fragment only
+                - cell "16:01:13" [ref=e1812]
+                - cell "17:18:33" [ref=e1813]
+              - row "public/assets/toolkit/Filter.js 1 $0.01 fragment only 16:00:22 16:00:22" [ref=e1814] [cursor=pointer]:
+                - cell "public/assets/toolkit/Filter.js" [ref=e1815]
+                - cell "1" [ref=e1816]
+                - cell "$0.01" [ref=e1817]
+                - cell "fragment only" [ref=e1818]:
+                  - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e1819]: fragment only
+                - cell "16:00:22" [ref=e1820]
+                - cell "16:00:22" [ref=e1821]
+              - row "~/.claude/proj…-2/f22fe3e8-1f31-4bd3-96e4-ed0c7400a3e2/custom-title.json 1 0% of the session cost 16:19:05 16:19:05" [ref=e1822] [cursor=pointer]:
+                - cell "~/.claude/proj…-2/f22fe3e8-1f31-4bd3-96e4-ed0c7400a3e2/custom-title.json" [ref=e1823]
+                - cell "1" [ref=e1824]
+                - cell "0% of the session cost" [ref=e1825]
+                - cell [ref=e1826]
+                - cell "16:19:05" [ref=e1827]
+                - cell "16:19:05" [ref=e1828]
+        - complementary [ref=e1829]:
+          - button "×" [ref=e1830] [cursor=pointer]
+          - paragraph [ref=e1831]: call from the session log
+          - heading "Bash" [level=2] [ref=e1832]
+          - paragraph [ref=e1833]: shell command run by the agent.
+          - generic [ref=e1834]:
+            - term [ref=e1835]: when
+            - definition [ref=e1836]: 23.10 15:56:02 → 15:56:03 (1.2 s)
+            - term [ref=e1837]: agent
+            - definition [ref=e1838]: main
+            - term [ref=e1840]: status
+            - definition [ref=e1841]:
+              - text: ✓ ran
+              - generic [ref=e1842]: The call ran and its result went back to the agent.
+            - term [ref=e1843]: cost
+            - definition [ref=e1844]:
+              - strong [ref=e1845]: $0.56
+              - text: (2.7% of the session)
+              - generic [ref=e1846]: The result added ~12k tokens to the agent's context. They were written to the cache once and then read again by 190 later model calls of this agent (until the context was compacted or the agent finished). A narrower read (offset/limit, sed -n, grep) or a subagent would keep it out of the main context.
+              - generic [ref=e1847]: "Estimate at API prices: the next cache write split between the tool results by their length."
+          - heading "command" [level=3] [ref=e1848]
+          - generic [ref=e1849]: cat templates/layout.php templates/session.php templates/tree.php templates/touch.php templates/commands-pane.php templates/prompts-pane.php
+          - heading "programs in the command" [level=3] [ref=e1850]
+          - paragraph [ref=e1851]:
+            - text: Each program the parser found, in order.
+            - code [ref=e1852]: "|"
+            - text: = it gets the output of the previous program; hover for where it runs.
+          - generic "top level" [ref=e1854]: cat
+          - heading "files (6)" [level=3] [ref=e1855]
+          - paragraph [ref=e1856]: Files this call touched and what happened to each. Click a file to see all calls that touched it.
+          - list [ref=e1857]:
+            - listitem "the content reached the agent (Read, cat, sed, head…)" [ref=e1858] [cursor=pointer]:
+              - generic [ref=e1859]: read
+              - text: templates/layout.php
+            - listitem "the content reached the agent (Read, cat, sed, head…)" [ref=e1860] [cursor=pointer]:
+              - generic [ref=e1861]: read
+              - text: templates/session.php
+            - listitem "the content reached the agent (Read, cat, sed, head…) · the file does not exist now" [ref=e1862] [cursor=pointer]:
+              - generic [ref=e1863]: read
+              - text: templates/tree.php
+            - listitem "the content reached the agent (Read, cat, sed, head…)" [ref=e1864] [cursor=pointer]:
+              - generic [ref=e1865]: read
+              - text: templates/touch.php
+            - listitem "the content reached the agent (Read, cat, sed, head…) · the file does not exist now" [ref=e1866] [cursor=pointer]:
+              - generic [ref=e1867]: read
+              - text: templates/commands-pane.php
+            - listitem "the content reached the agent (Read, cat, sed, head…) · the file does not exist now" [ref=e1868] [cursor=pointer]:
+              - generic [ref=e1869]: read
+              - text: templates/prompts-pane.php
+          - group [ref=e1870]:
+            - generic "what do read / context / search / listing / edit / write / exec mean?" [ref=e1871] [cursor=pointer]

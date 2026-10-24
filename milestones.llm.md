@@ -136,3 +136,31 @@ Powód: user ocenił GUI jako zbyt złożone (nagłówek 6 rzędów, ~25 liczb, 
 - Nagłówki `head-session.php` / `head-all.php` + wspólne `tabs.php`; widoki niedostępne w zakresie „all” wyszarzone
 - Usunięte: `summary.php`, `summary-rows.php`, `summary-commands.php`, `summary-blocked.php`, trasy `/summary/rows|fragment|version|export.csv`, `Viz.SummaryExport`, porcjowanie Hx (zastąpione limitem 300 + „show all”)
 - Natychmiastowe filtrowanie wpisywanego tekstu (toolkit `Filter`) w zakresie „all” zastąpione szukaniem po Enter
+
+## M16 — Zużycie tokenów — zrobione poza zakresem „all”
+Cel (user 2026-10-24): znaleźć miejsca, gdzie tokeny uciekają niepotrzebnie — nie tylko „ile”.
+- Parser: liczniki osobno (`output`, `cache_write`, `cache_read`, `input`, model) per odpowiedź, maksimum `output_tokens` z linii odpowiedzi, `<synthetic>` pomijany, `outputPartial` dla odpowiedzi bez końcowego usage (subagenci w Claude Code ≤ 2.1.300); `Session::tokens(agent, od, do)`; test w `tests/run.php`
+- Eksport: `metrics.json` (sesja, agenci, tury); agregaty `var/summary` (`tokens.total`, `tokens.models`, `PARSER` 6)
+- UI sesji: element `tokens` w rzędzie filtrów (sesja albo tura, tabela agentów, modele), wyjście w selectach tury i agenta, liczniki tury w Messages; lewy panel: wyjście per sesja
+- Koszt według cennika API per model (`Pricing`; odczyt z cache na Opus 5.5 = 0,05× wejścia, więc jedna waga nie wystarcza) jako miara główna zamiast „out”
+- Koszt wyniku narzędzia (`Event::carry`): tokeny dopisane do kontekstu × dalsze wywołania agenta do kompaktowania; panel tokenów (składniki, najdroższe wyniki), kolumna/sort w Files read i Commands, panel wywołania, `metrics.expensive_results`; `PARSER` 7
+- Pomiar na 4 sesjach: odczyt z cache 49–59% kosztu, zapis 20–39%, wyjście 13–23%; wyniki narzędzi niesione w kontekście 15–37% kosztu sesji
+- [ ] Zakładka Tokens w zakresie „all”: koszt per projekt / sesja w okresie, CSV — dane już są w agregatach
+- [ ] Odbudowy kontekstu jako zdarzenia (lista, znaczniki na osi czasu, przerwa przed, zmiana modelu) — 2–6% kosztu; część po przerwie 0–6 min z nieznanej przyczyny
+- [ ] Koszt startu subagenta (pierwsza odpowiedź) w tabeli agentów — ~20% kosztu sesji z 39 subagentami
+- [ ] Koszt własnego wyjścia agenta niesionego w kontekście (np. `Write` z całym plikiem) — dziś `carry` liczy tylko wyniki narzędzi
+
+## M17 — Strona startowa „Overview” — zrobione
+Cel (user 2026-10-24): big picture — co jest ok, a co wymaga uwagi (koszt, zablokowane podejrzane komendy, problemy z działaniem agentów).
+- Badanie na 106 sesjach (1583 tury, ≈ $946 według cennika API): tura p50 $0.21, p90 $1.28, 24 tury > $5; wynik narzędzia > $0.50 w 11 sesjach; kontekst > 400k w 20 sesjach; błędy narzędzi p90 2,3% wywołań
+- Blokady `block-secrets`: z 137 tylko 30 dotyczyło ścieżki z wzorcem reguły; 76 = wzorzec w tekście komendy, 31 = wiadomość agenta (raport subagenta nie dotarł)
+- Parser: `Session::incidents` — przerwania przez usera, limity, błędy API (wcześniej niewidoczne)
+- `Signals` → agregaty (`PARSER` 8) → `App::overview` → `templates/overview.php` na `/`; linki do tury / wywołania / zakładki Blocked; test w `tests/run.php`
+- Decyzje usera: osobna strona startowa (nie zakładka), progi jak wyżej, korekty usera pominięte (wykrywanie po słowach ~50% trafień)
+- Przebudowa 2026-10-24 (prośba usera: czytelniej, „co user może zrobić lepiej, a co agent” — granice, komunikacja, kontekst):
+  - badanie 7 dni (80 sesji, $846): 65% kosztu to wywołania przy kontekście > 200k; mediana kontekstu przy prompcie usera 201k (p90 471k); sesje wielodniowe (12) = 47% kosztu; odbudowa cache po przerwie > 5 min $66; subagenci 6% kosztu. Największa dźwignia to higiena kontekstu po stronie usera
+  - kolumny Cost / Security / Agents → osie kontekst / komunikacja / granice × „ty” / „agent”, każdy rodzaj z „co zrobić”; nowe sygnały `cold-cache`, `stale-session`, `quick-question`, `hook-text` (`PARSER` 11)
+- [ ] Plakietki przy promptach w widoku Messages (kontekst na starcie tury, zimny cache, „tu warto było /clear”) — te same obliczenia co `Signals`
+- [ ] Trend względem poprzedniego okresu (rośnie / maleje)
+- [ ] Sygnał „odbudowa kontekstu” (M16) i koszt startu subagentów, gdy powstaną
+

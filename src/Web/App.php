@@ -12,6 +12,7 @@ use Viz\Model\Session;
 use Viz\Model\Touch;
 use Viz\Path;
 use Viz\Problems;
+use Viz\Signals;
 use Viz\Source\HookLog;
 use Viz\Source\SessionIndex;
 use Viz\Source\TranscriptReader;
@@ -104,6 +105,14 @@ final class App
     {
         $sessions = SessionIndex::recent(self::SIDEBAR_LIMIT);
         $view = $this->view($q);
+        // bez sesji: strona startowa „Overview” (przelicza agregaty, więc przed odczytem kosztów do lewego panelu)
+        $overview = $view === null ? $this->overview($q) : null;
+        $sidebarTokens = SummaryStore::tokenTotals(array_column($sessions, 'id'));
+        // otwarta sesja: liczniki z transkryptu, agregat bywa sprzed ostatnich wywołań
+        if (isset($view['session']) && $view['session']->usage !== []) {
+            $all = $view['sessionTokens'];
+            $sidebarTokens[$view['sid']] = ['usd' => $all['unpriced'] < $all['calls'] ? $all['usd'] : null, 'output' => $all['output'], 'partial' => $all['outputPartial'] > 0, 'upTo' => null];
+        }
         header('Content-Type: text/html; charset=utf-8');
         require dirname(__DIR__, 2) . '/templates/layout.php';
     }
@@ -395,6 +404,136 @@ final class App
         ];
     }
 
+    /** Osie strony startowej (Signals::KINDS) w kolejności wyświetlania; w każdej osobno: co możesz zmienić ty, a co agent. */
+    public const OVERVIEW_AXES = [
+        'context' => 'Context',
+        'communication' => 'Communication',
+        'boundaries' => 'Boundaries',
+    ];
+
+    /** Domyślny okres strony startowej (dni); `days=all` = cała historia. */
+    private const OVERVIEW_DAYS = 7;
+
+    /**
+     * Strona startowa: sygnały ze wszystkich sesji (agregaty var/summary, więc także archiwalne) w okresie i projekcie.
+     * Liczniki `info` są sumą sesji aktywnych w okresie (agregat nie zna ich czasu).
+     */
+    private function overview(array $q): array
+    {
+        $p = $this->params($q);
+        $days = match (is_string($q['days'] ?? null) ? $q['days'] : '') {
+            '' => self::OVERVIEW_DAYS,
+            'all' => 0,
+            default => $p['days'],
+        };
+        $cutoff = $days > 0 ? gmdate('Y-m-d\TH:i:s', time() - $days * 86400) : '';
+        $store = new SummaryStore();
+        $store->refresh();
+        $projects = [];
+        $items = [];
+        $sessions = [];
+        $info = [];
+        $usd = 0.0;
+        foreach ($store->all() as $s) {
+            $cwd = (string) ($s['cwd'] ?? '');
+            $key = self::fileHash($cwd);
+            $projects[$key] ??= ['label' => basename($cwd) ?: '?', 'cwd' => $cwd, 'sessions' => 0];
+            $projects[$key]['sessions']++;
+            if (($p['project'] !== '' && $key !== $p['project']) || ($cutoff !== '' && (string) ($s['last'] ?? '') < $cutoff)) {
+                continue;
+            }
+            $sid = (string) $s['session_id'];
+            $sessions[$sid] = ['id' => $sid, 'title' => (string) ($s['title'] ?? ''), 'cwd' => $cwd, 'last' => (string) ($s['last'] ?? ''),
+                'usd' => (float) ($s['tokens']['total']['usd'] ?? 0), 'high' => 0, 'warn' => 0, 'kinds' => []];
+            $usd += $sessions[$sid]['usd'];
+            foreach ((array) ($s['signals']['info'] ?? []) as $k => $v) {
+                $info[$k] = ($info[$k] ?? 0) + $v;
+            }
+            foreach ((array) ($s['signals']['items'] ?? []) as $it) {
+                if (!isset(Signals::KINDS[$it['kind']]) || ($cutoff !== '' && $it['ts'] < $cutoff)) {
+                    continue;
+                }
+                [$axis, $actor, $sev] = Signals::KINDS[$it['kind']];
+                $items[] = $it + ['session_id' => $sid, 'title' => $sessions[$sid]['title'], 'cwd' => $cwd, 'axis' => $axis, 'actor' => $actor, 'sev' => $sev];
+                if ($sev !== 'info' && $axis !== 'cost') {
+                    $sessions[$sid][$sev]++;
+                    $sessions[$sid]['kinds'][$it['kind']] = ($sessions[$sid]['kinds'][$it['kind']] ?? 0) + 1;
+                }
+            }
+        }
+        uasort($projects, static fn (array $a, array $b): int => $b['sessions'] <=> $a['sessions']);
+        // najpierw `high`, potem kwoty malejąco (rodzaje w $), reszta od najnowszych
+        usort($items, static fn (array $a, array $b): int => [$a['sev'] === 'high' ? 0 : 1, -self::signalUsd($a), $b['ts']]
+            <=> [$b['sev'] === 'high' ? 0 : 1, -self::signalUsd($b), $a['ts']]);
+        $kindGroup = static function (string $kind) use ($items): array {
+            $list = array_values(array_filter($items, static fn (array $it): bool => $it['kind'] === $kind));
+
+            return ['items' => $list, 'sessions' => count(array_unique(array_column($list, 'session_id'))),
+                'usd' => in_array($kind, Signals::USD_KINDS, true) ? array_sum(array_column($list, 'value')) : null];
+        };
+        $axes = [];
+        foreach (array_merge(self::OVERVIEW_AXES, ['env' => 'Outside your and the agent’s control']) as $axis => $label) {
+            $inAxis = array_values(array_filter($items, static fn (array $it): bool => $it['axis'] === $axis));
+            $alarms = array_filter($inAxis, static fn (array $it): bool => $it['sev'] !== 'info');
+            $groups = [];
+            foreach (Signals::KINDS as $kind => [$kAxis, $actor]) {
+                if ($kAxis === $axis) {
+                    $groups[$actor][$kind] = $kindGroup($kind);
+                }
+            }
+            $axes[$axis] = [
+                'label' => $label,
+                'status' => match (true) {
+                    array_filter($alarms, static fn (array $it): bool => $it['sev'] === 'high') !== [] => 'high',
+                    $alarms !== [] => 'warn',
+                    default => 'ok',
+                },
+                'count' => count($alarms),
+                'groups' => $groups,
+                'top' => array_slice(array_values($alarms), 0, 4),
+            ];
+        }
+        $flagged = array_filter($sessions, static fn (array $s): bool => $s['high'] + $s['warn'] > 0);
+        usort($flagged, static fn (array $a, array $b): int => [$b['high'], $b['warn'], $b['usd']] <=> [$a['high'], $a['warn'], $a['usd']]);
+        $turns = $kindGroup('expensive-turn');
+
+        return [
+            'p' => $p,
+            'days' => $days,
+            'projects' => $projects,
+            'axes' => $axes,
+            'turns' => ['top' => array_slice($turns['items'], 0, 8)] + $turns,
+            'info' => $info,
+            'usd' => $usd,
+            'sessionCount' => count($sessions),
+            'flagged' => array_slice($flagged, 0, 15),
+            'flaggedCount' => count($flagged),
+        ];
+    }
+
+    /** Kwota sygnału do sortowania; rodzaje spoza Signals::USD_KINDS = 0. */
+    private static function signalUsd(array $it): float
+    {
+        return in_array($it['kind'], Signals::USD_KINDS, true) ? (float) $it['value'] : 0.0;
+    }
+
+    /** Link sygnału do widoku sesji, który pokazuje przyczynę (tura, wywołanie w panelu szczegółów, zakładka). */
+    public static function signalLink(array $it): string
+    {
+        $q = ['s' => $it['session_id'], 'turn' => $it['turn'] > 0 ? (string) $it['turn'] : ''];
+        $q = array_merge($q, match ($it['kind']) {
+            'expensive-turn' => ['view' => 'commands', 'sort' => 'cost'],
+            'expensive-result' => ['view' => 'commands', 'sort' => 'cost', 'pev' => (string) $it['ev']],
+            'huge-context' => ['view' => 'timeline', 'turn' => ''],
+            'protected-path', 'auto-mode', 'report-blocked', 'hook-text' => ['view' => 'blocked', 'pev' => (string) $it['ev']],
+            'subagent-failed' => ['view' => 'commands', 'status' => 'failed', 'pev' => (string) $it['ev']],
+            'error-rate' => ['view' => 'commands', 'status' => 'failed', 'turn' => ''],
+            default => ['view' => 'messages'],
+        });
+
+        return '/?' . http_build_query(array_filter($q, static fn (string $v): bool => $v !== ''));
+    }
+
     private function graph(array $q): void
     {
         $view = $this->view($q);
@@ -451,7 +590,7 @@ final class App
             'st' => max(0, (int) $str('st')),
             'se' => max(0, (int) $str('se')),
             // zakres „all”: okres, projekt, szukanie, wykluczenia, wszystkie wiersze
-            'days' => $str('recent') === '' && in_array($str('days'), ['7', '14', '30'], true) ? (int) $str('days') : 0,
+            'days' => $str('recent') === '' && in_array($str('days'), ['1', '7', '14', '30'], true) ? (int) $str('days') : 0,
             'recent' => isset(LiveSummary::WINDOWS[$str('recent')]) ? $str('recent') : '',
             'find' => mb_substr(trim($str('find')), 0, 200),
             'exclude' => mb_substr(trim($str('exclude')), 0, 500),
@@ -590,6 +729,22 @@ final class App
         $messages = self::messages($session, $agentFilter, $turn > 0 ? $turns[$turn - 1]['ts'] : null, $turn > 0 ? ($turns[$turn]['ts'] ?? null) : null);
         $mtime = $p['src'] === 'hook' ? (int) filemtime($path) : SessionIndex::mtime($path);
         $transcript = TranscriptReader::locate($sid);
+        // tokeny w zakresie tury (albo całej sesji) per agent — niezależne od filtrów agenta i statusu
+        $tokFrom = $turn > 0 ? $turns[$turn - 1]['ts'] : null;
+        $tokTo = $turn > 0 ? ($turns[$turn]['ts'] ?? null) : null;
+        $agentTokens = array_filter(
+            array_map(static fn (Agent $a): array => $session->tokens($a->id, $tokFrom, $tokTo), $session->agents),
+            static fn (array $t): bool => $t['calls'] > 0,
+        );
+        // po liczbie wywołań, nie po wyjściu: wyjście subagentów bywa zaniżone (`outputPartial`)
+        uasort($agentTokens, static fn (array $a, array $b): int => $b['calls'] <=> $a['calls']);
+        // najdroższe wyniki narzędzi w tym samym zakresie (wszyscy agenci): koszt zapisu + odczytów przy dalszych wywołaniach
+        $expensive = array_values(array_filter($session->events, static fn (Event $e): bool => ($e->carry['usd'] ?? 0) > 0
+            && ($tokFrom === null || $e->ts >= $tokFrom) && ($tokTo === null || $e->ts < $tokTo)));
+        usort($expensive, static fn (Event $a, Event $b): int => $b->carry['usd'] <=> $a->carry['usd']);
+        if ($p['sort'] === 'cost') {
+            usort($bash, static fn (Event $a, Event $b): int => ($b->carry['usd'] ?? 0) <=> ($a->carry['usd'] ?? 0));
+        }
 
         return [
             'allSessions' => false,
@@ -612,6 +767,14 @@ final class App
             'turn' => $turn,
             // zużycie tokenów per tura (wszyscy agenci, subagenci po czasie) — niezależne od filtrów agenta i statusu
             'turnTokens' => array_map(static fn (int $i): array => $session->tokens('', $turns[$i]['ts'], $turns[$i + 1]['ts'] ?? null), array_keys($turns)),
+            'tokens' => $session->tokens('', $tokFrom, $tokTo),
+            'sessionTokens' => $session->tokens(),
+            'carried' => array_sum(array_map(static fn (Event $e): float => $e->carry['usd'] ?? 0.0, array_filter($session->events,
+                static fn (Event $e): bool => ($tokFrom === null || $e->ts >= $tokFrom) && ($tokTo === null || $e->ts < $tokTo)))),
+            'expensive' => array_slice($expensive, 0, 8),
+            'agentTokens' => $agentTokens,
+            // select agenta: zużycie w całej sesji, bez względu na turę
+            'agentTokensAll' => array_map(static fn (Agent $a): array => $session->tokens($a->id), $session->agents),
             'problems' => $problems,
             'problemCount' => $problemCount,
             'statusCounts' => $statusCounts,
@@ -681,7 +844,7 @@ final class App
             }
             $out[] = $inside === $e->touches ? $e : new Event(
                 $e->ts, $e->sessionId, $e->agentId, $e->tool, $e->toolUseId, $e->summary, $e->cwd, $e->failed, $inside,
-                $e->unresolved, $e->indirect, $e->unknown, $e->endTs, $e->error, $e->commands, $e->denial,
+                $e->unresolved, $e->indirect, $e->unknown, $e->endTs, $e->error, $e->commands, $e->denial, $e->carry,
             );
         }
 
@@ -802,19 +965,31 @@ final class App
         };
     }
 
+    /** $0.42 · $3.17 · $12.4 · $128 — koszt według cennika API (Pricing). */
+    public static function usd(float $usd): string
+    {
+        return '$' . match (true) {
+            $usd >= 100 => number_format($usd, 0),
+            $usd >= 10 => number_format($usd, 1),
+            default => number_format($usd, 2),
+        };
+    }
+
     /**
-     * Opis zużycia tury: liczniki osobno (bez sumy), `≥` przy wyjściu zaniżonym przez transkrypt.
+     * Opis zużycia: koszt według cennika API jako miara główna, liczniki tokenów osobno (bez sumy), `≥` przy wyjściu zaniżonym przez transkrypt.
+     * `?` przy koszcie = część odpowiedzi to model spoza cennika.
      *
-     * @param array{calls: int, subagentCalls: int, outputPartial: int, output: int, cacheWrite: int, cacheRead: int, input: int, models: array<string, int>} $t
+     * @param array{calls: int, subagentCalls: int, outputPartial: int, output: int, cacheWrite: int, cacheRead: int, input: int, models: array<string, int>, usd: float, unpriced: int} $t
      * @return array{short: string, long: string}
      */
     public static function tokenText(array $t): array
     {
         $out = ($t['outputPartial'] > 0 ? '≥' : '') . self::tokenCount($t['output']);
+        $usd = self::usd($t['usd']) . ($t['unpriced'] > 0 ? '?' : '');
 
         return [
-            'short' => $out . ' out',
-            'long' => $t['calls'] . ($t['calls'] === 1 ? ' model call' : ' model calls') . ($t['subagentCalls'] > 0 ? ' (' . $t['subagentCalls'] . ' by subagents)' : '')
+            'short' => $usd,
+            'long' => $usd . ' · ' . $t['calls'] . ($t['calls'] === 1 ? ' model call' : ' model calls') . ($t['subagentCalls'] > 0 ? ' (' . $t['subagentCalls'] . ' by subagents)' : '')
                 . ' · output ' . $out . ' · new context ' . self::tokenCount($t['cacheWrite']) . ' · cache read ' . self::tokenCount($t['cacheRead'] + $t['input']),
         ];
     }

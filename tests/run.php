@@ -207,6 +207,94 @@ if ($gotTokens !== $expectedTokens) {
     echo "FAIL: tokens\n  oczekiwane: " . implode(' | ', $expectedTokens) . "\n  otrzymane:  " . implode(' | ', $gotTokens) . "\n";
 }
 
+// koszt wyników narzędzi: zapis cache następnej odpowiedzi bez jej poprzedniego wyjścia, dzielony po długości wyników;
+// dalsze odpowiedzi czytają wynik do kompaktowania (kontekst spada o > 40%); zapis 1 h = 2× wejścia; model spoza cennika = bez kosztu
+$costLine = static fn (string $ts, string $id, int $out, int $read, int $write, int $write1h, array $content = []): string => json_encode(['type' => 'assistant', 'timestamp' => $ts, 'cwd' => $root,
+    'message' => ['id' => $id, 'model' => 'claude-opus-5-5', 'role' => 'assistant', 'stop_reason' => 'end_turn', 'content' => $content ?: [['type' => 'text', 'text' => '.']],
+        'usage' => ['input_tokens' => 0, 'output_tokens' => $out, 'cache_read_input_tokens' => $read, 'cache_creation_input_tokens' => $write,
+            'cache_creation' => ['ephemeral_5m_input_tokens' => $write - $write1h, 'ephemeral_1h_input_tokens' => $write1h]]]]) . "\n";
+$use = static fn (string $id): array => ['type' => 'tool_use', 'id' => $id, 'name' => 'Read', 'input' => ['file_path' => "/tmp/$id"]];
+mkdir("$root/cost", 0700, true);
+file_put_contents("$root/cost/s3.jsonl",
+    $line('user', '2026-01-01T10:00:00Z', [['type' => 'text', 'text' => 'start']])
+    . $costLine('2026-01-01T10:00:01Z', 'c1', 100, 0, 10000, 0, [$use('t1'), $use('t2')])
+    . $line('user', '2026-01-01T10:00:02Z', [['type' => 'tool_result', 'tool_use_id' => 't1', 'content' => str_repeat('x', 3000)], ['type' => 'tool_result', 'tool_use_id' => 't2', 'content' => str_repeat('y', 1000)]])
+    . $costLine('2026-01-01T10:00:03Z', 'c2', 50, 10000, 2100, 2100, [$use('t3')])
+    . $line('user', '2026-01-01T10:00:04Z', [['type' => 'tool_result', 'tool_use_id' => 't3', 'content' => 'z']])
+    . $costLine('2026-01-01T10:00:05Z', 'c3', 10, 12100, 60, 0)
+    . $costLine('2026-01-01T10:00:06Z', 'c4', 10, 12160, 100, 0)
+    . $costLine('2026-01-01T10:00:07Z', 'c5', 10, 3000, 1000, 0));
+$costSession = (new Viz\Source\TranscriptReader())->read("$root/cost/s3.jsonl");
+$carryOf = [];
+foreach ($costSession->events as $e) {
+    $carryOf[$e->toolUseId] = $e->carry === null ? '-' : $e->carry['tokens'] . '×' . $e->carry['calls'] . '=' . round((float) $e->carry['usd'], 4);
+}
+ksort($carryOf);
+$gotCost = [
+    implode(' ', array_map(static fn ($k, $v): string => "$k:$v", array_keys($carryOf), $carryOf)),
+    implode(',', [Viz\Pricing::rates('claude-opus-5-5-x')[2], Viz\Pricing::rates('claude-opus-5')[2], Viz\Pricing::rates('gpt') === null ? 'null' : '?']),
+    $tokSession->tokens()['unpriced'] . ' ' . round($costSession->tokens()['usd'], 4),
+];
+// t1: 2000·3/4 = 1500 tokenów × (zapis 1 h 4·2 = 8 $/M + 2 dalsze odczyty po 0,20 $/M); t3: zapis 60 − wyjście 50 = 10 tokenów;
+// sesja: c1 0,052 + c2 0,0198 + c3 0,00292 + c4 0,00313 + c5 0,0058
+$expectedCost = ['t1:1500×2=0.0126 t2:500×2=0.0042 t3:10×1=0.0001', '0.2,0.5,null', '3 0.0837'];
+if ($gotCost !== $expectedCost) {
+    $failures++;
+    echo "FAIL: cost\n  oczekiwane: " . implode(' | ', $expectedCost) . "\n  otrzymane:  " . implode(' | ', $gotCost) . "\n";
+}
+
+// Overview: blokada hooka na ścieżce z wzorcem reguły = protected-path (2 = zaraz potem kolejna blokada), wzorzec tylko w tekście = info,
+// wiadomość agenta zablokowana = report-blocked, auto mode = high, deny rule = info; incydenty: przerwanie, limit (powtórka w 30 min = jeden)
+$sigRule = "block-secrets.sh: 'secret-dir'";
+$sigEvent = static fn (string $id, string $ts, string $tool, string $summary, array $touches, ?array $denial, string $agent = 'main'): Viz\Model\Event
+    => new Viz\Model\Event($ts, 's4', $agent, $tool, $id, $summary, '/p', $denial !== null, $touches, denial: $denial);
+$sigEvents = [
+    $sigEvent('b1', '2026-01-01T10:00:01Z', 'Bash', 'cat /p/secret-dir/a', [new Viz\Model\Touch('/p/secret-dir/a', Viz\Model\Touch::READ, true)], ['by' => 'hook', 'detail' => $sigRule]),
+    $sigEvent('b2', '2026-01-01T10:00:02Z', 'Bash', 'echo secret-dir', [], ['by' => 'hook', 'detail' => $sigRule]),
+    $sigEvent('b3', '2026-01-01T10:00:03Z', 'Bash', 'ls /p', [new Viz\Model\Touch('/p/secret-dir', Viz\Model\Touch::LIST, true)], ['by' => 'hook', 'detail' => $sigRule]),
+    $sigEvent('b4', '2026-01-01T10:00:04Z', 'SubagentHandback', 'report about secret-dir', [], ['by' => 'hook', 'detail' => $sigRule], 'sub1'),
+    $sigEvent('b5', '2026-01-01T10:00:05Z', 'Bash', 'rm -rf x', [], ['by' => 'auto mode', 'detail' => 'Irreversible Local Destruction']),
+    $sigEvent('b6', '2026-01-01T10:00:06Z', 'Bash', 'mkdir y', [], ['by' => 'deny rule', 'detail' => null]),
+];
+$sigIncidents = array_values(array_filter([
+    Viz\Source\TranscriptReader::incident(['type' => 'user', 'timestamp' => '2026-01-01T10:01:00Z', 'message' => ['content' => [['type' => 'text', 'text' => '[Request interrupted by user for tool use]']]]], 'main'),
+    Viz\Source\TranscriptReader::incident(['type' => 'assistant', 'isApiErrorMessage' => true, 'timestamp' => '2026-01-01T10:02:00Z', 'message' => ['content' => [['type' => 'text', 'text' => "You've hit your session limit · resets 6pm"]]]], 'main'),
+    Viz\Source\TranscriptReader::incident(['type' => 'assistant', 'isApiErrorMessage' => true, 'timestamp' => '2026-01-01T10:12:00Z', 'message' => ['content' => [['type' => 'text', 'text' => "You've hit your session limit · resets 6pm"]]]], 'main'),
+    Viz\Source\TranscriptReader::incident(['type' => 'user', 'timestamp' => '2026-01-01T10:13:00Z', 'message' => ['content' => 'zwykły prompt']], 'main'),
+]));
+$sig = Viz\Signals::of(new Viz\Model\Session('s4', '/x', 't', '/p', [Viz\Model\Agent::MAIN => new Viz\Model\Agent('main', 'main', 'main', null)], $sigEvents, 6, incidents: $sigIncidents));
+$gotSig = [implode(' ', array_map(static fn (array $it): string => $it['kind'] . ($it['ev'] !== null ? ':' . $it['ev'] : '') . ($it['value'] > 1 ? '×' . $it['value'] : ''), $sig['items'])),
+    "text={$sig['info']['hook_text']} deny={$sig['info']['deny_rule']}"];
+$expectedSig = ['protected-path:b1×2 hook-text:b2 protected-path:b3×2 report-blocked:b4 auto-mode:b5 interrupt limit', 'text=1 deny=1'];
+if ($gotSig !== $expectedSig) {
+    $failures++;
+    echo "FAIL: signals\n  oczekiwane: " . implode(' | ', $expectedSig) . "\n  otrzymane:  " . implode(' | ', $gotSig) . "\n";
+}
+
+// higiena kontekstu: przerwa > 5 min z odbudową cache, krótkie pytanie w dużym kontekście, powrót po nocy (bez /compact)
+$sigUsage = static fn (string $ts, int $tokens, int $read, int $write, float $readUsd, float $writeUsd): array => ['ts' => $ts, 'agent' => 'main', 'model' => 'm',
+    'tokens' => $tokens, 'input' => 0, 'cacheRead' => $read, 'cacheWrite' => $write, 'write1h' => 0, 'output' => 100, 'final' => true,
+    'cost' => ['input' => 0.0, 'read' => $readUsd, 'write' => $writeUsd, 'output' => 0.0]];
+$ctxSession = new Viz\Model\Session('s5', '/x', 't', '/p', [Viz\Model\Agent::MAIN => new Viz\Model\Agent('main', 'main', 'main', null)], [], 0,
+    prompts: array_map(static fn (array $x): array => ['ts' => $x[0], 'text' => $x[1], 'kind' => 'prompt'], [
+        ['2026-01-01T10:00:00Z', 'start'], ['2026-01-01T10:20:00Z', 'after a break'], ['2026-01-01T10:21:00Z', 'quick'],
+        ['2026-01-02T09:00:00Z', 'next day'], ['2026-01-02T15:00:00Z', '/compact keep the plan'],
+    ]),
+    usage: [
+        $sigUsage('2026-01-01T10:00:05Z', 20_000, 10_000, 10_000, 0.3, 0.2),
+        $sigUsage('2026-01-01T10:20:05Z', 200_000, 0, 200_000, 0.0, 2.0),
+        $sigUsage('2026-01-01T10:21:05Z', 210_000, 205_000, 5_000, 0.6, 0.0),
+        $sigUsage('2026-01-02T09:00:05Z', 215_000, 0, 215_000, 0.0, 2.5),
+        $sigUsage('2026-01-02T09:00:30Z', 220_000, 220_000, 5_000, 0.66, 0.0),
+        $sigUsage('2026-01-02T15:00:05Z', 220_000, 0, 220_000, 0.0, 2.6),
+    ]);
+$gotCtx = implode(' ', array_map(static fn (array $it): string => $it['kind'] . '=' . round($it['value'], 2), Viz\Signals::of($ctxSession)['items']));
+$expectedCtx = 'cold-cache=2 quick-question=0.6 stale-session=3.15 cold-cache=2.5 cold-cache=2.6';
+if ($gotCtx !== $expectedCtx) {
+    $failures++;
+    echo "FAIL: signals (kontekst)\n  oczekiwane: $expectedCtx\n  otrzymane:  $gotCtx\n";
+}
+
 // blokady: z decyzji zapisanej w linii tool_result, a w starszych transkryptach z treści błędu
 $denialCases = [
     [['toolDenialKind' => 'permission-rule', 'permissionDecision' => ['decision' => 'reject', 'source' => 'hook', 'reasonType' => 'hook']],

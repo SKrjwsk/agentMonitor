@@ -65,6 +65,16 @@ php bin/dump.php <session_id> [--agent=main|<agentId>] [--blind]
 - odznaka ⚠ (Commands, Log, panel szczegółów) — błędy, ślepe plamki, niepełny rozbiór, ponowne odczyty (od 2. razu przy ≥ 3 odczytach), odczyty plików, które były już w kontekście, edycje bez wcześniejszego odczytu
 - przerwy dłuższe niż 5 minut są ściśnięte do znacznika ⋯
 
+## Strona startowa „Overview”
+
+`http://127.0.0.1:8090/` (bez wybranej sesji) pokazuje, co w Twoich sesjach jest w porządku, a co wymaga uwagi. Trzy kolumny:
+
+- **Cost** — drogie tury (> $5), drogie wyniki narzędzi (> $0.50, duży wynik czytany ponownie przy każdym dalszym wywołaniu), ogromny kontekst (> 400k tokenów)
+- **Security** — wywołania zablokowane przez Twój hook na ścieżce pasującej do reguły oraz blokady trybu auto. Blokady, w których wzorzec był tylko w tekście komendy, i reguły `permissions.deny` są policzone w szarej linii — to nie alarm
+- **Agents** — raporty subagentów zablokowane przez hook (nie dotarły), nieudane subagenty, przerwania przez Ciebie, limity użycia, błędy API, sesje z > 3% błędów narzędzi
+
+Każdy przypadek prowadzi do sesji z ustawionym widokiem: tura z komendami według kosztu, wywołanie w panelu szczegółów albo zakładka Blocked. Okres: 24 h / 7 dni (domyślnie) / 30 dni / całość, filtr projektu. Pod kolumnami — sesje z sygnałami. Koszt to cennik API Anthropic, miara do porównań, nie rachunek.
+
 ## Podsumowanie wszystkich sesji
 Link „Σ Podsumowanie wszystkich sesji” nad listą sesji:
 - ranking plików ze wszystkich sesji, domyślnie według odczytów + zmian (listing, szukanie i uruchomienia są osobno)

@@ -14,13 +14,14 @@ use Viz\Path;
  */
 final class FileTable
 {
-    public const SORTS = ['count', 'path', 'agents', 'first', 'last', 'sessions'];
+    public const SORTS = ['count', 'path', 'agents', 'first', 'last', 'sessions', 'cost'];
 
     /**
      * @param list<Event> $events posortowane po czasie
      * @param array<string, list<string>> $problems toolUseId => powody
      * @param bool $attempted także wywołania, które się nie wykonały (zablokowane, błąd narzędzia) — pliki, do których agent próbował sięgnąć
-     * @return list<array{path: string, hash: string, ops: array<string, int>, reads: int, mods: int, partialOnly: bool, agents: array<string, true>, modAgents: array<string, true>, first: string, last: string, firstMod: ?string, exists: bool, blindEdit: bool}>
+     * @return list<array{path: string, hash: string, ops: array<string, int>, reads: int, mods: int, partialOnly: bool, agents: array<string, true>, modAgents: array<string, true>, first: string, last: string, firstMod: ?string, exists: bool, blindEdit: bool, usd: float}>
+     *         `usd` = koszt wyników wywołań w kontekście (Event::carry), podzielony po równo między pliki odczytane przez wywołanie
      */
     public static function build(array $events, array $problems, bool $attempted = false): array
     {
@@ -33,12 +34,15 @@ final class FileTable
             foreach ($problems[$e->toolUseId] ?? [] as $reason) {
                 $blindEdit = $blindEdit || str_starts_with($reason, 'edit without prior read');
             }
+            $seen = array_filter($e->touches, static fn (Touch $t): bool => !in_array($t->op, [Touch::EDIT, Touch::WRITE], true));
+            $share = $seen === [] ? 0.0 : ($e->carry['usd'] ?? 0.0) / count($seen);
             foreach ($e->touches as $t) {
                 $key = Path::key($t->path);
                 $r = $rows[$key] ?? [
                     'path' => $t->path, 'hash' => App::fileHash($t->path), 'ops' => [], 'reads' => 0, 'mods' => 0,
-                    'partialOnly' => true, 'agents' => [], 'modAgents' => [], 'first' => $e->ts, 'last' => $e->ts, 'firstMod' => null, 'exists' => $t->exists, 'blindEdit' => false,
+                    'partialOnly' => true, 'agents' => [], 'modAgents' => [], 'first' => $e->ts, 'last' => $e->ts, 'firstMod' => null, 'exists' => $t->exists, 'blindEdit' => false, 'usd' => 0.0,
                 ];
+                $r['usd'] += in_array($t->op, [Touch::EDIT, Touch::WRITE], true) ? 0.0 : $share;
                 $r['ops'][$t->op] = ($r['ops'][$t->op] ?? 0) + 1;
                 $r['agents'][$e->agentId] = true;
                 $r['last'] = $e->ts;
@@ -73,6 +77,7 @@ final class FileTable
             'last' => strcmp($b['last'], $a['last']),
             // tylko zakres „all”: liczba sesji, w których plik się pojawił
             'sessions' => [count($b['sessions'] ?? []), $b[$countKey]] <=> [count($a['sessions'] ?? []), $a[$countKey]],
+            'cost' => [$b['usd'] ?? 0, $b[$countKey]] <=> [$a['usd'] ?? 0, $a[$countKey]],
             default => [$b[$countKey], $a['path']] <=> [$a[$countKey], $b['path']],
         });
 

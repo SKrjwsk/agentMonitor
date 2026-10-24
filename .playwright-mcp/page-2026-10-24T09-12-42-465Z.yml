@@ -1,0 +1,833 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "Σ All sessions" [ref=e4] [cursor=pointer]:
+      - /url: /?s=all
+    - generic [ref=e5]:
+      - strong [ref=e6]: Sessions
+      - link "● follow latest" [ref=e7] [cursor=pointer]:
+        - /url: /?follow=1
+      - button "EN" [ref=e8] [cursor=pointer]
+      - button "◐" [ref=e9] [cursor=pointer]
+    - combobox "show sessions of one project (working directory of the session)" [ref=e11]:
+      - option "all projects (116)" [selected]
+      - option "REPO_agent_vizualization · 4"
+      - option "THE_MASTER_PLAN · 9"
+      - option "PROJECT_PRISMA_GROUP/PROJECT_PRISMA_DH_2 · 14"
+      - option "workbox9 · 9"
+      - option "PROJECT_GROUP_PRISMA/PROJECT_PRISMA_DH_2 · 4"
+      - option "eduBombel · 18"
+      - option "yodai · 11"
+      - option "v2026-stanmet-ropczyce-pl · 4"
+      - option "workbox9_prgrm · 2"
+      - option "stanmet-ropczyce-pl · 1"
+      - option "agent_vizualization · 10"
+      - option "m3/proj · 2"
+      - option "PROJECT_GROUP_PRISMA · 11"
+      - option "m0/proj · 1"
+      - option "open-mercato · 1"
+      - option "progremo_ksiegowosc · 3"
+      - option "REPO_PRISMA_DH_2 · 1"
+      - option "LLM_CONTEXT · 1"
+      - option "? · 1"
+      - option "PROJECT_FP_ADAPTER · 6"
+      - option "workbox9_swzk · 2"
+      - option ".claude · 1"
+    - list [ref=e12]:
+      - listitem [ref=e13]:
+        - link "Wizualizacja zużycia tokenów REPO_agent_vizualization · 24.10 11:12 · 16k out active" [ref=e14] [cursor=pointer]:
+          - /url: /?s=39f1c150-f79e-49f8-a275-24e39711fc44
+          - generic [ref=e15]: Wizualizacja zużycia tokenów
+          - generic [ref=e16]:
+            - text: REPO_agent_vizualization · 24.10 11:12 · 16k out
+            - generic [ref=e17]: active
+      - listitem [ref=e18]:
+        - link "Lewy panel sesji per projekt REPO_agent_vizualization · 24.10 11:07 · 53k out" [ref=e19] [cursor=pointer]:
+          - /url: /?s=af6af37b-470e-4ce7-87c7-07237997f09f
+          - generic [ref=e20]: Lewy panel sesji per projekt
+          - generic [ref=e21]: REPO_agent_vizualization · 24.10 11:07 · 53k out
+      - listitem [ref=e22]:
+        - link "Pogoda Kraków THE_MASTER_PLAN · 24.10 09:09 · 2k out" [ref=e23] [cursor=pointer]:
+          - /url: /?s=4a715cad-c362-4770-9234-a79f2ca6457b
+          - generic [ref=e24]: Pogoda Kraków
+          - generic [ref=e25]: THE_MASTER_PLAN · 24.10 09:09 · 2k out
+      - listitem [ref=e26]:
+        - link "Uproszczenie GUI i nowe widoki REPO_agent_vizualization · 23.10 17:23 · 243k out" [ref=e27] [cursor=pointer]:
+          - /url: /?s=7c6f1f3d-21cb-4c56-962b-c89ff99f797e
+          - generic [ref=e28]: Uproszczenie GUI i nowe widoki
+          - generic [ref=e29]: REPO_agent_vizualization · 23.10 17:23 · 243k out
+      - listitem [ref=e30]:
+        - link "Komendy agent-viz w CSV REPO_agent_vizualization · 23.10 16:44 · 7k out" [ref=e31] [cursor=pointer]:
+          - /url: /?s=cfa1830e-a7a2-4db1-83df-a53f31e8390e
+          - generic [ref=e32]: Komendy agent-viz w CSV
+          - generic [ref=e33]: REPO_agent_vizualization · 23.10 16:44 · 7k out
+      - listitem [ref=e34]:
+        - link "mediapress_api_switch_dh2_supervisor Mediapress_api_switch_dh2 linear i VOD stage3 PROJECT_PRISMA_DH_2 · 23.10 16:38 · 713k out" [ref=e35] [cursor=pointer]:
+          - /url: /?s=3ba958d8-5938-427a-b87a-dca7ecd01e5e
+          - generic [ref=e36]: mediapress_api_switch_dh2_supervisor
+          - generic [ref=e37]: Mediapress_api_switch_dh2 linear i VOD stage3
+          - generic [ref=e38]: PROJECT_PRISMA_DH_2 · 23.10 16:38 · 713k out
+      - listitem [ref=e39]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 15:46 · 172k out" [ref=e40] [cursor=pointer]:
+          - /url: /?s=f22fe3e8-1f31-4bd3-96e4-ed0c7400a3e2
+          - generic [ref=e41]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e42]: PROJECT_PRISMA_DH_2 · 23.10 15:46 · 172k out
+      - listitem [ref=e43]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 15:46 · 168k out" [ref=e44] [cursor=pointer]:
+          - /url: /?s=0169c462-7277-41b2-9005-f427b900dc5b
+          - generic [ref=e45]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e46]: PROJECT_PRISMA_DH_2 · 23.10 15:46 · 168k out
+      - listitem [ref=e47]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 14:22 · 130k out" [ref=e48] [cursor=pointer]:
+          - /url: /?s=c5a02743-170a-4524-b881-3150e451453e
+          - generic [ref=e49]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e50]: PROJECT_PRISMA_DH_2 · 23.10 14:22 · 130k out
+      - listitem [ref=e51]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 14:22 · 153k out" [ref=e52] [cursor=pointer]:
+          - /url: /?s=71f4e1b1-92db-4ff0-91cf-516e67b8ff8e
+          - generic [ref=e53]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e54]: PROJECT_PRISMA_DH_2 · 23.10 14:22 · 153k out
+      - listitem [ref=e55]:
+        - link "preperPlan_dev Plan MAIN.MD vs ebook EMP THE_MASTER_PLAN · 23.10 14:03 · ≥266k out" [ref=e56] [cursor=pointer]:
+          - /url: /?s=0f3e67b8-7c7f-4966-9290-e44e99375883
+          - generic [ref=e57]: preperPlan_dev
+          - generic [ref=e58]: Plan MAIN.MD vs ebook EMP
+          - generic [ref=e59]: THE_MASTER_PLAN · 23.10 14:03 · ≥266k out
+      - listitem [ref=e60]:
+        - link "no conversation /model THE_MASTER_PLAN · 23.10 13:59" [ref=e61] [cursor=pointer]:
+          - /url: /?s=a6c0bf64-a05f-4b91-8b32-8149f4e00713
+          - generic [ref=e62]: no conversation /model
+          - text: THE_MASTER_PLAN · 23.10 13:59
+      - listitem [ref=e63]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:52 · 288k out" [ref=e64] [cursor=pointer]:
+          - /url: /?s=6449290d-6734-46d0-a766-0d2e6d2d4f81
+          - generic [ref=e65]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e66]: PROJECT_PRISMA_DH_2 · 23.10 12:52 · 288k out
+      - listitem [ref=e67]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:52 · 184k out" [ref=e68] [cursor=pointer]:
+          - /url: /?s=11355268-9898-4a7e-b5d0-988f6ba7bdac
+          - generic [ref=e69]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e70]: PROJECT_PRISMA_DH_2 · 23.10 12:52 · 184k out
+      - listitem [ref=e71]:
+        - link "no conversation /exit THE_MASTER_PLAN · 23.10 12:03" [ref=e72] [cursor=pointer]:
+          - /url: /?s=0e8ff333-8197-4820-9dcd-4331dd167ea4
+          - generic [ref=e73]: no conversation /exit
+          - text: THE_MASTER_PLAN · 23.10 12:03
+      - listitem [ref=e74]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 12:01 · 1k out" [ref=e75] [cursor=pointer]:
+          - /url: /?s=7334190d-aae4-4283-975b-546994f8da3a
+          - generic [ref=e76]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e77]: PROJECT_PRISMA_DH_2 · 23.10 12:01 · 1k out
+      - listitem [ref=e78]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:58 · 13k out" [ref=e79] [cursor=pointer]:
+          - /url: /?s=f946810b-c04e-4a5b-a4a9-7174686788f6
+          - generic [ref=e80]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e81]: PROJECT_PRISMA_DH_2 · 23.10 11:58 · 13k out
+      - listitem [ref=e82]:
+        - link "mediapress_api_switch_dh2_linear_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:40 · 184k out" [ref=e83] [cursor=pointer]:
+          - /url: /?s=6911e279-ce8e-4d84-b0d8-24c24d70e227
+          - generic [ref=e84]: mediapress_api_switch_dh2_linear_stage3_part4
+          - generic [ref=e85]: PROJECT_PRISMA_DH_2 · 23.10 11:40 · 184k out
+      - listitem [ref=e86]:
+        - link "mediapress_api_switch_dh2_vod_stage3_part4 PROJECT_PRISMA_DH_2 · 23.10 11:40 · ≥188k out" [ref=e87] [cursor=pointer]:
+          - /url: /?s=69574883-90c6-43e7-a42d-66733781f434
+          - generic [ref=e88]: mediapress_api_switch_dh2_vod_stage3_part4
+          - generic [ref=e89]: PROJECT_PRISMA_DH_2 · 23.10 11:40 · ≥188k out
+      - listitem [ref=e90]:
+        - link "test_collection_porcess Mediapress API switch – kolejka tekstów PROJECT_PRISMA_DH_2 · 23.10 10:25 · 133k out" [ref=e91] [cursor=pointer]:
+          - /url: /?s=5aa84bef-726e-469c-afb2-4b64dc9a638f
+          - generic [ref=e92]: test_collection_porcess
+          - generic [ref=e93]: Mediapress API switch – kolejka tekstów
+          - generic [ref=e94]: PROJECT_PRISMA_DH_2 · 23.10 10:25 · 133k out
+      - listitem [ref=e95]:
+        - link "mediapress_api_switch_dh2_linear_stage3 PROJECT_PRISMA_DH_2 · 23.10 10:02 · ≥540k out" [ref=e96] [cursor=pointer]:
+          - /url: /?s=f9d5c603-270a-4b5a-bb3f-5b860fcf523a
+          - generic [ref=e97]: mediapress_api_switch_dh2_linear_stage3
+          - generic [ref=e98]: PROJECT_PRISMA_DH_2 · 23.10 10:02 · ≥540k out
+      - listitem [ref=e99]:
+        - link "mediapress_api_switch_dh2_vod_stage3 PROJECT_PRISMA_DH_2 · 23.10 09:59 · ≥654k out" [ref=e100] [cursor=pointer]:
+          - /url: /?s=b682122e-2d5a-4a34-80fc-e4f0a36f13fa
+          - generic [ref=e101]: mediapress_api_switch_dh2_vod_stage3
+          - generic [ref=e102]: PROJECT_PRISMA_DH_2 · 23.10 09:59 · ≥654k out
+      - listitem [ref=e103]:
+        - link "preperPlan_hejter Podsumowanie PDF EMP vs Master Plan THE_MASTER_PLAN · 23.10 08:49 · 297k out" [ref=e104] [cursor=pointer]:
+          - /url: /?s=99d52c03-c14c-4000-a36c-520e0737c0ad
+          - generic [ref=e105]: preperPlan_hejter
+          - generic [ref=e106]: Podsumowanie PDF EMP vs Master Plan
+          - generic [ref=e107]: THE_MASTER_PLAN · 23.10 08:49 · 297k out
+      - listitem [ref=e108]:
+        - link "no conversation 7b85fe80 THE_MASTER_PLAN · 22.10 20:50" [ref=e109] [cursor=pointer]:
+          - /url: /?s=7b85fe80-5ff4-4814-b98d-f380afbb59ee
+          - generic [ref=e110]: no conversation 7b85fe80
+          - text: THE_MASTER_PLAN · 22.10 20:50
+      - listitem [ref=e111]:
+        - link "404 w PHP dev server workbox9 · 22.10 14:37 · 521 out" [ref=e112] [cursor=pointer]:
+          - /url: /?s=6a02c431-c16e-4de0-9206-d301931d65fb
+          - generic [ref=e113]: 404 w PHP dev server
+          - generic [ref=e114]: workbox9 · 22.10 14:37 · 521 out
+      - listitem [ref=e115]:
+        - link "Skille superpowers w Claude Code THE_MASTER_PLAN · 22.10 14:31 · 27k out" [ref=e116] [cursor=pointer]:
+          - /url: /?s=77f36aa2-07ff-4f58-8cd7-c0dd40e3a18c
+          - generic [ref=e117]: Skille superpowers w Claude Code
+          - generic [ref=e118]: THE_MASTER_PLAN · 22.10 14:31 · 27k out
+      - listitem [ref=e119]:
+        - link "Faza 3 MediaPress VOD dh2 PROJECT_PRISMA_DH_2 · 22.10 13:58 · 6k out" [ref=e120] [cursor=pointer]:
+          - /url: /?s=4f520e75-fc0c-474b-93f9-dd072da6aa55
+          - generic [ref=e121]: Faza 3 MediaPress VOD dh2
+          - generic [ref=e122]: PROJECT_PRISMA_DH_2 · 22.10 13:58 · 6k out
+      - listitem [ref=e123]:
+        - link "mediapress_api_switch_dh2_linear_stage_3 PROJECT_PRISMA_DH_2 · 22.10 13:58 · 5k out" [ref=e124] [cursor=pointer]:
+          - /url: /?s=5bbffdf7-9d61-47e9-81e0-8138e526a008
+          - generic [ref=e125]: mediapress_api_switch_dh2_linear_stage_3
+          - generic [ref=e126]: PROJECT_PRISMA_DH_2 · 22.10 13:58 · 5k out
+      - listitem [ref=e127]:
+        - link "Koncepcja przebudowy repozytorium workbox9 · 22.10 13:46 · ≥194k out" [ref=e128] [cursor=pointer]:
+          - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372
+          - generic [ref=e129]: Koncepcja przebudowy repozytorium
+          - generic [ref=e130]: workbox9 · 22.10 13:46 · ≥194k out
+      - listitem [ref=e131]:
+        - link "Changelog Claude Code THE_MASTER_PLAN · 22.10 13:44 · 27k out" [ref=e132] [cursor=pointer]:
+          - /url: /?s=784f4ffe-9d81-4538-9184-50df2857a88e
+          - generic [ref=e133]: Changelog Claude Code
+          - generic [ref=e134]: THE_MASTER_PLAN · 22.10 13:44 · 27k out
+      - listitem [ref=e135]:
+        - link "Dyktowanie nie działa THE_MASTER_PLAN · 22.10 13:16 · 778 out" [ref=e136] [cursor=pointer]:
+          - /url: /?s=4196f779-e99a-4645-9677-d5efbd18e814
+          - generic [ref=e137]: Dyktowanie nie działa
+          - generic [ref=e138]: THE_MASTER_PLAN · 22.10 13:16 · 778 out
+      - listitem [ref=e139]:
+        - link "mediapress_api_switch_dh2 part2 Kontroler feedmpcontent i źródło danych PROJECT_PRISMA_DH_2 · 22.10 12:53 · 361k out" [ref=e140] [cursor=pointer]:
+          - /url: /?s=d3b8bfe3-a3f8-44d9-a248-db1f0e05a134
+          - generic [ref=e141]: mediapress_api_switch_dh2 part2
+          - generic [ref=e142]: Kontroler feedmpcontent i źródło danych
+          - generic [ref=e143]: PROJECT_PRISMA_DH_2 · 22.10 12:53 · 361k out
+      - listitem [ref=e144]:
+        - link "mediapress_api_switch_dh2_vod Przełączenie VOD na API Mediapress workbox9 · 22.10 12:50 · ≥259k out" [ref=e145] [cursor=pointer]:
+          - /url: /?s=22dd90e6-c411-4cde-922c-e57b792ecf2f
+          - generic [ref=e146]: mediapress_api_switch_dh2_vod
+          - generic [ref=e147]: Przełączenie VOD na API Mediapress
+          - generic [ref=e148]: workbox9 · 22.10 12:50 · ≥259k out
+      - listitem [ref=e149]:
+        - link "no conversation /clear eduBombel · 22.10 09:19" [ref=e150] [cursor=pointer]:
+          - /url: /?s=8bbc746a-6149-48ce-96a6-79d9b3d6968e
+          - generic [ref=e151]: no conversation /clear
+          - text: eduBombel · 22.10 09:19
+      - listitem [ref=e152]:
+        - link "no conversation /clear eduBombel · 22.10 09:18" [ref=e153] [cursor=pointer]:
+          - /url: /?s=6faa49c9-cce9-46ed-86fa-1a313b8b4eff
+          - generic [ref=e154]: no conversation /clear
+          - text: eduBombel · 22.10 09:18
+      - listitem [ref=e155]:
+        - link "mercato_upgrader_1 Analiza Yodai i Open Mercato yodai · 22.10 09:17 · ≥229k out" [ref=e156] [cursor=pointer]:
+          - /url: /?s=f5d17b95-a199-4c64-a6d7-8446ca9d21e7
+          - generic [ref=e157]: mercato_upgrader_1
+          - generic [ref=e158]: Analiza Yodai i Open Mercato
+          - generic [ref=e159]: yodai · 22.10 09:17 · ≥229k out
+      - listitem [ref=e160]:
+        - link "Błąd 500 na stanmet-ropczyce.pl v2026-stanmet-ropczyce-pl · 21.10 21:55 · 58k out" [ref=e161] [cursor=pointer]:
+          - /url: /?s=f9d69f45-13c4-4f19-b21d-778c7d8fa006
+          - generic [ref=e162]: Błąd 500 na stanmet-ropczyce.pl
+          - generic [ref=e163]: v2026-stanmet-ropczyce-pl · 21.10 21:55 · 58k out
+      - listitem [ref=e164]:
+        - link "Header, footer i menu v2026-stanmet-ropczyce-pl · 21.10 21:34 · 77k out" [ref=e165] [cursor=pointer]:
+          - /url: /?s=9089619b-ee3e-4d35-828f-78260b028eb3
+          - generic [ref=e166]: Header, footer i menu
+          - generic [ref=e167]: v2026-stanmet-ropczyce-pl · 21.10 21:34 · 77k out
+      - listitem [ref=e168]:
+        - link "Poprawki layoutu z ui-polish.md v2026-stanmet-ropczyce-pl · 21.10 21:01 · 91k out" [ref=e169] [cursor=pointer]:
+          - /url: /?s=98e472e1-3ec6-44c8-b5aa-da68f5806ece
+          - generic [ref=e170]: Poprawki layoutu z ui-polish.md
+          - generic [ref=e171]: v2026-stanmet-ropczyce-pl · 21.10 21:01 · 91k out
+      - listitem [ref=e172]:
+        - link "Dokumentacja serwerów webd, mikrus i lh.pl workbox9_prgrm · 21.10 20:57 · 82k out" [ref=e173] [cursor=pointer]:
+          - /url: /?s=9e2d8139-3808-4cd3-8501-ee8b9a867c6c
+          - generic [ref=e174]: Dokumentacja serwerów webd, mikrus i lh.pl
+          - generic [ref=e175]: workbox9_prgrm · 21.10 20:57 · 82k out
+      - listitem [ref=e176]:
+        - link "Ikony kul smoczych po Android 19 eduBombel · 21.10 20:27 · 15k out" [ref=e177] [cursor=pointer]:
+          - /url: /?s=7c499039-c06f-49e6-b6d8-53ae68f825d6
+          - generic [ref=e178]: Ikony kul smoczych po Android 19
+          - generic [ref=e179]: eduBombel · 21.10 20:27 · 15k out
+      - listitem [ref=e180]:
+        - link "Dopieszczenie layoutu UI v2026-stanmet-ropczyce-pl · 21.10 20:24 · 21k out" [ref=e181] [cursor=pointer]:
+          - /url: /?s=14127e84-1e7c-45dd-abb8-1d22278dd8b8
+          - generic [ref=e182]: Dopieszczenie layoutu UI
+          - generic [ref=e183]: v2026-stanmet-ropczyce-pl · 21.10 20:24 · 21k out
+      - listitem [ref=e184]:
+        - link "Kategoria zmiękczeń i baza słownictwa eduBombel · 21.10 20:00 · ≥150k out" [ref=e185] [cursor=pointer]:
+          - /url: /?s=c2ce2485-2abf-44a3-a0ee-b8462e500b45
+          - generic [ref=e186]: Kategoria zmiękczeń i baza słownictwa
+          - generic [ref=e187]: eduBombel · 21.10 20:00 · ≥150k out
+      - listitem [ref=e188]:
+        - link "Zestaw wyjątki ortograficzne eduBombel · 21.10 19:52 · 41k out" [ref=e189] [cursor=pointer]:
+          - /url: /?s=45278834-2ac6-4b0e-a8b0-9950b6ba0a69
+          - generic [ref=e190]: Zestaw wyjątki ortograficzne
+          - generic [ref=e191]: eduBombel · 21.10 19:52 · 41k out
+      - listitem [ref=e192]:
+        - link "Mediapress_api_switch_dh2 w prisma_dh2 PROJECT_PRISMA_DH_2 · 21.10 19:25 · 241k out" [ref=e193] [cursor=pointer]:
+          - /url: /?s=392c93a6-fd10-49ce-99ad-dc701e651121
+          - generic [ref=e194]: Mediapress_api_switch_dh2 w prisma_dh2
+          - generic [ref=e195]: PROJECT_PRISMA_DH_2 · 21.10 19:25 · 241k out
+      - listitem [ref=e196]:
+        - link "Przegląd szaty graficznej aplikacji stanmet-ropczyce-pl · 21.10 19:23 · 5k out" [ref=e197] [cursor=pointer]:
+          - /url: /?s=67731843-de52-4f0d-807e-4384cf0924e0
+          - generic [ref=e198]: Przegląd szaty graficznej aplikacji
+          - generic [ref=e199]: stanmet-ropczyce-pl · 21.10 19:23 · 5k out
+      - listitem [ref=e200]:
+        - link "Stanmet-ropczyce.pl – szablon PHP workbox9_prgrm · 21.10 19:21 · ≥352k out" [ref=e201] [cursor=pointer]:
+          - /url: /?s=7db98e15-7ab6-40a7-b829-19cb3abb4fae
+          - generic [ref=e202]: Stanmet-ropczyce.pl – szablon PHP
+          - generic [ref=e203]: workbox9_prgrm · 21.10 19:21 · ≥352k out
+      - listitem [ref=e204]:
+        - link "clear eduBombel · 21.10 17:53 · 202 out" [ref=e205] [cursor=pointer]:
+          - /url: /?s=79bb973c-b37b-4b1b-85c6-d6acfaf1fd8b
+          - generic [ref=e206]: clear
+          - generic [ref=e207]: eduBombel · 21.10 17:53 · 202 out
+      - listitem [ref=e208]:
+        - link "luka_wyjasnienie Luki bezpieczeństwa w PHP agent_vizualization · 21.10 17:29 · 4k out" [ref=e209] [cursor=pointer]:
+          - /url: /?s=72b54893-44e0-4f12-8053-08f7e715514d
+          - generic [ref=e210]: luka_wyjasnienie
+          - generic [ref=e211]: Luki bezpieczeństwa w PHP
+          - generic [ref=e212]: agent_vizualization · 21.10 17:29 · 4k out
+      - listitem [ref=e213]:
+        - link "luka_wyjasnienie agent_vizualization · 21.10 17:29 · 74 out" [ref=e214] [cursor=pointer]:
+          - /url: /?s=16932dc5-d4be-440b-9be8-15cc814a6a06
+          - generic [ref=e215]: luka_wyjasnienie
+          - generic [ref=e216]: agent_vizualization · 21.10 17:29 · 74 out
+      - listitem [ref=e217]:
+        - link "no conversation /clear agent_vizualization · 21.10 16:45" [ref=e218] [cursor=pointer]:
+          - /url: /?s=77bf48de-33c8-4088-9c5e-17fd566f15eb
+          - generic [ref=e219]: no conversation /clear
+          - text: agent_vizualization · 21.10 16:45
+      - listitem [ref=e220]:
+        - link "no conversation /clear agent_vizualization · 21.10 16:35" [ref=e221] [cursor=pointer]:
+          - /url: /?s=814568f6-b06e-461c-918c-e03e613e69f8
+          - generic [ref=e222]: no conversation /clear
+          - text: agent_vizualization · 21.10 16:35
+      - listitem [ref=e223]:
+        - link "Wizualizacja pracy agentów agent_vizualization · 21.10 15:52 · 527k out" [ref=e224] [cursor=pointer]:
+          - /url: /?s=7928a304-17c4-4a05-b7da-7920e75bf9fc
+          - generic [ref=e225]: Wizualizacja pracy agentów
+          - generic [ref=e226]: agent_vizualization · 21.10 15:52 · 527k out
+      - listitem [ref=e227]:
+        - link "Pogoda w Londynie agent_vizualization · 21.10 15:38 · 2k out" [ref=e228] [cursor=pointer]:
+          - /url: /?s=753966fb-a7a8-45c0-95e5-639d35593676
+          - generic [ref=e229]: Pogoda w Londynie
+          - generic [ref=e230]: agent_vizualization · 21.10 15:38 · 2k out
+      - listitem [ref=e231]:
+        - link "Dostęp do plików .env w workbox9 agent_vizualization · 21.10 14:59 · 3k out" [ref=e232] [cursor=pointer]:
+          - /url: /?s=d026cf8e-ef86-4f4e-9274-6fa26a2b0109
+          - generic [ref=e233]: Dostęp do plików .env w workbox9
+          - generic [ref=e234]: agent_vizualization · 21.10 14:59 · 3k out
+      - listitem [ref=e235]:
+        - link "no conversation /analiza-sesji agent_vizualization · 21.10 14:39 · 8k out" [ref=e236] [cursor=pointer]:
+          - /url: /?s=8399d707-b4e4-412f-9f09-e7c926f027af
+          - generic [ref=e237]: no conversation /analiza-sesji
+          - generic [ref=e238]: agent_vizualization · 21.10 14:39 · 8k out
+      - listitem [ref=e239]:
+        - link "no conversation /analiza-sesji agent_vizualization · 21.10 14:36 · 7k out" [ref=e240] [cursor=pointer]:
+          - /url: /?s=1aff0a19-a171-447b-b28f-73235f25a23f
+          - generic [ref=e241]: no conversation /analiza-sesji
+          - generic [ref=e242]: agent_vizualization · 21.10 14:36 · 7k out
+      - listitem [ref=e243]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 13:56 · 3k out hook" [ref=e244] [cursor=pointer]:
+          - /url: /?s=59a3f329-5cb6-42c9-93d5-48e02202b97d
+          - generic [ref=e245]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e246]:
+            - text: proj · 21.10 13:56 · 3k out
+            - generic [ref=e247]: hook
+      - listitem [ref=e248]:
+        - link "Incydenty bezpieczeństwa spowodowane przez AI agent_vizualization · 21.10 13:56 · 3k out" [ref=e249] [cursor=pointer]:
+          - /url: /?s=8f73abf7-b5fd-4ac8-b647-17982dd803f6
+          - generic [ref=e250]: Incydenty bezpieczeństwa spowodowane przez AI
+          - generic [ref=e251]: agent_vizualization · 21.10 13:56 · 3k out
+      - listitem [ref=e252]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 13:53 · 2k out" [ref=e253] [cursor=pointer]:
+          - /url: /?s=b6038a04-6c32-4c35-b906-f1891d8abcc0
+          - generic [ref=e254]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e255]: proj · 21.10 13:53 · 2k out
+      - listitem [ref=e256]:
+        - link "ZAM-6000_plan_wdrożenia_TV_tipps PROJECT_GROUP_PRISMA · 21.10 12:13 · 315k out" [ref=e257] [cursor=pointer]:
+          - /url: /?s=a13c94ac-669e-4c32-894d-2477934db105
+          - generic [ref=e258]: ZAM-6000_plan_wdrożenia_TV_tipps
+          - generic [ref=e259]: PROJECT_GROUP_PRISMA · 21.10 12:13 · 315k out
+      - listitem [ref=e260]:
+        - link "Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar… proj · 21.10 12:02 · 2k out" [ref=e261] [cursor=pointer]:
+          - /url: /?s=58900880-d7be-49b5-ad94-982251635e46
+          - generic [ref=e262]: Wykonaj DOKŁADNIE te kroki, każdy jako OSOBNE wywołanie narzędzia, bez komentar…
+          - generic [ref=e263]: proj · 21.10 12:02 · 2k out
+      - listitem [ref=e264]:
+        - link "mp_api_switch_prisma2026 PROJECT_GROUP_PRISMA · 21.10 10:31 · ≥308k out" [ref=e265] [cursor=pointer]:
+          - /url: /?s=3b9765dc-c06a-414f-a3a8-4f44c4fa1d56
+          - generic [ref=e266]: mp_api_switch_prisma2026
+          - generic [ref=e267]: PROJECT_GROUP_PRISMA · 21.10 10:31 · ≥308k out
+      - listitem [ref=e268]:
+        - link "Błąd PHP z 2026-10-20 yodai · 21.10 10:21 · 7k out" [ref=e269] [cursor=pointer]:
+          - /url: /?s=8959f8ca-6551-4675-b8f0-80cfe26c3505
+          - generic [ref=e270]: Błąd PHP z 2026-10-20
+          - generic [ref=e271]: yodai · 21.10 10:21 · 7k out
+      - listitem [ref=e272]:
+        - link "Ocena moralności modeli AI yodai · 21.10 10:19 · 4k out" [ref=e273] [cursor=pointer]:
+          - /url: /?s=b12e6266-7d21-4c5d-a332-d64a3ee5cb2a
+          - generic [ref=e274]: Ocena moralności modeli AI
+          - generic [ref=e275]: yodai · 21.10 10:19 · 4k out
+      - listitem [ref=e276]:
+        - link "mercato_upgrader_2 Lista zadań 11_zadania_warte_dodania yodai · 20.10 17:03 · 32k out" [ref=e277] [cursor=pointer]:
+          - /url: /?s=2d9895d1-8719-478a-bb06-2c8f4077d57b
+          - generic [ref=e278]: mercato_upgrader_2
+          - generic [ref=e279]: Lista zadań 11_zadania_warte_dodania
+          - generic [ref=e280]: yodai · 20.10 17:03 · 32k out
+      - listitem [ref=e281]:
+        - link "no conversation /mobile yodai · 20.10 16:34" [ref=e282] [cursor=pointer]:
+          - /url: /?s=38915087-8fcf-4217-8f51-78e1b957d432
+          - generic [ref=e283]: no conversation /mobile
+          - text: yodai · 20.10 16:34
+      - listitem [ref=e284]:
+        - link "Import obrazków w screen PROJECT_GROUP_PRISMA · 20.10 12:03 · 2k out" [ref=e285] [cursor=pointer]:
+          - /url: /?s=ed5da0f9-6ff5-4bed-9955-8e36513c2531
+          - generic [ref=e286]: Import obrazków w screen
+          - generic [ref=e287]: PROJECT_GROUP_PRISMA · 20.10 12:03 · 2k out
+      - listitem [ref=e288]:
+        - link "full_import PROJECT_GROUP_PRISMA · 20.10 12:01" [ref=e289] [cursor=pointer]:
+          - /url: /?s=42f1e206-fe19-49c1-a851-b720a837dc38
+          - generic [ref=e290]: full_import
+          - text: PROJECT_GROUP_PRISMA · 20.10 12:01
+      - listitem [ref=e291]:
+        - link "full_import PROJECT_GROUP_PRISMA · 20.10 12:01 · 15k out" [ref=e292] [cursor=pointer]:
+          - /url: /?s=d355af07-e28f-4367-a58a-f4c3a5cfd8c5
+          - generic [ref=e293]: full_import
+          - generic [ref=e294]: PROJECT_GROUP_PRISMA · 20.10 12:01 · 15k out
+      - listitem [ref=e295]:
+        - link "full_import Full import na produkcji PROJECT_GROUP_PRISMA · 20.10 11:07 · 237k out" [ref=e296] [cursor=pointer]:
+          - /url: /?s=168f1b28-66cd-4710-a534-7deba6577de2
+          - generic [ref=e297]: full_import
+          - generic [ref=e298]: Full import na produkcji
+          - generic [ref=e299]: PROJECT_GROUP_PRISMA · 20.10 11:07 · 237k out
+      - listitem [ref=e300]:
+        - link "Chronologiczne ułożenie pliku Adamella.md yodai · 20.10 09:39 · 2k out" [ref=e301] [cursor=pointer]:
+          - /url: /?s=233cf9b7-3769-4e46-93dc-a949026292cc
+          - generic [ref=e302]: Chronologiczne ułożenie pliku Adamella.md
+          - generic [ref=e303]: yodai · 20.10 09:39 · 2k out
+      - listitem [ref=e304]:
+        - link "Usunięcie core.hooksPath z composer.json yodai · 20.10 00:17 · 59k out" [ref=e305] [cursor=pointer]:
+          - /url: /?s=66ecbbf5-c879-4c26-8acf-845aff14ad53
+          - generic [ref=e306]: Usunięcie core.hooksPath z composer.json
+          - generic [ref=e307]: yodai · 20.10 00:17 · 59k out
+      - listitem [ref=e308]:
+        - link "Orientacja w projekcie i dokumentacji open-mercato · 19.10 23:27 · 8k out" [ref=e309] [cursor=pointer]:
+          - /url: /?s=d3c13a45-27cb-4060-bc93-6281b2cc7660
+          - generic [ref=e310]: Orientacja w projekcie i dokumentacji
+          - generic [ref=e311]: open-mercato · 19.10 23:27 · 8k out
+      - listitem [ref=e312]:
+        - link "Nowy użytkownik yamil i CLI eduBombel · 19.10 23:20 · ≥249k out" [ref=e313] [cursor=pointer]:
+          - /url: /?s=40cac0f5-c5e4-4c72-8373-aa347001eedf
+          - generic [ref=e314]: Nowy użytkownik yamil i CLI
+          - generic [ref=e315]: eduBombel · 19.10 23:20 · ≥249k out
+      - listitem [ref=e316]:
+        - link "Wskaźnik predykcji kierunku ceny Bitcoina yodai · 19.10 23:03 · 12k out" [ref=e317] [cursor=pointer]:
+          - /url: /?s=69b3fb6c-e244-43e9-985c-7e0046d8a2bb
+          - generic [ref=e318]: Wskaźnik predykcji kierunku ceny Bitcoina
+          - generic [ref=e319]: yodai · 19.10 23:03 · 12k out
+      - listitem [ref=e320]:
+        - link "Mechanizm audytów prisma-dh2 w yodai yodai · 19.10 23:02 · 4k out" [ref=e321] [cursor=pointer]:
+          - /url: /?s=2f3b20c5-4128-46d9-b04f-9a421c38178e
+          - generic [ref=e322]: Mechanizm audytów prisma-dh2 w yodai
+          - generic [ref=e323]: yodai · 19.10 23:02 · 4k out
+      - listitem [ref=e324]:
+        - link "Brak faktury z Infkat w systemie progremo_ksiegowosc · 19.10 18:21 · 16k out" [ref=e325] [cursor=pointer]:
+          - /url: /?s=60fd6002-4c4b-4187-a902-cfc33691a7bf
+          - generic [ref=e326]: Brak faktury z Infkat w systemie
+          - generic [ref=e327]: progremo_ksiegowosc · 19.10 18:21 · 16k out
+      - listitem [ref=e328]:
+        - link "Anonimizacja mail1 i mail2 w .env progremo_ksiegowosc · 19.10 17:09 · 83k out" [ref=e329] [cursor=pointer]:
+          - /url: /?s=479865a2-8602-4ee4-a994-eb94c743ec75
+          - generic [ref=e330]: Anonimizacja mail1 i mail2 w .env
+          - generic [ref=e331]: progremo_ksiegowosc · 19.10 17:09 · 83k out
+      - listitem [ref=e332]:
+        - link "Koszty w infakt w tym miesiącu progremo_ksiegowosc · 19.10 17:07 · ≥389k out" [ref=e333] [cursor=pointer]:
+          - /url: /?s=1f13b1db-de60-476e-b15a-1cfdccd66ed1
+          - generic [ref=e334]: Koszty w infakt w tym miesiącu
+          - generic [ref=e335]: progremo_ksiegowosc · 19.10 17:07 · ≥389k out
+      - listitem [ref=e336]:
+        - link "ZAM-6000_plan_wdrożenia_TV_tipps ZAM-6000 plan wdrożenia TV tipps PROJECT_GROUP_PRISMA · 19.10 17:05 · ≥263k out" [ref=e337] [cursor=pointer]:
+          - /url: /?s=2d6eca79-1dd6-4f51-937b-3dd6b5eb5e5f
+          - generic [ref=e338]: ZAM-6000_plan_wdrożenia_TV_tipps
+          - generic [ref=e339]: ZAM-6000 plan wdrożenia TV tipps
+          - generic [ref=e340]: PROJECT_GROUP_PRISMA · 19.10 17:05 · ≥263k out
+      - listitem [ref=e341]:
+        - link "Standardy aplikacji yodai_app_standards.md yodai · 19.10 16:33 · 28k out" [ref=e342] [cursor=pointer]:
+          - /url: /?s=e2e77fc6-f21d-478c-86c1-e029b5d359f3
+          - generic [ref=e343]: Standardy aplikacji yodai_app_standards.md
+          - generic [ref=e344]: yodai · 19.10 16:33 · 28k out
+      - listitem [ref=e345]:
+        - link "Klient mail do bazy i API yodai · 19.10 10:17 · 37k out" [ref=e346] [cursor=pointer]:
+          - /url: /?s=2a03726f-2761-4c91-b9db-278da05ea649
+          - generic [ref=e347]: Klient mail do bazy i API
+          - generic [ref=e348]: yodai · 19.10 10:17 · 37k out
+      - listitem [ref=e349]:
+        - link "Przewijanie ekranu w tmux REPO_PRISMA_DH_2 · 19.10 08:07 · 226 out" [ref=e350] [cursor=pointer]:
+          - /url: /?s=322b708d-d032-48ab-acf8-94e00c02509a
+          - generic [ref=e351]: Przewijanie ekranu w tmux
+          - generic [ref=e352]: REPO_PRISMA_DH_2 · 19.10 08:07 · 226 out
+      - listitem [ref=e353]:
+        - link "Dostęp dziecka do gier eduBombel · 18.10 21:26 · 48k out" [ref=e354] [cursor=pointer]:
+          - /url: /?s=5892fe3e-6c73-4335-85a6-61013b51c86f
+          - generic [ref=e355]: Dostęp dziecka do gier
+          - generic [ref=e356]: eduBombel · 18.10 21:26 · 48k out
+      - listitem [ref=e357]:
+        - link "Zestawy danych gry Ortografia / Gol eduBombel · 18.10 21:25 · ≥84k out" [ref=e358] [cursor=pointer]:
+          - /url: /?s=16ea1c75-ea07-4fff-b061-5717d3badab8
+          - generic [ref=e359]: Zestawy danych gry Ortografia / Gol
+          - generic [ref=e360]: eduBombel · 18.10 21:25 · ≥84k out
+      - listitem [ref=e361]:
+        - link "Skrypt download-missing.py – pobieranie MKV workbox9 · 16.10 23:53 · 63k out" [ref=e362] [cursor=pointer]:
+          - /url: /?s=fc495ad4-c657-4053-bcee-08e8c44e1dca
+          - generic [ref=e363]: Skrypt download-missing.py – pobieranie MKV
+          - generic [ref=e364]: workbox9 · 16.10 23:53 · 63k out
+      - listitem [ref=e365]:
+        - link "Przesyłanie plików na MacBook Mam Krate workbox9 · 16.10 21:01 · 2k out" [ref=e366] [cursor=pointer]:
+          - /url: /?s=392603ee-be16-42f6-a2d4-5e331b4d08d1
+          - generic [ref=e367]: Przesyłanie plików na MacBook Mam Krate
+          - generic [ref=e368]: workbox9 · 16.10 21:01 · 2k out
+      - listitem [ref=e369]:
+        - link "Dump OFFLINE_DATABASE na dysku zewnętrznym workbox9 · 16.10 16:05 · 22k out" [ref=e370] [cursor=pointer]:
+          - /url: /?s=22d323c5-d173-40c3-98b4-48700bf12281
+          - generic [ref=e371]: Dump OFFLINE_DATABASE na dysku zewnętrznym
+          - generic [ref=e372]: workbox9 · 16.10 16:05 · 22k out
+      - listitem [ref=e373]:
+        - link "Nowe instancje gry flagi dla dzieci eduBombel · 16.10 14:18 · 3k out" [ref=e374] [cursor=pointer]:
+          - /url: /?s=10a7a8ed-f007-44e0-8804-62c658c442d2
+          - generic [ref=e375]: Nowe instancje gry flagi dla dzieci
+          - generic [ref=e376]: eduBombel · 16.10 14:18 · 3k out
+      - listitem [ref=e377]:
+        - link "Ticket 18664 w CRM Netzindianer PROJECT_GROUP_PRISMA · 16.10 13:58 · 13k out" [ref=e378] [cursor=pointer]:
+          - /url: /?s=400f67c7-da34-4cc7-9cc9-dc48969c8016
+          - generic [ref=e379]: Ticket 18664 w CRM Netzindianer
+          - generic [ref=e380]: PROJECT_GROUP_PRISMA · 16.10 13:58 · 13k out
+      - listitem [ref=e381]:
+        - link "Dane do gry Dragon Ball eduBombel · 16.10 13:34 · ≥233k out" [ref=e382] [cursor=pointer]:
+          - /url: /?s=787bc754-6cde-4df9-8ed5-594f26462ece
+          - generic [ref=e383]: Dane do gry Dragon Ball
+          - generic [ref=e384]: eduBombel · 16.10 13:34 · ≥233k out
+      - listitem [ref=e385]:
+        - link "ZAM-6000 plan wdrożenia TV tipps PROJECT_GROUP_PRISMA · 16.10 12:06 · 4k out" [ref=e386] [cursor=pointer]:
+          - /url: /?s=d3c8fd5b-524f-4383-9422-5a0e76d80a04
+          - generic [ref=e387]: ZAM-6000 plan wdrożenia TV tipps
+          - generic [ref=e388]: PROJECT_GROUP_PRISMA · 16.10 12:06 · 4k out
+      - listitem [ref=e389]:
+        - link "Import telschau ZAM-6000 PROJECT_GROUP_PRISMA · 16.10 12:01 · 8k out" [ref=e390] [cursor=pointer]:
+          - /url: /?s=6270c0f5-6c4a-4a17-958f-082f6bbfd999
+          - generic [ref=e391]: Import telschau ZAM-6000
+          - generic [ref=e392]: PROJECT_GROUP_PRISMA · 16.10 12:01 · 8k out
+      - listitem [ref=e393]:
+        - link "Zadania TV-Tipp, ticket 6000 PROJECT_GROUP_PRISMA · 16.10 11:48 · ≥110k out" [ref=e394] [cursor=pointer]:
+          - /url: /?s=089c7539-9dde-4b44-b616-c431c20fda58
+          - generic [ref=e395]: Zadania TV-Tipp, ticket 6000
+          - generic [ref=e396]: PROJECT_GROUP_PRISMA · 16.10 11:48 · ≥110k out
+      - listitem [ref=e397]:
+        - link "Kontekst edu bomble dla agentów eduBombel · 16.10 11:48 · 9k out" [ref=e398] [cursor=pointer]:
+          - /url: /?s=cc989d22-ebc2-4460-9e1e-4a4551504ddb
+          - generic [ref=e399]: Kontekst edu bomble dla agentów
+          - generic [ref=e400]: eduBombel · 16.10 11:48 · 9k out
+      - listitem [ref=e401]:
+        - link "Workbox_rebuild.md i naprawa linków LLM_CONTEXT · 16.10 11:30 · ≥39k out" [ref=e402] [cursor=pointer]:
+          - /url: /?s=b0033637-57ff-496c-ad7e-2fccc9b0e6b3
+          - generic [ref=e403]: Workbox_rebuild.md i naprawa linków
+          - generic [ref=e404]: LLM_CONTEXT · 16.10 11:30 · ≥39k out
+      - listitem [ref=e405]:
+        - link "Ortografia Dragon Ball dla Kuby eduBombel · 16.10 11:14 · ≥127k out" [ref=e406] [cursor=pointer]:
+          - /url: /?s=ac4011b1-6a29-4b68-82c9-3fd300ac918d
+          - generic [ref=e407]: Ortografia Dragon Ball dla Kuby
+          - generic [ref=e408]: eduBombel · 16.10 11:14 · ≥127k out
+      - listitem [ref=e409]:
+        - link "Ustawienia z załączonego zrzutu workbox9 · 16.10 11:12 · 8k out" [ref=e410] [cursor=pointer]:
+          - /url: /?s=142e9cdb-16b6-4098-a861-9855eb12bdac
+          - generic [ref=e411]: Ustawienia z załączonego zrzutu
+          - generic [ref=e412]: workbox9 · 16.10 11:12 · 8k out
+      - listitem [ref=e413]:
+        - link "Grafiki piłkarzy Gol za czytanie eduBombel · 16.10 10:33 · 98k out" [ref=e414] [cursor=pointer]:
+          - /url: /?s=c5ef44fd-7ad7-4560-97e2-b52fd0a6b07b
+          - generic [ref=e415]: Grafiki piłkarzy Gol za czytanie
+          - generic [ref=e416]: eduBombel · 16.10 10:33 · 98k out
+      - listitem [ref=e417]:
+        - link "Lokalizacja skilli yoda:* workbox9 · 16.10 09:16 · ≥84k out" [ref=e418] [cursor=pointer]:
+          - /url: /?s=4c3fd2d4-bbce-4606-bb97-171f5f80a6f8
+          - generic [ref=e419]: Lokalizacja skilli yoda:*
+          - generic [ref=e420]: workbox9 · 16.10 09:16 · ≥84k out
+      - listitem [ref=e421]:
+        - link "Repozytorium workbox_rebuild na GitHub · 16.10 09:05" [ref=e422] [cursor=pointer]:
+          - /url: /?s=786e4798-3891-4b27-9ca9-ac77f8e570f7
+          - generic [ref=e423]: Repozytorium workbox_rebuild na GitHub
+          - text: · 16.10 09:05
+      - listitem [ref=e424]:
+        - link "edubombel_archtekt eduBombel · 16.10 08:42" [ref=e425] [cursor=pointer]:
+          - /url: /?s=9a2aaece-9b57-43d1-800e-9cb4bfab2bd2
+          - generic [ref=e426]: edubombel_archtekt
+          - text: eduBombel · 16.10 08:42
+      - listitem [ref=e427]:
+        - link "edubombel_archtekt Przegląd aplikacji z @edubombel_dev eduBombel · 16.10 08:33 · ≥60k out" [ref=e428] [cursor=pointer]:
+          - /url: /?s=43e9c1c4-efd2-433c-8cb3-7be39ed506e8
+          - generic [ref=e429]: edubombel_archtekt
+          - generic [ref=e430]: Przegląd aplikacji z @edubombel_dev
+          - generic [ref=e431]: eduBombel · 16.10 08:33 · ≥60k out
+      - listitem [ref=e432]:
+        - link "edubombel_dev eduBombel · 15.10 17:19 · 109k out" [ref=e433] [cursor=pointer]:
+          - /url: /?s=0ff9bbc3-6012-4e5a-aa3e-891ff5cf3396
+          - generic [ref=e434]: edubombel_dev
+          - generic [ref=e435]: eduBombel · 15.10 17:19 · 109k out
+      - listitem [ref=e436]:
+        - link "no conversation bbe85a31 PROJECT_FP_ADAPTER · 15.10 17:06" [ref=e437] [cursor=pointer]:
+          - /url: /?s=bbe85a31-5572-4352-8ac5-bc62a74f461c
+          - generic [ref=e438]: no conversation bbe85a31
+          - text: PROJECT_FP_ADAPTER · 15.10 17:06
+      - listitem [ref=e439]:
+        - 'link "Jedną linią: czy na liście skilli masz autodeploy, autocommit i mieso? eduBombel · 15.10 16:57 · 307 out" [ref=e440] [cursor=pointer]':
+          - /url: /?s=b7594cdd-c9dd-443a-8b73-65fbfc5f0b06
+          - generic [ref=e441]: "Jedną linią: czy na liście skilli masz autodeploy, autocommit i mieso?"
+          - generic [ref=e442]: eduBombel · 15.10 16:57 · 307 out
+      - listitem [ref=e443]:
+        - 'link "Bez narzędzi: (1) jakie jest hasło testowe reguł projektu? (2) jaki przykład kl… PROJECT_FP_ADAPTER · 15.10 16:31 · 233 out" [ref=e444] [cursor=pointer]':
+          - /url: /?s=e3f794f5-fa42-4ce5-9070-1f2f692984b0
+          - generic [ref=e445]: "Bez narzędzi: (1) jakie jest hasło testowe reguł projektu? (2) jaki przykład kl…"
+          - generic [ref=e446]: PROJECT_FP_ADAPTER · 15.10 16:31 · 233 out
+      - listitem [ref=e447]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref… PROJECT_FP_ADAPTER · 15.10 16:31 · 439 out" [ref=e448] [cursor=pointer]':
+          - /url: /?s=0128260f-7182-47c3-b2fe-06d60cf9450c
+          - generic [ref=e449]: "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref…"
+          - generic [ref=e450]: PROJECT_FP_ADAPTER · 15.10 16:31 · 439 out
+      - listitem [ref=e451]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref… PROJECT_FP_ADAPTER · 15.10 16:30 · 505 out" [ref=e452] [cursor=pointer]':
+          - /url: /?s=952ab064-c3e5-4c67-bfbd-eaf77b21be58
+          - generic [ref=e453]: "Bez używania narzędzi, tylko z instrukcji: (1) jaki przykład nazwy klasy z pref…"
+          - generic [ref=e454]: PROJECT_FP_ADAPTER · 15.10 16:30 · 505 out
+      - listitem [ref=e455]:
+        - 'link "Bez używania narzędzi, tylko z instrukcji: jaki przykład nazwy klasy (z prefiks… PROJECT_FP_ADAPTER · 15.10 16:30 · 411 out" [ref=e456] [cursor=pointer]':
+          - /url: /?s=00f1b354-d0b6-4187-8342-fc6a3fd47997
+          - generic [ref=e457]: "Bez używania narzędzi, tylko z instrukcji: jaki przykład nazwy klasy (z prefiks…"
+          - generic [ref=e458]: PROJECT_FP_ADAPTER · 15.10 16:30 · 411 out
+      - listitem [ref=e459]:
+        - 'link "Jedną linią: czy masz skille flux, zammad, mieso oraz komendę master? Wypisz te… PROJECT_FP_ADAPTER · 15.10 16:25 · 1k out" [ref=e460] [cursor=pointer]':
+          - /url: /?s=f228bda2-d7ac-4f85-bca0-615168bf7edb
+          - generic [ref=e461]: "Jedną linią: czy masz skille flux, zammad, mieso oraz komendę master? Wypisz te…"
+          - generic [ref=e462]: PROJECT_FP_ADAPTER · 15.10 16:25 · 1k out
+      - listitem [ref=e463]:
+        - link "Pasek statusu dizalssz workbox9 · 15.10 16:20 · 316 out" [ref=e464] [cursor=pointer]:
+          - /url: /?s=0ee3357f-ac84-4eae-b419-254d6ae4b738
+          - generic [ref=e465]: Pasek statusu dizalssz
+          - generic [ref=e466]: workbox9 · 15.10 16:20 · 316 out
+      - listitem [ref=e467]:
+        - 'link "Odpowiedz jedną linią: czy widzisz skill ''mieso'' i komendę ''makebyplan''? Jaki m… workbox9_swzk · 15.10 16:19 · 139 out" [ref=e468] [cursor=pointer]':
+          - /url: /?s=2c931a2c-06d9-4075-8fa2-6d9e9be397bb
+          - generic [ref=e469]: "Odpowiedz jedną linią: czy widzisz skill 'mieso' i komendę 'makebyplan'? Jaki m…"
+          - generic [ref=e470]: workbox9_swzk · 15.10 16:19 · 139 out
+      - listitem [ref=e471]:
+        - 'link "Odpowiedz jedną linią: czy widzisz skill ''mieso'' i komendę ''makebyplan'' na liśc… workbox9_swzk · 15.10 16:18 · 117 out" [ref=e472] [cursor=pointer]':
+          - /url: /?s=0e85119c-4a2d-45ad-8c11-ee242d205370
+          - generic [ref=e473]: "Odpowiedz jedną linią: czy widzisz skill 'mieso' i komendę 'makebyplan' na liśc…"
+          - generic [ref=e474]: workbox9_swzk · 15.10 16:18 · 117 out
+      - listitem [ref=e475]:
+        - link "Czyszczenie plików prywatności w Claude .claude · 15.10 15:42 · ≥19k out" [ref=e476] [cursor=pointer]:
+          - /url: /?s=5f2c1456-3db1-4b79-8938-26766d322fdb
+          - generic [ref=e477]: Czyszczenie plików prywatności w Claude
+          - generic [ref=e478]: .claude · 15.10 15:42 · ≥19k out
+  - main [ref=e479]:
+    - generic [ref=e480]:
+      - generic [ref=e481]:
+        - generic [ref=e482]:
+          - heading "Koncepcja przebudowy repozytorium" [level=1] [ref=e483]
+          - generic "4d12c76b-8f7d-4e64-a643-4ee2e799b372" [ref=e484]:
+            - text: ~/SK/workbox9 ·
+            - strong [ref=e485]: transcript
+          - link "⇩ CSV" [ref=e486] [cursor=pointer]:
+            - /url: /export.csv?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5
+          - button "⇩ dump" [ref=e488] [cursor=pointer]
+          - generic [ref=e489] [cursor=pointer]:
+            - checkbox "live" [ref=e490]
+            - text: live
+        - navigation [ref=e491]:
+          - link "Files read 2" [ref=e492] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5
+          - link "Files changed 3" [ref=e493] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&view=changed
+          - link "Commands 4" [ref=e494] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&view=commands
+          - link "Blocked 0" [ref=e495] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&view=blocked
+          - link "Messages 1" [ref=e496] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&view=messages
+          - link "Timeline" [ref=e497] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&view=timeline
+          - link "Graph" [ref=e498] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&view=graph
+          - link "Log" [ref=e499] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&view=log
+        - generic [ref=e500]:
+          - combobox [ref=e503]:
+            - option "all agents (39)" [selected]
+            - option "main · 188k out"
+            - 'option "general-purpose: Przenieś aitrader · ≥76 out"'
+            - 'option "general-purpose: Przenieś REPO_PRICEDROP · ≥93 out"'
+            - 'option "general-purpose: Przenieś agent_vizualization · ≥43 out"'
+            - 'option "general-purpose: Przenieś lesna-wyprawa · ≥140 out"'
+            - 'option "general-purpose: Repo paths: REPOS_NETZI · ≥79 out"'
+            - 'option "general-purpose: Przenieś REPO_BILLINGTOOL · ≥56 out"'
+            - 'option "general-purpose: Przenieś agency-test · ≥64 out"'
+            - 'option "general-purpose: Przenieś REPO_OSC · ≥90 out"'
+            - 'option "general-purpose: Docs paths: A + B · ≥1k out"'
+            - 'option "general-purpose: Przenieś spec-kit · ≥102 out"'
+            - 'option "general-purpose: Przenieś fixit_logitech_promo · ≥73 out"'
+            - 'option "general-purpose: Przenieś REPO_RP-SHOP · ≥43 out"'
+            - 'option "general-purpose: Przenieś wp_mcp · ≥88 out"'
+            - 'option "general-purpose: Przenieś REPO_ADAPTER · ≥56 out"'
+            - 'option "general-purpose: Repo paths: REPOS_PRGRM część 2 · ≥172 out"'
+            - 'option "general-purpose: Przenieś open-mercato · ≥38 out"'
+            - 'option "general-purpose: Przenieś figma-mcp-layout-admina · ≥84 out"'
+            - 'option "general-purpose: Przenieś eduBombel · ≥100 out"'
+            - 'option "general-purpose: Przenieś pm_center · ≥61 out"'
+            - 'option "general-purpose: Przenieś REPO_CONSENT · ≥56 out"'
+            - 'option "general-purpose: Przenieś autonomus_llm_agency_page · ≥47 out"'
+            - 'option "general-purpose: Przenieś REPO_BIGD · ≥58 out"'
+            - 'option "general-purpose: Przenieś kid-game1 · ≥52 out"'
+            - 'option "general-purpose: Przenieś dealfinder · ≥80 out"'
+            - 'option "general-purpose: Przenieś REPO_NISSO · ≥57 out"'
+            - 'option "general-purpose: Przenieś prgrm2 i worktrees · ≥52 out"'
+            - 'option "general-purpose: Docs paths: Prisma group · ≥2k out"'
+            - 'option "general-purpose: Przenieś REPO_IAM · ≥56 out"'
+            - 'option "general-purpose: Przenieś playwright-playground · ≥75 out"'
+            - 'option "general-purpose: Docs paths: C + D · ≥132 out"'
+            - 'option "general-purpose: Przenieś ROMEK · ≥94 out"'
+            - 'option "general-purpose: Repo paths: REPOS_PRGRM część 1 · ≥162 out"'
+            - 'option "general-purpose: Przenieś progremo_ksiegowosc · ≥146 out"'
+            - 'option "general-purpose: Przenieś kubix · ≥62 out"'
+            - 'option "general-purpose: Przenieś REPO_EVENTHUB · ≥72 out"'
+            - 'option "general-purpose: Przenieś yodai · ≥97 out"'
+            - 'option "general-purpose: Przenieś oba REPO_HANS2 · ≥58 out"'
+            - 'option "general-purpose: Przenieś REPO_FP_ADAPTER · ≥57 out"'
+          - generic [ref=e504]:
+            - link "←" [ref=e505] [cursor=pointer]:
+              - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=4
+            - 'combobox "turn = from a user prompt to the next one · out = output tokens of all agents in the turn · this turn: 6 model calls · output 7k · new context 9k · cache read 444k" [ref=e506]':
+              - option "all turns (39)"
+              - option "1 · 09:21 · robilismy przebudowe repo opisana w tym pliku zap… · 2k out"
+              - option "2 · 09:25 · ok, dobrze .. niestety teraz musimy zorbic krok w… · 4k out"
+              - option "3 · 09:59 · mi tutaj drzewko katalogów, jakbyś to widział po … · 1k out"
+              - option "4 · 10:03 · Okej, każdy workbox ma swój git, to jest okej, cz… · 1k out"
+              - option "5 · 10:03 · poprawiaj strukturę katalogów i zrób skilla, a na… · 7k out" [selected]
+              - option "6 · 10:11 · pokaż mi teraz aktualną wersję drzewka katalogów,… · 4k out"
+              - option "7 · 10:19 · Zastanawiam się jeszcze nad jedną poprawką, żeby … · 1k out"
+              - option "8 · 10:20 · zostawiamy projekt. Jakiego wrapera? Zaczynamy od… · 1k out"
+              - option "9 · 10:22 · Okej, możesz to gdzieś napisać. Ale niekoniecznie… · 2k out"
+              - option "10 · 10:24 · Nie do końca rozumiem ten Claude Wrapper ZSH. To … · 841 out"
+              - option "11 · 10:25 · bo po prostu wyrzucimy, bo chyba nie jest koniecz… · 2k out"
+              - option "12 · 10:27 · Plan jest taki, żeby uruchamiać Claude'a w folder… · 2k out"
+              - option "13 · 10:28 · To jest dobry pomysł, żeby do projektu X, dołożyć… · 978 out"
+              - 'option "14 · 10:31 · # workbox9: środowisko Claude Code source \"$HOME/… · 889 out"'
+              - option "15 · 10:31 · ZSH, także tutaj to nie jest pytanie. · 616 out"
+              - option "16 · 10:32 · jest podłączony ten wrapper, nie rozumiem. W któr… · 504 out"
+              - option "17 · 10:33 · zmieńmy to, bo to jest turbo mylące. Ten CloudWra… · 2k out"
+              - option "18 · 10:35 · przenieść tego Claude Wrappera w ogóle do ZSH, bo… · 836 out"
+              - option "19 · 10:35 · ale można Cloud Wrappera zmienić. Czyli rozumiem,… · 1k out"
+              - option "20 · 10:36 · wykonanie tego, co do czego ma być przyklejone. M… · 4k out"
+              - option "21 · 10:40 · zmieniłem to w ZSH, możesz sobie tutaj zapisać w … · 3k out"
+              - option "22 · 10:49 · pusty folder to szum, no ale mniej więcej jakbyś … · 4k out"
+              - option "23 · 10:50 · jeszcze potrzebuję, no to ten, co będzie w projek… · 5k out"
+              - 'option "24 · 10:52 · \"projects\": { \"/Users/Sebastian/PROJECT-SK/workb… · 2k out"'
+              - option "25 · 10:53 · cały ten obiekt. Możesz go przebudować i dać mi n… · 10k out"
+              - option "26 · 11:23 · Co to się robi strasznie skomplikowane. co się st… · 1k out"
+              - option "27 · 11:24 · Dobra, nie sprzątamy. Zaczynamy, wydziel agentów,… · ≥22k out"
+              - option "28 · 11:27 · ~/SK/workbox9/workbox9_prgrm/agent_vizualization … · ≥64k out"
+              - option "29 · 12:53 · zamkniete okna wszystkie rowniez prisma. -- mozes… · 6k out"
+              - option "30 · 13:14 · ~/.zshrc daj mi tutaj poprawiony skrypt dla tego … · 3k out"
+              - option "31 · 13:17 · OK, to działa i ze stanMet plus serwery do zatrzy… · 3k out"
+              - option "32 · 13:18 · stanmet mozez zatrzymac · 517 out"
+              - option "33 · 13:18 · jakie sa nastpen kroki ? czy mozemy przejsc do ak… · 1k out"
+              - option "34 · 13:19 · ok, dzialaj z tym .. rozpisz sobie progres plan i… · ≥25k out"
+              - option "35 · 13:33 · sprobuj napsrawic zepsute import jesli nie da sie… · 2k out"
+              - option "36 · 13:35 · tak skasu j i usun workbox9_netzi/Restructurisati… · 586 out"
+              - option "37 · 13:36 · sill jest w glwonym workbox9 tak ? · 2k out"
+              - option "38 · 13:41 · dobra czy projekt przebudowy moge uznac za zamkni… · 1k out"
+              - option "39 · 13:45 · ok rob h · 2k out"
+            - link "→" [ref=e507] [cursor=pointer]:
+              - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=6
+          - combobox "where the file came from" [ref=e508]:
+            - option "all sources" [selected]
+            - option "agent tools only"
+            - option "injected context only"
+          - link "project only" [ref=e509] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&scope=project
+          - combobox "executed = ran (also Bash with exit code ≠ 0) · blocked = stopped by a hook, a permissions.deny rule, auto mode or you · failed = tool error, e.g. file does not exist" [ref=e510]:
+            - option "all calls (5)" [selected]
+            - option "executed (5)"
+            - option "blocked (0)"
+            - option "failed (0)"
+          - group [ref=e511]:
+            - 'generic "turn 5 tokens: 7k out" [active] [ref=e512] [cursor=pointer]'
+            - generic [ref=e554]:
+              - paragraph [ref=e555]:
+                - strong [ref=e556]: turn 5
+                - text: · all agents, regardless of the agent and status filters · subagents counted by time
+              - table [ref=e557]:
+                - rowgroup [ref=e558]:
+                  - row "agent calls output new context cache read" [ref=e559]:
+                    - columnheader "agent" [ref=e560]
+                    - columnheader "calls" [ref=e561]
+                    - columnheader "output" [ref=e562]
+                    - columnheader "new context" [ref=e563]
+                    - columnheader "cache read" [ref=e564]
+                - rowgroup [ref=e565]:
+                  - row "main 6 7k 9k 444k" [ref=e566]:
+                    - cell "main" [ref=e567]:
+                      - link "main" [ref=e568] [cursor=pointer]:
+                        - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&agent=main
+                        - text: main
+                    - cell "6" [ref=e570]
+                    - cell "7k" [ref=e571]
+                    - cell "9k" [ref=e572]
+                    - cell "444k" [ref=e573]
+              - paragraph [ref=e574]: "models: claude-sonnet-5-5 ×6"
+              - paragraph [ref=e575]: "Counters are not summed: cache read is the same context read again on every call, usually ~95% of all tokens."
+          - group [ref=e513]:
+            - 'generic "parser: 0% blind" [ref=e514] [cursor=pointer]'
+      - generic [ref=e516]:
+        - generic [ref=e517]:
+          - generic [ref=e518]: files whose content reached an agent (read with a tool unless marked) · click a row → calls that touched it
+          - link "+ searched / listed / run" [ref=e519] [cursor=pointer]:
+            - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&more=1
+        - table [ref=e520]:
+          - rowgroup [ref=e521]:
+            - row "file reads ▾ how agents first last" [ref=e522]:
+              - columnheader "file" [ref=e523]:
+                - link "file" [ref=e524] [cursor=pointer]:
+                  - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&sort=path
+              - columnheader "reads ▾" [ref=e525]:
+                - link "reads ▾" [ref=e526] [cursor=pointer]:
+                  - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&sort=count
+              - columnheader "how" [ref=e527]
+              - columnheader "agents" [ref=e528]:
+                - link "agents" [ref=e529] [cursor=pointer]:
+                  - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&sort=agents
+              - columnheader "first" [ref=e530]:
+                - link "first" [ref=e531] [cursor=pointer]:
+                  - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&sort=first
+              - columnheader "last" [ref=e532]:
+                - link "last" [ref=e533] [cursor=pointer]:
+                  - /url: /?s=4d12c76b-8f7d-4e64-a643-4ee2e799b372&turn=5&sort=last
+          - rowgroup [ref=e534]:
+            - row ".claude/skills/docrefactor/SKILL.md 1 fragment only main 10:03:49 10:03:49" [ref=e535] [cursor=pointer]:
+              - cell ".claude/skills/docrefactor/SKILL.md" [ref=e536]
+              - cell "1" [ref=e537]
+              - cell "fragment only" [ref=e538]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e539]: fragment only
+              - cell "main" [ref=e540]:
+                - generic "main" [ref=e541]
+              - cell "10:03:49" [ref=e542]
+              - cell "10:03:49" [ref=e543]
+            - row "context/todo/2026-10-22-restrukturyzacja-2-repos.md 1 fragment only modified main 10:03:32 10:04:20" [ref=e544] [cursor=pointer]:
+              - cell "context/todo/2026-10-22-restrukturyzacja-2-repos.md" [ref=e545]
+              - cell "1" [ref=e546]
+              - cell "fragment only modified" [ref=e547]:
+                - generic "only part of the file (offset/limit, head, sed -n…)" [ref=e548]: fragment only
+                - generic [ref=e549]: modified
+              - cell "main" [ref=e550]:
+                - generic "main" [ref=e551]
+              - cell "10:03:32" [ref=e552]
+              - cell "10:04:20" [ref=e553]

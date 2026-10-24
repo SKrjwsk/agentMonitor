@@ -45,8 +45,9 @@ Wejście: folder zrzutu z przycisku „⇩ zrzut sesji” albo `php bin/export.p
   - `edited_without_prior_read_same_agent`
   - `shared_read_between_agents`, `shared_read_examples` — pliki czytane albo zmieniane przez ≥ 2 agentów (duplikacja pracy)
 - `agents`: wywołania, przeczytane pliki, `max_context_tokens` i `tokens` per agent
-- `tokens` (cała sesja, bez filtrów zrzutu), `agents[].tokens`, `turns[].tokens`: `model_calls`, `subagent_model_calls`, `output`, `cache_write`, `cache_read`, `input_uncached`, `models`
-  - liczników **nie sumuj**: `cache_read` to ten sam kontekst czytany przy każdym wywołaniu (zwykle ~95% wszystkiego)
+- `tokens` (cała sesja, bez filtrów zrzutu), `agents[].tokens`, `turns[].tokens`: `model_calls`, `subagent_model_calls`, `output`, `cache_write`, `cache_read`, `input_uncached`, `models`, `cost_usd`, `cost_usd_parts` (`input`, `read`, `write`, `output`), `unpriced_calls`
+  - liczników tokenów **nie sumuj**: `cache_read` to ten sam kontekst czytany przy każdym wywołaniu (zwykle ~95% wszystkiego). Do porównań i rankingu używaj `cost_usd` (cennik API per model — miara porównawcza, nie rachunek usera)
+- `expensive_results` (cała sesja): 15 najdroższych wyników narzędzi — `context_tokens` dopisane do kontekstu × `later_calls` dalszych odpowiedzi agenta, które je czytały = `cost_usd`. Szacunek: zapis cache następnej odpowiedzi dzielony na wyniki proporcjonalnie do długości
   - `output_incomplete_calls` > 0 → `output` jest dolną granicą (subagenci w Claude Code ≤ 2.1.300 nie zapisywali końcowego usage); nie porównuj wtedy `output` subagentów z sesją główną
 - `problems`: liczba wywołań per rodzaj sygnału (`error`, `blind spot`, `partial parse`, `re-read`, `read of a file already in context`, `edit without prior read`, `risky command`, `interactive program`, `retry after error` — etykiety po angielsku, jak w UI) — te same reguły co filtr „tylko problemy” w UI (`src/Problems.php`)
 - `commands` (M11): `occurrences`, `programs`, `by_role`, `top` (program → wystąpienia, wywołania z błędem, konteksty), `top_pipes` (`grep | head`), `risky`, `interactive`; szczegóły per wystąpienie w `commands.csv`. Status jest per **całe wywołanie** — program w łańcuchu `a && b | c` dziedziczy błąd wywołania
@@ -61,7 +62,8 @@ Wejście: folder zrzutu z przycisku „⇩ zrzut sesji” albo `php bin/export.p
 - **Kontekst:**
   - `context_also_read_by_tool` (zmarnowane odczyty)
   - wzrost `max_context_tokens`
-  - drogie tury: `turns[].tokens.cache_write` (nowy kontekst) i `model_calls` na tle efektu tury
+  - drogie tury: `turns[].tokens.cost_usd` na tle efektu tury; składnik `cost_usd_parts.read` rośnie z rozmiarem kontekstu × liczbą wywołań
+  - `expensive_results`: duży wynik wczytany wcześnie w długiej sesji kosztuje przy każdym dalszym wywołaniu — czy wystarczył fragment albo subagent
   - kompaktowania
   - Pytanie kontrolne: czy agent czytał całe duże pliki tam, gdzie wystarczył fragment
 - **Eksploracja:**

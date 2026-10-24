@@ -203,6 +203,7 @@ final class Metrics
                 'indirect' => array_count_values(array_merge(...array_map(static fn (Event $e): array => $e->indirect, $calls))),
             ],
             'tokens' => self::tokens($session->tokens()),
+            'expensive_results' => self::expensive($session),
             'agents' => $agents,
             'turns' => $turns,
             'problems' => self::problemSummary(Problems::tag($events)),
@@ -228,8 +229,27 @@ final class Metrics
             'cache_write' => $t['cacheWrite'],
             'cache_read' => $t['cacheRead'],
             'input_uncached' => $t['input'],
+            // koszt według cennika API (Pricing) — miara porównawcza; `unpriced_calls` = model spoza cennika, nie ma go w koszcie
+            'cost_usd' => round($t['usd'], 4),
+            'cost_usd_parts' => array_map(static fn (float $v): float => round($v, 4), $t['cost']),
+            'unpriced_calls' => $t['unpriced'],
             'models' => $t['models'],
         ];
+    }
+
+    /**
+     * Najdroższe wyniki narzędzi (Event::carry): tokeny dopisane do kontekstu × dalsze odpowiedzi agenta, które je czytały.
+     * Cała sesja, bez filtrów zrzutu — jak `tokens`.
+     */
+    private static function expensive(Session $session): array
+    {
+        $events = array_values(array_filter($session->events, static fn (Event $e): bool => ($e->carry['usd'] ?? 0) > 0));
+        usort($events, static fn (Event $a, Event $b): int => $b->carry['usd'] <=> $a->carry['usd']);
+
+        return array_map(static fn (Event $e): array => [
+            'ts' => $e->ts, 'agent' => $e->agentId, 'tool' => $e->tool, 'summary' => $e->summary,
+            'context_tokens' => $e->carry['tokens'], 'later_calls' => $e->carry['calls'], 'cost_usd' => round((float) $e->carry['usd'], 4),
+        ], array_slice($events, 0, 15));
     }
 
     /**

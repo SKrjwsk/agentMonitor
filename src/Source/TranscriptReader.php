@@ -10,6 +10,7 @@ use Viz\Model\Event;
 use Viz\Model\Session;
 use Viz\Model\Touch;
 use Viz\Path;
+use Viz\Pricing;
 
 /**
  * Czyta transkrypt Claude Code (format wewnętrzny, nieudokumentowany):
@@ -56,7 +57,7 @@ final class TranscriptReader
     {
         $sessionId = basename($mainPath, '.jsonl');
         $agents = [Agent::MAIN => new Agent(Agent::MAIN, 'main', 'main session', null)];
-        $meta = ['title' => '', 'cwd' => null, 'toolUses' => 0, 'prompts' => [], 'usage' => [], 'messages' => []];
+        $meta = ['title' => '', 'cwd' => null, 'toolUses' => 0, 'prompts' => [], 'usage' => [], 'messages' => [], 'incidents' => []];
         $events = $this->readFile($mainPath, $sessionId, Agent::MAIN, $meta);
 
         foreach (glob(substr($mainPath, 0, -6) . '/subagents/agent-*.jsonl') ?: [] as $file) {
@@ -68,12 +69,14 @@ final class TranscriptReader
                 (string) ($info['description'] ?? $agentId),
                 isset($info['toolUseId']) ? (string) $info['toolUseId'] : null,
             );
-            $subMeta = ['title' => '', 'cwd' => null, 'toolUses' => 0, 'prompts' => [], 'usage' => [], 'messages' => []];
+            $subMeta = ['title' => '', 'cwd' => null, 'toolUses' => 0, 'prompts' => [], 'usage' => [], 'messages' => [], 'incidents' => []];
             array_push($events, ...$this->readFile($file, $sessionId, $agentId, $subMeta));
             $meta['toolUses'] += $subMeta['toolUses'];
             array_push($meta['usage'], ...$subMeta['usage']);
             $meta['messages'] += $subMeta['messages'];
+            array_push($meta['incidents'], ...$subMeta['incidents']);
         }
+        usort($meta['incidents'], static fn (array $a, array $b): int => strcmp($a['ts'], $b['ts']));
 
         usort($events, static fn (Event $a, Event $b): int => strcmp($a->ts, $b->ts));
         usort($meta['prompts'], static fn (array $a, array $b): int => strcmp($a['ts'], $b['ts']));
@@ -81,6 +84,7 @@ final class TranscriptReader
         return new Session(
             $sessionId, $mainPath, ($meta['customTitle'] ?? '') !== '' ? $meta['customTitle'] : $meta['title'], $meta['cwd'], $agents, $events, $meta['toolUses'], $meta['prompts'], $meta['usage'],
             self::messages($meta['prompts'], $meta['messages'], $agents),
+            $meta['incidents'],
         );
     }
 
@@ -125,6 +129,53 @@ final class TranscriptReader
     }
 
     /**
+     * Koszt wyników narzędzi w kontekście jednego agenta (szacunek — transkrypt nie podaje tokenów per wynik).
+     * Zapis do cache odpowiedzi N to to, co doszło od odpowiedzi N-1: jej wyjście + wyniki narzędzi; ten zapis bez wyjścia
+     * dzielimy na wyniki proporcjonalnie do długości. Gdy zapis jest dużo większy niż te wyniki, kontekst był zapisywany
+     * od nowa (wygasły cache, zmiana modelu, kompaktowanie) — wtedy wynik szacujemy z długości (≈ 3 znaki na token).
+     * Wynik zostaje w kontekście i jest czytany z cache przy każdej dalszej odpowiedzi — do kompaktowania (kontekst spada o > 40%).
+     *
+     * @param list<array<string, mixed>> $usage odpowiedzi agenta w kolejności z transkryptu, z `results`
+     * @return array<string, array{tokens: int, calls: int, usd: ?float}> tool_use_id → koszt
+     */
+    private static function carry(array $usage): array
+    {
+        $n = count($usage);
+        // indeks pierwszej odpowiedzi po kompaktowaniu, licząc od każdej odpowiedzi
+        $nextDrop = [];
+        $next = $n;
+        for ($j = $n - 1; $j >= 1; $j--) {
+            $nextDrop[$j] = $next;
+            if ($usage[$j]['tokens'] < 0.6 * $usage[$j - 1]['tokens']) {
+                $next = $j;
+            }
+        }
+        $out = [];
+        for ($i = 1; $i < $n; $i++) {
+            $u = $usage[$i];
+            $chars = array_sum(array_column($u['results'], 1));
+            if ($u['results'] === [] || $chars === 0) {
+                continue;
+            }
+            $prevOut = $usage[$i - 1]['output'];
+            $rebuild = $u['cacheWrite'] > 20000 && $u['cacheWrite'] > 2 * ($chars / 3 + $prevOut + 3000);
+            $base = max(0, $u['cacheWrite'] - $prevOut);
+            $calls = $nextDrop[$i] - $i - 1;
+            $rates = Pricing::rates($u['model']);
+            foreach ($u['results'] as [$id, $len]) {
+                $tokens = (int) round($rebuild ? $len / 3 : $base * $len / $chars);
+                $out[$id] = [
+                    'tokens' => $tokens,
+                    'calls' => $calls,
+                    'usd' => $rates === null ? null : $tokens * (Pricing::writeRate($rates[0], $u['cacheWrite'], $u['write1h']) + $rates[2] * $calls) / 1e6,
+                ];
+            }
+        }
+
+        return $out;
+    }
+
+    /**
      * @param array{title: string, cwd: ?string, toolUses: int} $meta
      * @return list<Event>
      */
@@ -140,6 +191,8 @@ final class TranscriptReader
         $errors = [];
         $denials = [];
         $usage = [];
+        // wyniki narzędzi od ostatniej odpowiedzi modelu: [tool_use_id, długość] — trafiają do zapisu cache następnej odpowiedzi
+        $sinceResponse = [];
         $events = [];
         while (($line = fgets($handle)) !== false) {
             if (!str_contains($line, '"tool_use"') && !str_contains($line, '"tool_result"')
@@ -180,6 +233,10 @@ final class TranscriptReader
                 }
                 continue;
             }
+            $incident = self::incident($d, $agentId);
+            if ($incident !== null) {
+                $meta['incidents'][] = $incident;
+            }
             // jedna odpowiedź modelu = kilka linii z tym samym message.id; wejście jest w nich takie samo,
             // ale output_tokens bywa w pierwszej linii niepełne (16 zamiast 1706) — bierzemy największe
             // `<synthetic>` to komunikat harnessu z zerowym usage, nie wywołanie modelu
@@ -187,7 +244,11 @@ final class TranscriptReader
             if ($type === 'assistant' && isset($d['message']['usage'], $d['message']['id']) && ($d['message']['model'] ?? '') !== '<synthetic>') {
                 $u = $d['message']['usage'];
                 $id = (string) $d['message']['id'];
-                $usage[$id] ??= [
+                if (!isset($usage[$id])) {
+                    $usage[$id] = ['results' => $sinceResponse];
+                    $sinceResponse = [];
+                }
+                $usage[$id] += [
                     'ts' => (string) ($d['timestamp'] ?? ''),
                     'agent' => $agentId,
                     'model' => (string) ($d['message']['model'] ?? ''),
@@ -195,6 +256,7 @@ final class TranscriptReader
                     'input' => (int) ($u['input_tokens'] ?? 0),
                     'cacheRead' => (int) ($u['cache_read_input_tokens'] ?? 0),
                     'cacheWrite' => (int) ($u['cache_creation_input_tokens'] ?? 0),
+                    'write1h' => (int) ($u['cache_creation']['ephemeral_1h_input_tokens'] ?? 0),
                     'output' => 0,
                     'final' => false,
                 ];
@@ -227,6 +289,8 @@ final class TranscriptReader
                 if ($type === 'user' && ($block['type'] ?? '') === 'tool_result') {
                     $failed[(string) ($block['tool_use_id'] ?? '')] = ($block['is_error'] ?? false) === true;
                     $ended[(string) ($block['tool_use_id'] ?? '')] = (string) ($d['timestamp'] ?? '');
+                    // tylko długość wyniku (do szacunku kosztu), nie treść
+                    $sinceResponse[] = [(string) ($block['tool_use_id'] ?? ''), is_string($block['content'] ?? null) ? strlen($block['content']) : strlen((string) json_encode($block['content'] ?? ''))];
                     if (($block['is_error'] ?? false) === true) {
                         $errors[(string) ($block['tool_use_id'] ?? '')] = self::firstLine($block['content'] ?? '');
                         $denials[(string) ($block['tool_use_id'] ?? '')] = self::denial($d, $errors[(string) ($block['tool_use_id'] ?? '')]);
@@ -243,7 +307,13 @@ final class TranscriptReader
             }
         }
         fclose($handle);
-        array_push($meta['usage'], ...array_values($usage));
+        $usage = array_values($usage);
+        $carry = self::carry($usage);
+        foreach ($usage as $u) {
+            unset($u['results']);
+            $u['cost'] = Pricing::cost($u['model'], $u['input'], $u['cacheRead'], $u['cacheWrite'], $u['write1h'], $u['output']);
+            $meta['usage'][] = $u;
+        }
 
         foreach ($pending as $id => [$ts, $cwd, $tool, $input]) {
             $x = $this->tools->extract($tool, $input, $cwd);
@@ -254,6 +324,7 @@ final class TranscriptReader
                 error: $errors[$id] ?? null,
                 commands: $x->commands,
                 denial: $denials[$id] ?? null,
+                carry: $carry[$id] ?? null,
             );
         }
 
@@ -331,6 +402,38 @@ final class TranscriptReader
             (string) ($d['timestamp'] ?? ''), $sessionId, $agentId, Event::TOOL_CONTEXT, (string) ($d['uuid'] ?? ''),
             self::CONTEXT_ATTACHMENTS[$kind], $d['cwd'] ?? null, false, $touches,
         );
+    }
+
+    /**
+     * Zakłócenie pracy agenta zapisane w transkrypcie: przerwanie przez usera (`[Request interrupted by user…]`),
+     * limit sesji albo inny błąd API (linia z `isApiErrorMessage` — komunikat Claude Code, nie treść pliku).
+     *
+     * @param array<string, mixed> $d
+     * @return ?array{ts: string, agent: string, kind: string, text: string}
+     */
+    public static function incident(array $d, string $agentId): ?array
+    {
+        $type = $d['type'] ?? '';
+        $content = $d['message']['content'] ?? null;
+        $text = is_string($content) ? $content : '';
+        if (is_array($content)) {
+            foreach ($content as $block) {
+                if (is_array($block) && ($block['type'] ?? '') === 'text') {
+                    $text .= (string) ($block['text'] ?? '');
+                }
+            }
+        }
+        $ts = (string) ($d['timestamp'] ?? '');
+        if ($type === 'user' && str_starts_with(ltrim($text), '[Request interrupted by user')) {
+            return ['ts' => $ts, 'agent' => $agentId, 'kind' => 'interrupt', 'text' => str_contains($text, 'for tool use') ? 'interrupted during a tool call' : 'interrupted'];
+        }
+        if ($type === 'assistant' && ($d['isApiErrorMessage'] ?? false) === true) {
+            $first = mb_strimwidth(trim(strtok($text, "\n") ?: ''), 0, 160, '…');
+
+            return ['ts' => $ts, 'agent' => $agentId, 'kind' => stripos($text, 'limit') !== false ? 'limit' : 'api-error', 'text' => $first !== '' ? $first : (string) ($d['error'] ?? 'API error')];
+        }
+
+        return null;
     }
 
     /**
