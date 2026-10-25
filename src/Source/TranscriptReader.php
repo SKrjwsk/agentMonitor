@@ -190,6 +190,7 @@ final class TranscriptReader
         $ended = [];
         $errors = [];
         $denials = [];
+        $osDenied = [];
         $usage = [];
         // wyniki narzędzi od ostatniej odpowiedzi modelu: [tool_use_id, długość] — trafiają do zapisu cache następnej odpowiedzi
         $sinceResponse = [];
@@ -294,6 +295,8 @@ final class TranscriptReader
                     if (($block['is_error'] ?? false) === true) {
                         $errors[(string) ($block['tool_use_id'] ?? '')] = self::firstLine($block['content'] ?? '');
                         $denials[(string) ($block['tool_use_id'] ?? '')] = self::denial($d, $errors[(string) ($block['tool_use_id'] ?? '')]);
+                        // odmowa sandboxa: Bash „się wykonał” (kod ≠ 0), ale plik nie został otwarty — tylko flaga, treść wyniku nie jest zapisywana
+                        $osDenied[(string) ($block['tool_use_id'] ?? '')] = str_contains(self::text($block['content'] ?? ''), 'Operation not permitted');
                     }
                     // subagent synchroniczny: jego odpowiedź jest wynikiem wywołania Agent (asynchroniczny odsyła ją przez SubagentHandback)
                     $callId = (string) ($block['tool_use_id'] ?? '');
@@ -325,6 +328,7 @@ final class TranscriptReader
                 commands: $x->commands,
                 denial: $denials[$id] ?? null,
                 carry: $carry[$id] ?? null,
+                osDenied: $osDenied[$id] ?? false,
             );
         }
 

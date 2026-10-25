@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Viz\Web;
 
+use Viz\Boundary;
 use Viz\Clock;
 use Viz\Export\SessionExport;
 use Viz\Model\Agent;
@@ -197,6 +198,18 @@ final class App
         header('Content-Disposition: attachment; filename="agent-viz-' . $p['view'] . '-' . Clock::local(Clock::nowUtc(), 'Ymd-His') . '-' . $period . '.csv"');
         header('Cache-Control: no-store');
         $out = fopen('php://output', 'w');
+        if ($p['view'] === 'boundary') {
+            fputcsv($out, ['time', 'kind', 'stopped_by', 'tool', 'call', 'paths_outside', 'session', 'project'], ',', '"', '');
+            foreach ($view['boundary'] as $b) {
+                fputcsv($out, [
+                    Clock::local($b['ts'], 'Y-m-d H:i:s'), $b['kind'], self::csvSafe((string) ($b['by'] ?? '')), $b['tool'], self::csvSafe($b['summary']),
+                    self::csvSafe(implode('; ', array_map(static fn (array $t): string => $t['op'] . ' ' . $t['path'], $b['paths']))),
+                    self::csvSafe($b['title'] !== '' ? $b['title'] : (string) $b['session_id']), self::csvSafe(basename($b['cwd'])),
+                ], ',', '"', '');
+            }
+            fclose($out);
+            return;
+        }
         if ($p['view'] === 'blocked') {
             fputcsv($out, ['time', 'blocked_by', 'rule', 'tool', 'call', 'session', 'project'], ',', '"', '');
             foreach ($view['blocked'] as $b) {
@@ -246,7 +259,7 @@ final class App
         $session = $view['session'];
         $agent = static fn (string $id): string => isset($session->agents[$id]) ? self::agentLabel($session->agents[$id]) : $id;
         $status = static fn (Event $e): string => $e->denial !== null ? 'blocked' : (!$e->failed ? 'ok' : ($e->executed() ? 'exit≠0' : 'tool error'));
-        $tab = in_array($p['view'], ['read', 'changed', 'commands', 'blocked', 'messages'], true) ? $p['view'] : 'calls';
+        $tab = in_array($p['view'], ['read', 'changed', 'commands', 'blocked', 'boundary', 'messages'], true) ? $p['view'] : 'calls';
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="agent-viz-' . substr($view['sid'], 0, 8) . '-' . $tab . '-' . Clock::local(Clock::nowUtc(), 'Ymd-His') . '.csv"');
         header('Cache-Control: no-store');
@@ -264,6 +277,12 @@ final class App
             $row(['time', 'agent', 'blocked_by', 'rule', 'tool', 'call']);
             foreach ($view['blocked'] as $b) {
                 $row([Clock::local($b['ts'], 'Y-m-d H:i:s'), $agent((string) $b['agent']), $b['by'], (string) ($b['detail'] ?? ''), $b['tool'], $b['summary']]);
+            }
+        } elseif ($tab === 'boundary') {
+            $row(['time', 'agent', 'kind', 'stopped_by', 'tool', 'call', 'paths_outside']);
+            foreach ($view['boundary'] as $b) {
+                $row([Clock::local($b['ts'], 'Y-m-d H:i:s'), $agent((string) $b['agent']), $b['kind'], (string) ($b['by'] ?? ''), $b['tool'], $b['summary'],
+                    implode('; ', array_map(static fn (array $t): string => $t['op'] . ' ' . $t['path'], $b['paths']))]);
             }
         } elseif ($tab === 'messages') {
             $row(['time', 'from', 'to', 'kind', 'text']);
@@ -374,6 +393,24 @@ final class App
         }
         usort($blocked, static fn (array $a, array $b): int => strcmp($b['ts'], $a['ts']));
 
+        // naruszenia granicy ze wszystkich sesji w zakresie; `boundary` = filtr rodzaju
+        $boundary = [];
+        foreach ($ranking['sessions'] as $sess) {
+            foreach ((array) ($sess['boundary'] ?? []) as $b) {
+                $hay = $b['tool'] . ' ' . $b['summary'] . ' ' . implode(' ', array_column($b['paths'], 'path'));
+                if (($cutoff !== '' && $b['ts'] < $cutoff) || ($p['boundary'] !== '' && $b['kind'] !== $p['boundary']) || ($p['find'] !== '' && mb_stripos($hay, $p['find']) === false)) {
+                    continue;
+                }
+                foreach ($excludes as $x) {
+                    if (mb_stripos($hay, $x) !== false) {
+                        continue 2;
+                    }
+                }
+                $boundary[] = $b + ['session_id' => (string) $sess['session_id'], 'title' => (string) ($sess['title'] ?? ''), 'cwd' => (string) ($sess['cwd'] ?? ''), 'id' => null];
+            }
+        }
+        usort($boundary, static fn (array $a, array $b): int => strcmp($b['ts'], $a['ts']));
+
         $sessionsById = [];
         foreach ($ranking['sessions'] as $sess) {
             $sessionsById[(string) $sess['session_id']] = $sess;
@@ -391,7 +428,9 @@ final class App
             'changed' => FileTable::sort($changed, $p['sort'] !== '' ? $p['sort'] : 'count', 'mods'),
             'commands' => $commands,
             'blocked' => $blocked,
-            'counts' => ['read' => count($read), 'changed' => count($changed), 'commands' => count($commands), 'blocked' => count($blocked)],
+            'boundary' => $boundary,
+            'boundaryOn' => Boundary::fromEnv()->enabled(),
+            'counts' => ['read' => count($read), 'changed' => count($changed), 'commands' => count($commands), 'blocked' => count($blocked), 'boundary' => count($boundary)],
             'rowLimit' => $p['limit'] ? PHP_INT_MAX : self::ALL_ROWS,
             'sessionsById' => $sessionsById,
             'projects' => $ranking['projects'],
@@ -526,6 +565,8 @@ final class App
             'expensive-result' => ['view' => 'commands', 'sort' => 'cost', 'pev' => (string) $it['ev']],
             'huge-context' => ['view' => 'timeline', 'turn' => ''],
             'protected-path', 'auto-mode', 'report-blocked', 'hook-text' => ['view' => 'blocked', 'pev' => (string) $it['ev']],
+            'outside-executed', 'unknown-paths', 'outside-stopped' => ['view' => 'boundary', 'pev' => (string) $it['ev'],
+                'boundary' => ['outside-executed' => Boundary::OUTSIDE, 'unknown-paths' => Boundary::SUSPICIOUS, 'outside-stopped' => Boundary::STOPPED][$it['kind']]],
             'subagent-failed' => ['view' => 'commands', 'status' => 'failed', 'pev' => (string) $it['ev']],
             'error-rate' => ['view' => 'commands', 'status' => 'failed', 'turn' => ''],
             default => ['view' => 'messages'],
@@ -575,6 +616,7 @@ final class App
             'scope' => $str('scope') === 'project' ? 'project' : '',
             'problems' => $str('problems') === '1',
             'status' => in_array($str('status'), self::STATUSES, true) ? $str('status') : '',
+            'boundary' => in_array($str('boundary'), Boundary::KINDS, true) ? $str('boundary') : '',
             'view' => self::viewName($str('view')),
             'sort' => in_array($str('sort'), FileTable::SORTS, true) ? $str('sort') : '',
             'more' => $str('more') === '1',
@@ -600,10 +642,10 @@ final class App
     }
 
     /** Widoki-pytania + widoki dodatkowe; stare `logs` (sprzed podziału na pytania) = `log`. */
-    public const VIEWS = ['read', 'changed', 'commands', 'blocked', 'messages', 'timeline', 'graph', 'log'];
+    public const VIEWS = ['read', 'changed', 'commands', 'blocked', 'boundary', 'messages', 'timeline', 'graph', 'log'];
 
     /** Zakładki dostępne w zakresie „all” — agregaty nie mają pojedynczych wywołań, wiadomości ani czasu. */
-    public const ALL_VIEWS = ['read', 'changed', 'commands', 'blocked'];
+    public const ALL_VIEWS = ['read', 'changed', 'commands', 'blocked', 'boundary'];
 
     /**
      * Status wywołania: wykonane (także Bash z kodem wyjścia ≠ 0), zablokowane (hook, reguła deny, tryb auto, user — `Event::denial`)
@@ -711,19 +753,42 @@ final class App
                 $statusCounts[self::status($e)]++;
             }
         }
+        // granica pracy agentów (`.env`): rodzaj per wywołanie — znaczniki w Commands, zakładka Boundary (bez filtra statusu), filtr `boundary`
+        $limits = Boundary::fromEnv();
+        $crossed = [];
+        $boundaryRows = [];
+        $boundaryCounts = array_fill_keys(Boundary::KINDS, 0);
+        foreach ($events as $e) {
+            $kind = $limits->classify($e);
+            if ($kind === null) {
+                continue;
+            }
+            $crossed[$e->toolUseId] = $kind;
+            $boundaryCounts[$kind]++;
+            if ($p['boundary'] === '' || $p['boundary'] === $kind) {
+                $boundaryRows[] = ['ts' => $e->ts, 'agent' => $e->agentId, 'tool' => $e->tool, 'summary' => $e->summary, 'kind' => $kind,
+                    'by' => $kind === Boundary::STOPPED ? Boundary::stoppedBy($e) : null,
+                    'paths' => array_map(static fn (Touch $t): array => ['path' => $t->path, 'op' => $t->op], $limits->outside($e)),
+                    'id' => $e->toolUseId, 'session_id' => null, 'title' => '', 'cwd' => (string) $session->cwd];
+            }
+        }
         if ($p['status'] !== '') {
             $events = array_values(array_filter($events, static fn (Event $e): bool => self::status($e) === $p['status']));
+        }
+        if ($p['boundary'] !== '') {
+            $events = array_values(array_filter($events, static fn (Event $e): bool => ($crossed[$e->toolUseId] ?? null) === $p['boundary']));
         }
         $stats = Stats::of($events);
         $shown = $p['origin'] === ''
             ? $events
             : array_values(array_filter($events, static fn (Event $e): bool => ($e->tool === Event::TOOL_CONTEXT) === ($p['origin'] === 'context')));
         // przy blokadach i błędach tabela pokazuje pliki, do których agent próbował sięgnąć
-        $files = FileTable::build($shown, $problems, in_array($p['status'], ['blocked', 'failed'], true));
+        $tried = in_array($p['status'], ['blocked', 'failed'], true) || $p['boundary'] === Boundary::STOPPED;
+        $files = FileTable::build($shown, $problems, $tried);
         $readOps = $p['more'] ? [Touch::READ, Touch::CONTEXT, Touch::SEARCH, Touch::LIST, Touch::EXEC] : [Touch::READ, Touch::CONTEXT];
         $read = array_values(array_filter($files, static fn (array $f): bool => array_intersect_key($f['ops'], array_flip($readOps)) !== []));
         $changed = array_values(array_filter($files, static fn (array $f): bool => $f['mods'] > 0));
-        $bash = in_array($p['status'], ['blocked', 'failed'], true)
+        $bash = $tried || $p['boundary'] !== ''
             ? array_values(array_filter($shown, static fn (Event $e): bool => $e->tool !== Event::TOOL_CONTEXT))
             : array_values(array_filter($shown, static fn (Event $e): bool => $e->commands !== [] || $e->tool === 'Bash'));
         $messages = self::messages($session, $agentFilter, $turn > 0 ? $turns[$turn - 1]['ts'] : null, $turn > 0 ? ($turns[$turn]['ts'] ?? null) : null);
@@ -787,9 +852,14 @@ final class App
                 'changed' => count($changed),
                 'commands' => count($bash),
                 'blocked' => count($blockedRows),
+                'boundary' => count($boundaryRows),
                 'messages' => count($messages),
             ],
             'blocked' => array_reverse($blockedRows),
+            'boundary' => array_reverse($boundaryRows),
+            'boundaryCounts' => $boundaryCounts,
+            'crossed' => $crossed,
+            'boundaryOn' => $limits->enabled(),
             'rowLimit' => PHP_INT_MAX,
             'bash' => $p['pcmd'] === '' ? $bash : array_values(array_filter($bash, static function (Event $e) use ($p): bool {
                 foreach ($e->commands as $c) {
@@ -929,6 +999,7 @@ final class App
             'scope' => $p['scope'],
             'problems' => $p['problems'] ? '1' : '',
             'status' => $p['status'],
+            'boundary' => $p['boundary'],
             'view' => $p['view'] === 'read' ? '' : $p['view'],
             'sort' => $p['sort'],
             'more' => $p['more'] ? '1' : '',

@@ -76,6 +76,14 @@ $pct = $stats->bashCalls > 0 ? round(100 * $stats->blind / $stats->bashCalls) : 
                     <option value="/?<?= h(App::query($view, ['status' => $status])) ?>" <?= $p['status'] === $status ? 'selected' : '' ?>><?= h($label) ?></option>
                 <?php endforeach ?>
             </select>
+            <?php if ($view['boundaryOn']): ?>
+                <select onchange="Viz.Go(this)" title="<?= th('boundary from .env · outside = ran and touched a path outside it · suspicious = Bash whose paths could not be resolved · stopped = an attempt outside that did not run') ?>">
+                    <?php $bc = $view['boundaryCounts'] ?>
+                    <?php foreach (['' => t('boundary: all'), 'outside' => t('outside ({n})', ['n' => $bc['outside']]), 'suspicious' => t('suspicious ({n})', ['n' => $bc['suspicious']]), 'stopped' => t('stopped ({n})', ['n' => $bc['stopped']])] as $kind => $label): ?>
+                        <option value="/?<?= h(App::query($view, ['boundary' => $kind])) ?>" <?= $p['boundary'] === $kind ? 'selected' : '' ?>><?= h($label) ?></option>
+                    <?php endforeach ?>
+                </select>
+            <?php endif ?>
             <?php if ($p['problems']): ?>
                 <a class="chip" viz-current href="/?<?= h(App::query($view, ['problems' => ''])) ?>" title="<?= th('filter from an older link — click to clear') ?>"><?= th('flagged only') ?> ×</a>
             <?php endif ?>

@@ -416,6 +416,11 @@ table.files .agents .dot { margin-right: 2px; }
 .s-sub { display: block; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .s-sub { display: block; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .badge.denied { color: var(--err); border-color: currentColor; white-space: nowrap; flex: none; }
+/* granica pracy agentów: wykonane poza nią / ścieżki nieustalone / zatrzymane */
+.badge[viz-boundary] { border-color: currentColor; flex: none; cursor: help; }
+.badge[viz-boundary="outside"] { color: var(--err); font-weight: 600; }
+.badge[viz-boundary="suspicious"] { color: var(--blind); }
+.badge[viz-boundary="stopped"] { color: var(--muted); }
 .status[viz-status="failed"] { color: var(--blind); }
 .rows .cmd .tool { font-family: inherit; font-weight: 600; color: var(--text); }
 .blocked-groups { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 0 10px; }

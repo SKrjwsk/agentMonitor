@@ -49,6 +49,8 @@ final readonly class Event
          * @var ?array{tokens: int, calls: int, usd: ?float}
          */
         public ?array $carry = null,
+        /** Sandbox systemu odmówił dostępu do pliku („Operation not permitted” w wyniku z błędem). */
+        public bool $osDenied = false,
     ) {
     }
 

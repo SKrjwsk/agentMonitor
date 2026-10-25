@@ -9,6 +9,8 @@ php -S 127.0.0.1:8090 -t public public/index.php
 ```
 Otwórz `http://127.0.0.1:8090/`.
 
+Konfiguracja: `cp .env.example .env` i dopasuj ścieżki (granica pracy agentów, UID w ścieżce scratchpada).
+
 Na ekranie:
 - **po lewej** lista ostatnich sesji Claude Code (wszystkie projekty) oraz tryb „● śledź najnowszą”
 - **nagłówek** (trzy rzędy):
@@ -26,6 +28,13 @@ Zakładki-pytania:
 - **Messages** — przepływ poleceń: prompty usera, zadania dla subagentów (pełny prompt z wywołania `Agent`), odpowiedzi subagentów, `SendMessage`, wiadomości z innych sesji. Odpowiedzi subagentów są przycięte do 600 znaków, bo zwykle cytują przeczytane pliki
 
 **Blokady:** status „blocked” pokazuje wywołania zatrzymane przez hook (np. `block-secrets.sh` z regułą, która zadziałała), regułę `permissions.deny`, tryb auto, wbudowaną kontrolę bezpieczeństwa albo Twoją odmowę. Dane pochodzą z decyzji zapisanych przez Claude Code w transkrypcie, więc nowe reguły pojawiają się same. Pliki przy „blocked” to te, do których agent próbował sięgnąć. Blokady ze wszystkich sesji: „Σ All sessions” → zakładka Blocked (grupy mechanizm · reguła, CSV).
+
+**Granica agent / user:** w `.env` wpisujesz, gdzie agenci mogą pracować (`AGENT_ALLOWED_RW` — odczyt i zapis, `AGENT_ALLOWED_R` — tylko odczyt). Aplikacja oznacza każde wywołanie, które z tej granicy wyszło:
+- **outside** — wykonało się i dotknęło ścieżki poza granicą (albo zapisało w strefie tylko do odczytu): Twoje zabezpieczenia to przepuściły
+- **suspicious** — Bash się wykonał, ale ścieżek nie da się ustalić (glob, zmienna, heredoc)
+- **stopped** — próba wyjścia poza granicę, którą zatrzymał hook, reguła, tryb auto albo sandbox (rozpoznany po „Operation not permitted”)
+
+Widać je w Overview (oś Boundaries), w zakładce **Boundary** (sesja i „Σ All sessions”, ścieżki zgrupowane, CSV), w filtrze „boundary” i jako znacznik przy wywołaniu w Commands. Bez wpisów w `.env` granica jest wyłączona.
 
 **Pochodzenie plików:** filtr pochodzenia rozdziela:
 - kontekst automatyczny (fiolet) — CLAUDE.md, rules i pliki wstrzyknięte przez Claude Code
@@ -87,6 +96,13 @@ Link „Σ Podsumowanie wszystkich sesji” nad listą sesji:
 - pokazuje pierwsze 300 plików; „załaduj kolejne” dociąga następne 300 bez przeładowania, a „pokaż wszystkie” renderuje całość (~3000 plików, ~4,5 MB). Szukanie po ścieżce działa na załadowanych wierszach
 
 Dane leżą w `var/summary/` (liczniki per sesja, bez treści plików). Pierwsze wejście przelicza wszystkie sesje (~2–3 s), kolejne trwają ~0,05 s. Claude Code usuwa transkrypty po 14 dniach (`cleanupPeriodDays`), a agregaty zostają, więc podsumowanie sięga dalej niż transkrypty. **Nie usuwaj `var/summary/`** — to jedyna kopia historii starszych sesji.
+
+## Reset do stanu po instalacji
+```
+php bin/reset.php          # podgląd: co zostanie usunięte i ile sesji istnieje już tylko w archiwum
+php bin/reset.php --yes    # usuwa
+```
+Czyści `var/`: agregaty (`var/summary/`), zapis hooka (`var/events/`), zrzuty sesji i log błędów hooka. Nie dotyka transkryptów Claude Code (`~/.claude`) ani `.env`. Po resecie aplikacja przelicza sesje z transkryptów, które jeszcze istnieją (ostatnie 14 dni). **Sesje starsze, których transkrypty Claude Code już usunął, znikają na zawsze** — podgląd podaje ich liczbę.
 
 ## Zrzut sesji i analiza
 Przycisk „⇩ zrzut sesji” (albo `php bin/export.php <session_id> [--agent=…]`) zapisuje folder `var/session_dump/<data>-<sesja>/`. Zrzut zawiera to, co widać na ekranie: to samo źródło i ten sam filtr agenta.

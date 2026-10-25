@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Viz\Summary;
 
+use Viz\Boundary;
 use Viz\Model\Event;
 use Viz\Model\Touch;
 use Viz\Path;
@@ -22,7 +23,7 @@ final class SummaryStore
      * Wersja reguł parsera. Podbij przy zmianie parsera/modelu: agregaty sesji z transkryptem przeliczą się same,
      * a archiwalne (transkrypt usunięty) zostaną. Nigdy nie usuwaj var/summary, żeby „przeliczyć” — to archiwum.
      */
-    public const PARSER = '11';
+    public const PARSER = '12';
 
     public const OPS = [Touch::READ, Touch::CONTEXT, Touch::EDIT, Touch::WRITE, Touch::SEARCH, Touch::LIST, Touch::EXEC];
 
@@ -44,7 +45,8 @@ final class SummaryStore
             if (!HookLog::validSessionId($id)) {
                 continue;
             }
-            $version = self::PARSER . ':' . SessionIndex::version($path);
+            // odcisk granicy z `.env`: zmiana konfiguracji przelicza sesje z transkryptem (archiwalne zostają z poprzednią)
+            $version = self::PARSER . ':' . Boundary::fromEnv()->fingerprint() . ':' . SessionIndex::version($path);
             $file = self::dir() . '/' . $id . '.json';
             $cached = is_file($file) ? json_decode((string) file_get_contents($file), true) : null;
             if (is_array($cached) && ($cached['version'] ?? '') === $version) {
@@ -108,8 +110,17 @@ final class SummaryStore
         $active = [];
         $commands = [];
         $blocked = [];
+        $boundary = [];
+        $limits = Boundary::fromEnv();
         foreach ($events as $e) {
             $active[$e->agentId] = true;
+            $crossed = $limits->classify($e);
+            if ($crossed !== null) {
+                // naruszenia granicy: ścieżki poza nią (przy `suspicious` brak — parser ich nie ustalił)
+                $boundary[] = ['ts' => $e->ts, 'agent' => $e->agentId, 'tool' => $e->tool, 'summary' => $e->summary, 'kind' => $crossed,
+                    'by' => $crossed === Boundary::STOPPED ? Boundary::stoppedBy($e) : null,
+                    'paths' => array_map(static fn (Touch $t): array => ['path' => $t->path, 'op' => $t->op], $limits->outside($e))];
+            }
             if ($e->denial !== null) {
                 // log blokad: komenda (tekst wywołania, bez wyniku) + kto i jaką regułą zablokował
                 $blocked[] = ['ts' => $e->ts, 'agent' => $e->agentId, 'tool' => $e->tool, 'summary' => $e->summary, 'by' => $e->denial['by'], 'detail' => $e->denial['detail']];
@@ -157,6 +168,7 @@ final class SummaryStore
             'agents' => count($session->agents),
             'agents_active' => count($active),
             'blocked' => $blocked,
+            'boundary' => $boundary,
             'tokens' => self::tokens($session, $cutoff),
             // strona startowa „Overview” — sygnały do obejrzenia (Signals), zostają w archiwum po usunięciu transkryptu
             'signals' => \Viz\Signals::of($session, $cutoff),

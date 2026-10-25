@@ -112,6 +112,10 @@ $sessionUsd = max($view['sessionTokens']['usd'], 1e-9);
                 <i class="dot" viz-agent-color="<?= h(($view['agentColors'][$e->agentId] ?? 0) % 8) ?>" title="<?= h(isset($agents[$e->agentId]) ? App::agentLabel($agents[$e->agentId]) : $e->agentId) ?>"></i>
                 <span class="status" viz-status="<?= h($status[0]) ?>" title="<?= h($status[2]) ?>"><?= h($status[1]) ?></span>
                 <code class="cmd" title="<?= h($e->summary) ?>"><?= $e->tool !== 'Bash' ? '<span class="tool">' . h($e->tool) . '</span> ' : '' ?><?= h(App::shortText($e->summary, $view['session']->cwd)) ?></code>
+                <?php if (isset($view['crossed'][$e->toolUseId])): ?>
+                    <?php $crossed = $view['crossed'][$e->toolUseId] ?>
+                    <span class="badge" viz-boundary="<?= h($crossed) ?>" title="<?= h(['outside' => 'ran outside the boundary from .env', 'suspicious' => 'paths not resolved — may have left the boundary', 'stopped' => 'attempt outside the boundary, did not run'][$crossed]) ?>"><?= h(['outside' => '⛔ outside', 'suspicious' => '? paths', 'stopped' => '⛔ stopped'][$crossed]) ?></span>
+                <?php endif ?>
                 <?php if ($e->denial !== null): ?>
                     <span class="badge denied" title="<?= h((string) $e->error) ?>"><?= h($e->denial['by'] . ($e->denial['detail'] !== null ? ' · ' . $e->denial['detail'] : '')) ?></span>
                 <?php endif ?>

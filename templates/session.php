@@ -39,9 +39,9 @@ $opLabels = App::OP_LABELS;
 // panel szczegółów: plik albo wywołanie (sesja), plik albo program (wszystkie sesje)
 $drawer = $all
     ? in_array($p['view'], ['read', 'changed', 'commands'], true) && ($p['pick'] !== '' || $p['pcmd'] !== '')
-    : in_array($p['view'], ['read', 'changed', 'commands', 'blocked', 'log'], true) && ($p['pick'] !== '' || $p['pev'] !== '');
+    : in_array($p['view'], ['read', 'changed', 'commands', 'blocked', 'boundary', 'log'], true) && ($p['pick'] !== '' || $p['pev'] !== '');
 $tab = static fn (string $v): string => '/?' . App::query($view, ['view' => $v === 'read' ? '' : $v, 'sort' => '', 'pcmd' => '', 'pev' => '', 'pick' => '']);
-$tabs = ['read' => 'Files read', 'changed' => 'Files changed', 'commands' => 'Commands', 'blocked' => 'Blocked', 'messages' => 'Messages'];
+$tabs = ['read' => 'Files read', 'changed' => 'Files changed', 'commands' => 'Commands', 'blocked' => 'Blocked', 'boundary' => 'Boundary', 'messages' => 'Messages'];
 ?>
 <section viz-session
          viz-version="<?= h($view['version']) ?>"
@@ -75,6 +75,7 @@ $tabs = ['read' => 'Files read', 'changed' => 'Files changed', 'commands' => 'Co
                 <?php match ($p['view']) {
                     'commands' => require __DIR__ . '/commands.php',
                     'blocked' => require __DIR__ . '/blocked.php',
+                    'boundary' => require __DIR__ . '/boundary.php',
                     'messages' => require __DIR__ . '/messages.php',
                     'log' => require __DIR__ . '/log.php',
                     default => require __DIR__ . '/files.php',

@@ -12,7 +12,8 @@ use Viz\Model\Session;
  * Sygnały strony startowej „Overview”: co w sesji wymaga uwagi, na osiach kontekst / komunikacja / granice i z podziałem na to,
  * co może zmienić user, a co agent (KINDS).
  * Progi skalibrowane na sesjach usera 2026-10-24 (106 sesji, 1583 tury) — milestones.llm.md M17.
- * Ponowne odczyty, ślepe plamki i korekty usera celowo pominięte: na danych to głównie szum.
+ * Ponowne odczyty i korekty usera celowo pominięte: na danych to głównie szum. Ślepe plamki Bash liczą się tylko jako
+ * `unknown-paths` na osi granic (Boundary) — przy granicy agent/user lepiej więcej niż mniej.
  */
 final class Signals
 {
@@ -60,6 +61,10 @@ final class Signals
         'hook-text' => ['boundaries', 'you', 'info'],
         'protected-path' => ['boundaries', 'agent', 'high'],
         'auto-mode' => ['boundaries', 'agent', 'high'],
+        // granica pracy agentów z `.env` (Boundary)
+        'outside-executed' => ['boundaries', 'agent', 'high'],
+        'unknown-paths' => ['boundaries', 'agent', 'warn'],
+        'outside-stopped' => ['boundaries', 'agent', 'info'],
         'limit' => ['env', '', 'warn'],
         'api-error' => ['env', '', 'warn'],
     ];
@@ -75,8 +80,9 @@ final class Signals
      * @return array{items: list<array{kind: string, ts: string, agent: string, turn: int, ev: ?string, value: float, text: string, detail: string}>, info: array<string, int|float>}
      *         `info` = liczniki bez alarmu: blokady reguł deny, odmowy usera, wzorzec hooka w treści komendy, ponowienia po błędzie, kompaktowania
      */
-    public static function of(Session $session, ?string $cutoff = null): array
+    public static function of(Session $session, ?string $cutoff = null, ?Boundary $boundary = null): array
     {
+        $boundary ??= Boundary::fromEnv();
         $turns = array_values(array_filter($session->prompts, static fn (array $p): bool => $p['kind'] === 'prompt'));
         $turnOf = static function (string $ts) use ($turns): int {
             $n = 0;
@@ -194,6 +200,17 @@ final class Signals
                     $add('subagent-failed', $e->ts, $e->agentId, 1, $e->summary, (string) $e->error, $e->toolUseId);
                 }
             }
+            $crossed = $boundary->classify($e);
+            if ($crossed !== null) {
+                $paths = implode(' · ', array_map(static fn ($t): string => $t->op . ' ' . $t->path, array_slice($boundary->outside($e), 0, 3)));
+                $add(['outside' => 'outside-executed', 'suspicious' => 'unknown-paths', 'stopped' => 'outside-stopped'][$crossed], $e->ts, $e->agentId, 1,
+                    ($e->tool !== 'Bash' ? $e->tool . ' ' : '') . $e->summary,
+                    match ($crossed) {
+                        Boundary::OUTSIDE => $paths,
+                        Boundary::STOPPED => $paths . ' · stopped by ' . Boundary::stoppedBy($e),
+                        default => 'paths not resolved: ' . implode(' · ', array_slice([...$e->unresolved, ...$e->unknown], 0, 2)),
+                    }, $e->toolUseId);
+            }
             if ($e->denial === null) {
                 continue;
             }
@@ -208,7 +225,7 @@ final class Signals
                 } elseif ($touches) {
                     $add('protected-path', $e->ts, $e->agentId, $again ? 2 : 1, ($e->tool !== 'Bash' ? $e->tool . ' ' : '') . $e->summary,
                         (string) $e->denial['detail'] . ($again ? ' · blocked again right after' : ''), $e->toolUseId);
-                } else {
+                } elseif ($crossed !== Boundary::STOPPED) {
                     // wzorzec tylko w tekście (komentarz, nazwa, komunikat) — zwykle fałszywy alarm, który kosztuje agenta ponowienie
                     $info['hook_text']++;
                     $add('hook-text', $e->ts, $e->agentId, 1, ($e->tool !== 'Bash' ? $e->tool . ' ' : '') . $e->summary, 'hook ' . (string) $e->denial['detail'], $e->toolUseId);

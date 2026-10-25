@@ -44,6 +44,12 @@ $kinds = [
         'The hook did its job. If the agent keeps trying, write in CLAUDE.md which paths are off-limits and why.', []],
     'auto-mode' => ['Blocked by auto mode', 'the auto mode classifier or a safety check stopped the call',
         'Check the command: a real risk → keep it blocked; routine work → allow it in permissions.', []],
+    'outside-executed' => ['Outside the boundary — executed', 'a call ran and touched a path outside AGENT_ALLOWED_RW / AGENT_ALLOWED_R in .env, or wrote into a read-only path — your guards let it through',
+        'Find which guard missed it (hook, sandbox, permissions) and close the gap; if the path is legitimate, add it to .env.', []],
+    'unknown-paths' => ['Unknown paths — suspicious', 'Bash ran, but its paths could not be resolved (glob, variable, heredoc, unknown program) — it may have left the boundary',
+        'Open the call and check what it touched; the sandbox is what really stops shell commands.', []],
+    'outside-stopped' => ['Outside the boundary — stopped', 'an attempt outside the boundary that did not run: a hook, a rule, auto mode, the sandbox or a tool error',
+        'The guards did their job. If the agent keeps trying, its task needs something outside — hand it over or widen the boundary.', []],
     'limit' => ['Usage limits hit', 'the session hit a usage limit and had to wait', '', []],
     'api-error' => ['API errors', 'network, server, login or the computer went to sleep', '', []],
 ];

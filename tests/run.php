@@ -262,7 +262,7 @@ $sigIncidents = array_values(array_filter([
     Viz\Source\TranscriptReader::incident(['type' => 'assistant', 'isApiErrorMessage' => true, 'timestamp' => '2026-01-01T10:12:00Z', 'message' => ['content' => [['type' => 'text', 'text' => "You've hit your session limit · resets 6pm"]]]], 'main'),
     Viz\Source\TranscriptReader::incident(['type' => 'user', 'timestamp' => '2026-01-01T10:13:00Z', 'message' => ['content' => 'zwykły prompt']], 'main'),
 ]));
-$sig = Viz\Signals::of(new Viz\Model\Session('s4', '/x', 't', '/p', [Viz\Model\Agent::MAIN => new Viz\Model\Agent('main', 'main', 'main', null)], $sigEvents, 6, incidents: $sigIncidents));
+$sig = Viz\Signals::of(new Viz\Model\Session('s4', '/x', 't', '/p', [Viz\Model\Agent::MAIN => new Viz\Model\Agent('main', 'main', 'main', null)], $sigEvents, 6, incidents: $sigIncidents), boundary: new Viz\Boundary([], []));
 $gotSig = [implode(' ', array_map(static fn (array $it): string => $it['kind'] . ($it['ev'] !== null ? ':' . $it['ev'] : '') . ($it['value'] > 1 ? '×' . $it['value'] : ''), $sig['items'])),
     "text={$sig['info']['hook_text']} deny={$sig['info']['deny_rule']}"];
 $expectedSig = ['protected-path:b1×2 hook-text:b2 protected-path:b3×2 report-blocked:b4 auto-mode:b5 interrupt limit', 'text=1 deny=1'];
@@ -288,7 +288,7 @@ $ctxSession = new Viz\Model\Session('s5', '/x', 't', '/p', [Viz\Model\Agent::MAI
         $sigUsage('2026-01-02T09:00:30Z', 220_000, 220_000, 5_000, 0.66, 0.0),
         $sigUsage('2026-01-02T15:00:05Z', 220_000, 0, 220_000, 0.0, 2.6),
     ]);
-$gotCtx = implode(' ', array_map(static fn (array $it): string => $it['kind'] . '=' . round($it['value'], 2), Viz\Signals::of($ctxSession)['items']));
+$gotCtx = implode(' ', array_map(static fn (array $it): string => $it['kind'] . '=' . round($it['value'], 2), Viz\Signals::of($ctxSession, boundary: new Viz\Boundary([], []))['items']));
 $expectedCtx = 'cold-cache=2 quick-question=0.6 stale-session=3.15 cold-cache=2.5 cold-cache=2.6';
 if ($gotCtx !== $expectedCtx) {
     $failures++;
@@ -317,8 +317,49 @@ foreach ($denialCases as [$line, $error, $expected]) {
     }
 }
 
+// konfiguracja: linie KLUCZ=wartość i lista ścieżek po przecinku
+file_put_contents($root . '/cfg', "# comment\nAGENT_ALLOWED_RW=~/SK, /private/tmp/claude-501\nexport AGENT_ALLOWED_R=\"~/.claude/skills\"\n\nnot a pair\n");
+$gotEnv = json_encode(Viz\Env::parse($root . '/cfg'), JSON_UNESCAPED_SLASHES);
+$expectedEnv = '{"AGENT_ALLOWED_RW":"~/SK, /private/tmp/claude-501","AGENT_ALLOWED_R":"~/.claude/skills"}';
+if ($gotEnv !== $expectedEnv) {
+    $failures++;
+    echo "FAIL: Env::parse\n  oczekiwane: $expectedEnv\n  otrzymane:  $gotEnv\n";
+}
+$gotPaths = implode(' ', Viz\Env::pathList('~/SK, /private/tmp/claude-501,, relative/dir'));
+$expectedPaths = Viz\Path::home() . '/SK /private/tmp/claude-501';
+if ($gotPaths !== $expectedPaths) {
+    $failures++;
+    echo "FAIL: Env::pathList\n  oczekiwane: $expectedPaths\n  otrzymane:  $gotPaths\n";
+}
+
+// granica pracy agentów: wykonane poza / podejrzane / zatrzymane; zapis w strefie tylko do odczytu; programy systemowe
+$limits = new Viz\Boundary(['/home/u/SK', '/tmp/claude-501'], ['/home/u/.claude/skills']);
+$ev = static fn (string $tool, array $touches, bool $failed = false, ?string $error = null, ?array $denial = null, bool $os = false, array $unresolved = []): Viz\Model\Event
+    => new Viz\Model\Event('2026-01-01T00:00:00Z', 's', 'main', $tool, 'id', '', '/home/u/SK', $failed, $touches, $unresolved, error: $error, denial: $denial, osDenied: $os);
+$touch = static fn (string $path, string $op = 'read'): Viz\Model\Touch => new Viz\Model\Touch($path, $op, true);
+$boundaryCases = [
+    ['inside', $ev('Read', [$touch('/home/u/SK/a.txt')]), 'null'],
+    ['outside read', $ev('Read', [$touch('/etc/hosts')]), 'outside'],
+    ['read-only zone read', $ev('Read', [$touch('/home/u/.claude/skills/x/SKILL.md')]), 'null'],
+    ['read-only zone write', $ev('Write', [$touch('/home/u/.claude/skills/x/SKILL.md', 'write')]), 'outside'],
+    ['system program', $ev('Bash', [$touch('/usr/bin/php', 'exec')]), 'null'],
+    ['blind bash', $ev('Bash', [], unresolved: ['python3 — script from stdin/heredoc']), 'suspicious'],
+    ['sandbox denied', $ev('Bash', [$touch('/home/u/.zprofile')], true, 'Exit code 1', null, true), 'stopped'],
+    ['hook denied', $ev('Read', [$touch('/etc/hosts')], true, 'Error: blocked', ['by' => 'hook', 'detail' => null]), 'stopped'],
+];
+if (PHP_OS_FAMILY === 'Darwin') {
+    $boundaryCases[] = ['/private alias', $ev('Write', [$touch('/private/tmp/claude-501/x', 'write')]), 'null'];
+}
+foreach ($boundaryCases as [$name, $event, $expected]) {
+    $got = $limits->classify($event) ?? 'null';
+    if ($got !== $expected) {
+        $failures++;
+        echo "FAIL: boundary $name\n  oczekiwane: $expected\n  otrzymane:  $got\n";
+    }
+}
+
 exec('rm -rf ' . escapeshellarg($root));
-$total = count($cases) + count($toolCases) + count($commandCases) + count($roles) + count($denialCases) + 2;
+$total = count($cases) + count($toolCases) + count($commandCases) + count($roles) + count($denialCases) + count($boundaryCases) + 4;
 echo $failures === 0 ? "OK ($total przypadków)\n" : "$failures/$total nieudanych\n";
 exit($failures === 0 ? 0 : 1);
 
