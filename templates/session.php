@@ -2,9 +2,10 @@
 /**
  * Fragment podmieniany przy odświeżaniu na żywo (Hx, outerHTML).
  *
- * Sygnatura saradom:
- * < viz-session viz-version viz-version-url viz-pick? viz-pev? viz-pcmd? viz-all? viz-live? viz-st viz-se hx-get hx-vals-query="() => Viz.Query(this)">
+ * Sygnatura atrybutów:
+ * < viz-session viz-view viz-version viz-version-url viz-pick? viz-pev? viz-pcmd? viz-all? viz-live? viz-st viz-se hx-get hx-vals-query="() => Viz.Query(this)">
  *     # viz-all = zakres „wszystkie sesje” (s=all): panel szczegółów dla pliku (pick) albo programu (pcmd)
+ *     # viz-view = zakładka; w sesji zapamiętana w localStorage (`viz-view`) dla linków sesji w lewym panelu (Viz.SessionLink)
  *     < input onchange="Viz.LiveToggle(this)">
  *     < select onchange="Viz.Go(this)">          # filtry agent / tura / pochodzenie; wartość opcji = URL budowany przez serwer
  *     < viz-pane="list">                         # lista bieżącego widoku (read / changed / commands / messages / log)
@@ -44,6 +45,7 @@ $tab = static fn (string $v): string => '/?' . App::query($view, ['view' => $v =
 $tabs = ['read' => 'Files read', 'changed' => 'Files changed', 'commands' => 'Commands', 'blocked' => 'Blocked', 'boundary' => 'Boundary', 'messages' => 'Messages'];
 ?>
 <section viz-session
+         viz-view="<?= h($p['view']) ?>"
          viz-version="<?= h($view['version']) ?>"
          viz-version-url="/version?<?= h(App::query($view)) ?>"
          <?= $p['pick'] !== '' ? 'viz-pick="' . h($p['pick']) . '"' : '' ?>

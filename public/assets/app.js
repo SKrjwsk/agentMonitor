@@ -1,10 +1,33 @@
 /*
- * Viz — interakcje widoku sesji (saradom: stan w atrybutach, eventy inline, init w miejscu).
+ * Viz — interakcje widoku sesji (wzorzec atrybutów: stan w atrybutach, eventy inline, init w miejscu).
  * Sygnatura: templates/session.php
  */
 const Viz = (() => {
 
-    const POLL_MS = 3000;
+    /** Co tyle ms zapytanie o wersję źródła (`/version`, kilka ms); fragment jest pobierany tylko przy jej zmianie. */
+    const POLL_MS = 1000;
+    /** Fragment w drodze: Hx nie zwraca obietnicy, więc do tej chwili (albo do podmiany sekcji) nie zaczynamy kolejnego. */
+    const FRAGMENT_WAIT_MS = 10000;
+    /** Zapytanie o wersję bez odpowiedzi tak długo = błąd odświeżania; bez limitu zawieszone połączenie zostawiłoby `_busy` na stałe. */
+    const FETCH_TIMEOUT_MS = 5000;
+
+    /** Tekst odpowiedzi; HTTP ≠ 2xx, błąd sieci i przekroczenie limitu czasu odrzucają obietnicę. */
+    const fetchText = url => {
+        const abort = new AbortController();
+        const timer = setTimeout(() => abort.abort(), FETCH_TIMEOUT_MS);
+        return fetch(url, { cache: 'no-store', signal: abort.signal })
+            .then(res => {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.text();
+            })
+            .finally(() => clearTimeout(timer));
+    };
+
+    /** Komunikat „refresh not working” (layout.php) — pokazany po nieudanym odświeżeniu, znika przy pierwszym udanym. */
+    const refreshFailed = failed => {
+        const note = document.querySelector('[viz-refresh-error]');
+        if (note) note.hidden = !failed;
+    };
 
     const space = el => el.up('[viz-session]');
 
@@ -23,6 +46,8 @@ const Viz = (() => {
     });
 
     const Init = section => {
+        // nowa sekcja = fragment właśnie przyszedł, więc odświeżanie działa
+        refreshFailed(false);
         const list = section.one('[viz-pane="list"]');
         const drawer = section.one('[viz-pane="drawer"]');
         if (list) list.scrollTop = +section.attr('viz-st') || 0;
@@ -35,21 +60,41 @@ const Viz = (() => {
             tl.scrollTop = +section.attr('viz-sy') || 0;
         }
         section._timer = setInterval(() => tick(section), POLL_MS);
+        if (section.attr('viz-view') && !section.flag('viz-all')) {
+            try { localStorage.setItem('viz-view', section.attr('viz-view')); } catch { /* bez pamięci */ }
+        }
     };
 
-    /** Podmienia fragment tylko, gdy źródło się zmieniło — nie gubi przewijania co 3 s. */
+    /**
+     * Podmienia fragment tylko, gdy źródło się zmieniło — przy odświeżaniu co sekundę bez zmiany danych DOM stoi w miejscu
+     * (przewinięcie, zaznaczenie tekstu i rozwinięte elementy zostają). Nowe żądanie dopiero po zakończeniu poprzedniego:
+     * zapytanie o wersję (`_busy`, z limitem czasu) i pobranie fragmentu (`_fragmentUntil`; po podmianie sekcja jest nowym elementem).
+     * Fragment, który nie podmienił sekcji w FRAGMENT_WAIT_MS, to błąd odświeżania (Hx nie zgłasza błędów) — kolejna próba przy następnym ticku.
+     * Błąd (sieć, HTTP, limit czasu, brak podmiany) pokazuje komunikat; pierwsze udane odświeżenie albo podmiana sekcji go chowa.
+     */
     const tick = section => {
         if (!section.isConnected) {
             clearInterval(section._timer);
             return;
         }
         if (!section.flag('viz-live') || document.hidden || section._busy) return;
+        if (section._fragmentUntil) {
+            if (Date.now() < section._fragmentUntil) return;
+            section._fragmentUntil = 0;
+            refreshFailed(true);
+        }
         section._busy = true;
-        fetch(section.attr('viz-version-url'), { cache: 'no-store' })
-            .then(res => res.ok ? res.text() : '')
+        fetchText(section.attr('viz-version-url'))
             .then(version => {
-                if (version && version !== section.attr('viz-version')) hx(section);
+                if (!version) throw new Error('empty version');
+                if (version === section.attr('viz-version')) {
+                    refreshFailed(false);
+                    return;
+                }
+                section._fragmentUntil = Date.now() + FRAGMENT_WAIT_MS;
+                hx(section);
             })
+            .catch(() => refreshFailed(true))
             .finally(() => { section._busy = false; });
     };
 
@@ -119,12 +164,12 @@ const Viz = (() => {
         location.reload();
     };
 
-    /** Domyślnie ciemny; wybór jasnego zapamiętany w przeglądarce. Graf czyta kolory przy budowie, więc przeładowanie. */
+    /** Domyślnie ciemny; wybór jasnego zapamiętany w przeglądarce. Graf i biuro czytają kolory przy budowie, więc przeładowanie. */
     const Theme = () => {
         const light = document.documentElement.dataset.theme !== 'light';
         if (light) document.documentElement.dataset.theme = 'light'; else delete document.documentElement.dataset.theme;
         try { localStorage.setItem('viz-theme', light ? 'light' : 'dark'); } catch { /* bez pamięci */ }
-        if (document.one('[viz-graph]')) location.reload();
+        if (document.one('[viz-graph], [viz-office]')) location.reload();
     };
 
     /** Lewy panel: tylko sesje wybranego projektu; wybór zapamiętany w przeglądarce. */
@@ -149,5 +194,18 @@ const Viz = (() => {
         Project(select);
     };
 
-    return { Init, Query, LiveToggle, Open, OpenCmd, Close, Go, Theme, Lang, Project, ProjectInit };
+    /**
+     * Ostatnio otwarta zakładka sesji (`viz-view`, zapamiętana przy Init sekcji) — link sesji w lewym panelu otwiera ją od razu,
+     * żeby przeglądać kolejne sesje w tym samym widoku (np. Office) bez przeklikiwania.
+     */
+    const SessionLink = link => {
+        let view = '';
+        try { view = localStorage.getItem('viz-view') || ''; } catch { /* bez pamięci */ }
+        if (view === '' || view === 'read') return;
+        const url = new URL(link.href);
+        url.searchParams.set('view', view);
+        link.href = url.pathname + url.search;
+    };
+
+    return { Init, Query, LiveToggle, Open, OpenCmd, Close, Go, Theme, Lang, Project, ProjectInit, SessionLink };
 })();

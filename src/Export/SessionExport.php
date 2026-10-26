@@ -17,7 +17,7 @@ use Viz\Stats;
  */
 final class SessionExport
 {
-    public const FORMAT = 'agent-viz-export/2';
+    public const FORMAT = 'agentmonitor-export/2';
 
     public static function dumpRoot(): string
     {
@@ -139,13 +139,13 @@ final class SessionExport
         $csv = fopen('php://temp', 'r+');
         fputcsv($csv, ['path', ...$ops, 'partial_only', 'exists', 'agents'], ',', '"', '');
         foreach ($stats->files as $f) {
-            fputcsv($csv, [
+            fputcsv($csv, Csv::cells([
                 $f['path'],
                 ...array_map(static fn (string $op): int => $f['ops'][$op] ?? 0, $ops),
                 $f['partialOnly'] ? 1 : 0,
                 $f['exists'] ? 1 : 0,
                 implode(' ', array_keys($f['agents'])),
-            ], ',', '"', '');
+            ]), ',', '"', '');
         }
         rewind($csv);
         $files['files.csv'] = (string) stream_get_contents($csv);
@@ -155,10 +155,10 @@ final class SessionExport
         fputcsv($csv, ['ts', 'agent_id', 'program', 'sub', 'contexts', 'wrappers', 'piped_from', 'call_status', 'role', 'tool_use_id'], ',', '"', '');
         foreach ($events as $e) {
             foreach ($e->commands as $c) {
-                fputcsv($csv, [
+                fputcsv($csv, Csv::cells([
                     $e->ts, $e->agentId, $c->program, (string) $c->sub, implode(' ', $c->contexts), implode(' ', $c->wrappers), (string) $c->pipedFrom,
                     !$e->failed ? 'ok' : ($e->executed() ? 'failed' : 'blocked'), \Viz\Extract\ToolRoles::role($c->program), $e->toolUseId,
-                ], ',', '"', '');
+                ]), ',', '"', '');
             }
         }
         rewind($csv);

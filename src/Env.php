@@ -31,7 +31,7 @@ final class Env
     }
 
     /**
-     * „~/SK, /private/tmp/x” → absolutne, znormalizowane ścieżki. Wpis względny jest pomijany:
+     * „~/projects, /private/tmp/x” → absolutne, znormalizowane ścieżki. Wpis względny jest pomijany:
      * bez katalogu odniesienia nie wiadomo, co oznacza.
      *
      * @return list<string>

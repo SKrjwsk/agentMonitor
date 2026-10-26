@@ -133,6 +133,75 @@ main { min-width: 0; overflow: hidden; }
 .graph-bar a { text-decoration: none; }
 .graph-bar .link { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); cursor: pointer; }
 .graph-bar .sep { flex: 1; }
+/* wirtualne biuro (templates/office.php, office.js): podpisy to HTML nad canvasem, kolory stanu wspólne z diodami monitorów */
+.office { position: relative; height: 100vh; min-height: 420px; overflow: hidden; background: var(--bg); }
+.office-canvas { position: absolute; inset: 0; cursor: grab; touch-action: none; }
+.office-canvas:active { cursor: grabbing; }
+/* pasek i legenda w jednej kolumnie nad sceną — legenda zawsze pod paskiem, nawet gdy pasek zawinie się do dwóch linii */
+.office-top { position: absolute; z-index: 3; top: 8px; left: 8px; right: 8px; bottom: 8px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; pointer-events: none; }
+.office-top > * { pointer-events: auto; }
+.office-bar { align-self: stretch; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center;
+    font-size: 12px; padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: color-mix(in srgb, var(--panel) 88%, transparent); }
+.office-dot { display: inline-block; width: 9px; height: 9px; margin-right: 5px; vertical-align: middle; }
+.office-labels { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+.office-empty { position: absolute; z-index: 2; top: 50%; width: 100%; text-align: center; color: var(--muted); font-weight: 600; }
+/* podpisy mają być tłem dla postaci, nie odwrotnie: mały font, półprzezroczyste; pełny tekst i pełne krycie po najechaniu */
+[viz-office-label] { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; gap: 1px; white-space: nowrap;
+    font-family: var(--mono); font-size: 7px; font-weight: 500; line-height: 1.2; pointer-events: auto; opacity: .8; text-decoration: none; }
+[viz-office-label-row] { display: flex; align-items: center; gap: 2px; }
+/* kwadracik sesji: kolor przydziela office.js (paleta wełny), ten sam w legendzie */
+[viz-office-label-dot], [viz-office-session-dot], [viz-office-project-dot] { display: inline-block; width: 5px; height: 5px; flex: none; outline: 1px solid rgba(0, 0, 0, .4); }
+[viz-office-label]:hover { opacity: 1; z-index: 1; }
+[viz-office-label][hidden] { display: none; }
+[viz-office-label-name] { color: rgba(255, 255, 255, .8); background: rgba(0, 0, 0, .3); padding: 0 3px; font-size: 6px; }
+[viz-office-label-bubble] { display: flex; gap: .4em; color: #1f2328; background: rgba(255, 255, 255, .7); border-left: 2px solid var(--state); padding: 0 3px; max-width: 130px; overflow: hidden; }
+[viz-office-label-bubble] > span { flex: none; }
+[viz-office-label-bubble] > span[hidden] { display: none; }
+/* zwęża się tylko cel; ścieżka ucinana od lewej (widać plik i jego folder), opis wywołania od prawej */
+[viz-office-label-bubble] > [viz-office-label-target] { flex: 0 1000 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* początek (np. długa nazwa narzędzia MCP) zwęża się dopiero, gdy celu już nie ma czego ucinać */
+[viz-office-label-bubble] > span:first-child { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[viz-office-label-target][viz-office-label-path] { direction: rtl; }
+[viz-office-label-target] > bdi { direction: ltr; unicode-bidi: isolate; }
+[viz-office-label]:hover [viz-office-label-bubble] { max-width: none; background: #fff; }
+/* notka po wylądowaniu koperty: co przyszło (zlecenie, wynik, wiadomość), przez 5 s */
+[viz-office-label-note] { color: #1f2328; background: #f4f1e6; border: 1px solid #b9b39c; padding: 0 3px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+[viz-office-label-note][hidden] { display: none; }
+[viz-office-label]:hover [viz-office-label-note] { max-width: none; }
+[viz-office-state="working"] { --state: #5fd35f; }
+[viz-office-state="delegated"] { --state: #5fa8ff; }
+[viz-office-state="idle"] { --state: #e0c050; }
+[viz-office-state="stuck"] { --state: #ff4040; }
+[viz-office-state="leaving"] { --state: #a0a0a0; }
+.office-dot[viz-office-state] { background: var(--state); }
+/* legendy (Projects, Status) w kolumnie na lewym boku; scena jest przesunięta w prawo o jej szerokość (office.js, setViewOffset) */
+.office-side { max-width: 240px; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
+.office-legend { min-height: 0; overflow: auto; flex: none;
+    display: flex; flex-direction: column; gap: 6px; font-size: 11px; padding: 8px 10px;
+    border: 1px solid var(--line); border-radius: 8px; background: color-mix(in srgb, var(--panel) 88%, transparent); }
+.office-projects { flex: 0 1 auto; }
+.office-projects:has([viz-office-legend]:empty) { display: none; }
+.office-legend h3 { margin: 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+[viz-office-legend] { display: flex; flex-direction: column; gap: 6px; }
+.office-legend-item { display: grid; grid-template-columns: 9px 1fr; column-gap: 6px; align-items: center; }
+.office-legend-item .office-dot { margin: 0; }
+.office-legend-item .muted { grid-column: 2; font-size: 10px; }
+/* projekt = rząd biurek; pod nazwą jego sesje z wcięciem */
+[viz-office-project] { display: flex; flex-direction: column; gap: 4px; }
+/* nagłówek projektu: kolor koszulek (= kolor projektu) i nazwa */
+[viz-office-project-head] { display: flex; align-items: center; gap: 6px; min-width: 0; }
+[viz-office-project-name] { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+[viz-office-legend-note] { margin: 0 0 6px; font-size: 10px; }
+/* komunikat, gdy odświeżanie widoku nie działa (app.js `refreshFailed`) — stały róg ekranu, niezależnie od przewinięcia */
+.refresh-error { position: fixed; top: 8px; right: 12px; z-index: 50; padding: 3px 10px; border: 1px solid var(--err); border-radius: 6px; background: var(--bg); color: var(--err); font-size: 12px; }
+.refresh-error[hidden] { display: none; }
+[viz-office-project] [viz-office-session] { padding-left: 8px; }
+[viz-office-session] { display: grid; grid-template-columns: auto 1fr; column-gap: 6px; align-items: center; text-decoration: none; color: var(--text); }
+[viz-office-session] > span:first-of-type { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[viz-office-session] .muted { grid-column: 2; font-size: 10px; }
+.office-bar-sep { flex: 1; }
+[viz-office-session-dot], [viz-office-project-dot] { width: 9px; height: 9px; }
+
 .gdot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
 .gdot[viz-origin="context"] { background: var(--context); }
 .gdot[viz-origin="self"] { background: var(--read); }

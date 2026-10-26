@@ -4,12 +4,14 @@
  * @var ?array $view
  * @var array<string, array{usd: ?float, output: int, partial: bool, upTo: ?string}> $sidebarTokens
  * @var ?array $overview strona startowa, gdy nie wybrano sesji
+ * @var ?bool $office wirtualne biuro (wszystkie aktywne sesje), trasa /office
  */
 
 use Viz\Clock;
 use Viz\Web\App;
 
 $currentId = $view['sid'] ?? '';
+$office ??= false;
 $follow = $view['p']['follow'] ?? false;
 $projects = App::sidebarProjects($sessions);
 ?>
@@ -18,7 +20,7 @@ $projects = App::sidebarProjects($sessions);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Agent viz</title>
+    <title>agentMonitor</title>
     <link rel="icon" href="data:,">
     <script>try { if (localStorage.getItem('viz-theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}</script>
     <link rel="stylesheet" href="/assets/app.css">
@@ -32,11 +34,14 @@ $projects = App::sidebarProjects($sessions);
     <script src="/assets/timeline.js"></script>
 </head>
 <body>
+<span class="refresh-error" viz-refresh-error hidden><?= th('refresh not working') ?></span>
 <div class="app">
     <aside class="sessions">
         <?php /* zakres „wszystkie sesje” to ten sam widok co sesja (s=all), z danymi z archiwum agregatów */ ?>
         <a class="summary-link" href="/" <?= $overview !== null ? 'viz-current' : '' ?>
            title="<?= th('what is fine and what needs attention: cost, security, agents') ?>">◎ <?= th('Overview') ?></a>
+        <a class="summary-link" href="/office" <?= $office ? 'viz-current' : '' ?>
+           title="<?= th('virtual office: what active agents of all sessions are doing right now') ?>">▦ <?= th('Office') ?></a>
         <a class="summary-link" href="/?s=all" <?= $currentId === App::ALL ? 'viz-current' : '' ?>
            title="<?= th('files, commands and blocked calls across all sessions — the same tabs as a single session') ?>">Σ <?= th('All sessions') ?></a>
         <div class="sessions-head">
@@ -57,7 +62,7 @@ $projects = App::sidebarProjects($sessions);
         <ol>
             <?php foreach ($sessions as $s): ?>
                 <li viz-project="<?= h(App::fileHash($s['cwd'])) ?>" <?= !$follow && $s['id'] === $currentId ? 'viz-current' : '' ?> <?= $s['empty'] ? 'viz-empty' : '' ?>>
-                    <a href="/?s=<?= h($s['id']) ?>" <?= $s['empty'] ? 'title="' . th('no conversation — only commands like /model or /exit') . '"' : '' ?>>
+                    <a href="/?s=<?= h($s['id']) ?>" onclick="Viz.SessionLink(this)" <?= $s['empty'] ? 'title="' . th('no conversation — only commands like /model or /exit') . '"' : '' ?>>
                         <span class="s-title"><?= $s['empty'] ? '<span class="muted">' . th('no conversation') . '</span> ' : '' ?><?= h($s['title'] !== '' ? $s['title'] : substr($s['id'], 0, 8)) ?></span>
                         <?php if ($s['subtitle'] !== ''): ?><span class="s-sub muted"><?= h($s['subtitle']) ?></span><?php endif ?>
                         <span class="s-meta">
@@ -81,7 +86,9 @@ $projects = App::sidebarProjects($sessions);
         <s-init run="(el) => Viz.ProjectInit(el)"></s-init>
     </aside>
     <main>
-        <?php if ($view === null): ?>
+        <?php if ($office): ?>
+            <?php require __DIR__ . '/office.php' ?>
+        <?php elseif ($view === null): ?>
             <?php require __DIR__ . '/overview.php' ?>
         <?php else: ?>
             <?php require __DIR__ . '/session.php' ?>

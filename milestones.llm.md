@@ -1,4 +1,4 @@
-# Milestones — agent_vizualization
+# Milestones — agentMonitor
 
 Kontekst, fakty o źródłach danych i reguły bezpieczeństwa: `CLAUDE.md`. Reguły bezpieczeństwa obowiązują w każdym milestonie.
 
@@ -9,7 +9,7 @@ Fakty są w `CLAUDE.md` (sekcja „Źródła danych”). Otwarte:
 ## M1 — Rdzeń: zdarzenia, ścieżki, interfejs tekstowy — zrobione
 - Model, parser transkryptu (+ subagenci, załączniki kontekstu), ekstraktor narzędzi, parser Bash (zmienne, pętle `for`, `cd`, BSD/GNU, zakresy `partial`)
 - `bin/dump.php`, testy `tests/run.php`
-- Wynik: sesja yodai `f5d17b95…` ma 1% ślepych plamek (4 z 394 wykonanych wywołań Bash); inne sesje robocze 0–5%; sesja budowy aplikacji 12% (same skrypty `python3 - <<EOF`)
+- Wynik: jedna sesja robocza ma 1% ślepych plamek (4 z 394 wykonanych wywołań Bash); inne sesje robocze 0–5%; sesja budowy aplikacji 12% (same skrypty `python3 - <<EOF`)
 
 ## M2 — Widok w przeglądarce — zrobione
 - Lista sesji, nagłówek ze statystykami, drzewo z heatmapą, oś czasu, klik w plik, filtr agenta, eksport ZIP
@@ -17,12 +17,12 @@ Fakty są w `CLAUDE.md` (sekcja „Źródła danych”). Otwarte:
 - Do decyzji po pytaniach badawczych: co ma być na pierwszym ekranie
 
 ## M3 — Live — zrobione poza instalacją
-- `bin/hook.php` (`PostToolUse` + `PostToolUseFailure`), przełącznik źródła, polling `/version` co 3 s, tryb „śledź najnowszą”
-- Sprawdzone na sesji testowej `claude -p` z hookiem przez `--settings` (`59a3f329…`, zapis w `var/events/`):
+- `bin/hook.php` (`PostToolUse` + `PostToolUseFailure`), przełącznik źródła, polling `/version` co 1 s (M21), tryb „śledź najnowszą”
+- Sprawdzone na sesji testowej `claude -p` z hookiem przez `--settings` (jedna sesja testowa, zapis w `var/events/`):
   - hook i transkrypt zgodne dla 7 z 7 wywołań, także subagenta i błędów
   - nowe zdarzenie pojawia się w przeglądarce w ≤ 3 s
   - zepsuty payload → `exit 0` bez zapisu
-- [ ] Instalacja wpisu w `workbox9/.claude/settings.json` — decyzja usera (README, sekcja „Podgląd na żywo przez hook”)
+- [ ] Instalacja wpisu hooka w ustawieniach Claude Code — decyzja użytkownika (README, sekcja „Podgląd na żywo przez hook”)
 
 ## M4 — Weryfikacja — kod gotowy, brak testu na prawdziwym logu
 - `bin/verify.php`, `src/Verify` (parser `fs_usage -w` i `strace -f -tt`, porównanie w oknie czasowym, szum odfiltrowany)
@@ -33,17 +33,17 @@ Fakty są w `CLAUDE.md` (sekcja „Źródła danych”). Otwarte:
 ## M5 — Wielu agentów — częściowo
 - Zrobione:
   - kolor agenta (kropki w drzewie i na osi czasu) i filtr agenta
-  - widok „wspólne dla agentów” (pliki dotknięte przez więcej niż jednego agenta; sesja yodai: 303)
+  - widok „wspólne dla agentów” (pliki dotknięte przez więcej niż jednego agenta; sesja robocza: 303)
   - graf, w którym pliki wspólne leżą między węzłami agentów
 - Torki (swimlanes) na osi czasu — zrobione w M7
 - [ ] Wiele sesji (równoległe terminale) w jednym widoku
 
 ## M6 — Pochodzenie i graf — zrobione
-- Rozdzielenie: kontekst automatyczny / doczytane samodzielnie / ponownie czytane z kontekstu (sesja yodai: 23 / 322 / 11)
+- Rozdzielenie: kontekst automatyczny / doczytane samodzielnie / ponownie czytane z kontekstu (sesja robocza: 23 / 322 / 11)
 - Filtr `origin` dla drzewa, osi czasu i grafu
 - Widok grafu (force-graph): kolor = pochodzenie, jeden poziom z obszarami folderów (grupowanie optyczne), podpisy plików od przybliżenia, panel ze szczegółami i linkiem do logów
 - Domyślnie ciemny motyw z przełącznikiem
-- Sprawdzone w przeglądarce na sesji yodai: 543 węzły i 989 krawędzi, konsola bez błędów
+- Sprawdzone w przeglądarce na dużej sesji roboczej: 543 węzły i 989 krawędzi, konsola bez błędów
 
 ## M7 — Oś czasu, zrzut, analiza — zrobione
 - Zakładka „Oś czasu”:
@@ -53,14 +53,14 @@ Fakty są w `CLAUDE.md` (sekcja „Źródła danych”). Otwarte:
   - raster plik × czas
   - ściskanie przerw
 - Zrzut do `var/session_dump/` (POST z kontrolą pochodzenia) z `metrics.json` i `prompts.json`
-- Skill `.claude/skills/analiza-sesji` — przetestowany przez `claude -p` (sonnet, 0,38 USD) na zrzucie sesji yodai. Pierwszy przebieg przeliczył się w liczbie blokad hooka (podał 25, w danych jest 18), więc powody błędów są teraz liczone w `metrics.json` (`failed_reasons`), a nie przez model
+- Skill `.claude/skills/analiza-sesji` — przetestowany przez `claude -p` (sonnet, 0,38 USD) na zrzucie sesji roboczej. Pierwszy przebieg przeliczył się w liczbie blokad hooka (podał 25, w danych jest 18), więc powody błędów są teraz liczone w `metrics.json` (`failed_reasons`), a nie przez model
 
 ## M8 — Filtry analizy — zrobione
 - Tura (prompt usera → następny prompt): pasek „tura: 1 2 3…” w nagłówku, klik w numer promptu na osi czasu, baner z treścią i strzałkami ← →
 - „Tylko projekt”: dotknięcia spoza cwd sesji odpadają; wywołanie bez żadnego pliku w projekcie znika, a wywołania bez plików zostają
 - „Tylko problemy” (`src/Problems.php`): błąd, ślepa plamka, niepełny rozbiór, ponowny odczyt (od 2. razu przy ≥ 3 odczytach), odczyt pliku z kontekstu, edycja bez odczytu (plik nieznany agentowi: nieczytany, nieutworzony, niezmieniony)
 - Filtry łączą się ze sobą i z filtrem agenta/pochodzenia; działają na wszystkie widoki i zrzut (`manifest.filters`); `metrics.problems` liczy te same reguły
-- Sesja yodai: 142 wywołania z sygnałem problemu na 535; tura 3 + projekt + problemy = 18
+- Sesja robocza: 142 wywołania z sygnałem problemu na 535; tura 3 + projekt + problemy = 18
 
 ## M9 — Podsumowanie wszystkich sesji — zrobione
 - `/summary`: ranking plików (domyślnie odczyty + kontekst + zmiany), filtry okres / projekt / tylko pliki projektu / sortowanie, szukanie po ścieżce (toolkit `Filter`), lista sesji dla pliku
@@ -70,10 +70,10 @@ Fakty są w `CLAUDE.md` (sekcja „Źródła danych”). Otwarte:
 - Operacja `exec` (uruchomienie skryptu ≠ odczyt) — wcześniej `php console` liczyło się jako 222 odczyty pliku `console`
 - Pomiar: 66 sesji, pierwsze przeliczenie ~2,6 s, kolejne wejścia ~0,05 s
 
-## M10 — Dopasowanie do standardu yodai („yodai lite”) — do zrobienia
-Źródło: `~/SK/REPOS_PRGRM/REPO_yodai/YODAI_DOC/yodai_app_standards.md`. Przenosimy tylko to, co pasuje do lokalnego narzędzia tylko do odczytu, uruchamianego przez `php -S`. **Nie przenosimy:** Symfony, Doctrine/MySQL, encji `User`, Twig/Tailwind/Gruvbox (wymagają bazy, logowania albo kroku budowania), MCP. Nie robimy też modułu w yodai, bo yodai działa na serwerze, a narzędzie czyta lokalny `~/.claude`.
+## M10 — Standard jakości kodu („lite”) — do zrobienia
+Przenosimy tylko praktyki, które pasują do lokalnego narzędzia tylko do odczytu, uruchamianego przez `php -S`. **Nie przenosimy:** frameworka (Symfony), bazy (Doctrine/MySQL), użytkowników i logowania, szablonów wymagających kroku budowania (Twig/Tailwind), MCP. Narzędzie czyta lokalny `~/.claude`, więc nie może być usługą na serwerze.
 
-- [ ] **Własny plik standardu** `STANDARDS.md` (import w `CLAUDE.md`) — co z yodai obowiązuje, co nie i dlaczego. Bez tego następny agent zacznie „dociągać” Symfony
+- [ ] **Własny plik standardu** `STANDARDS.md` (import w `CLAUDE.md`) — co obowiązuje, co nie i dlaczego. Bez tego następny agent zacznie „dociągać” framework
 - [ ] **Bramki** (`composer check`, Composer tylko jako narzędzie deweloperskie — aplikacja dalej działa bez `composer install`):
   - php-cs-fixer (strict_types, importy, PSR-12)
   - PHPStan + strict-rules, start od level 6 bez baseline'u, podnoszenie do 9 razem z wymianą tablic na DTO
@@ -84,10 +84,10 @@ Fakty są w `CLAUDE.md` (sekcja „Źródła danych”). Otwarte:
 - [ ] **Granice warstw:**
   - `fileHash` i `shortPath` z `Web\App` → `Path`; dziś `Summary/Ranking.php` i `Export/Metrics.php` zależą od warstwy web
   - kierunek zależności: Model ← Extract ← Source ← Summary/Export ← Web; deptrac, jeśli PHPStan nie wystarczy
-- [ ] **Kontroler per trasa:** `Web/App.php` (511 linii, 13 tras) → `Web/Controller/*Controller.php` z `__invoke`; router zostaje mapą ścieżka → kontroler
+- [ ] **Kontroler per trasa:** `Web/App.php` (ponad 1000 linii, 9 tras: 8 GET i POST `/export`) → `Web/Controller/*Controller.php` z `__invoke`; router zostaje mapą ścieżka → kontroler
 - [ ] **DTO zamiast tablic na granicach:** agregat sesji, wiersz rankingu, dane widoku — warunek PHPStan level 9
 - [ ] **`ADR/`:** brak frameworka; polling zamiast SSE; `exec` ≠ odczyt; Bash z „Exit code” = wykonany; `var/summary` = archiwum; pierwsza linia błędu zamiast pełnego komunikatu
-- Komentarze w kodzie: standard yodai je zakazuje — **decyzja usera otwarta**. Propozycja: zostają komentarze z faktami o formacie danych (np. semantyka `cwd` w hooku), znikają komentarze opisujące, co robi kod
+- Komentarze w kodzie: rygorystyczne standardy zwykle ich zakazują — **decyzja właściciela repo otwarta**. Propozycja: zostają komentarze z faktami o formacie danych (np. semantyka `cwd` w hooku), znikają komentarze opisujące, co robi kod
 
 Kryterium: `composer check` zielony na całym kodzie, bez baseline'u; aplikacja startuje tak jak dziś.
 
@@ -153,7 +153,7 @@ Cel (user 2026-10-24): znaleźć miejsca, gdzie tokeny uciekają niepotrzebnie �
 ## M17 — Strona startowa „Overview” — zrobione
 Cel (user 2026-10-24): big picture — co jest ok, a co wymaga uwagi (koszt, zablokowane podejrzane komendy, problemy z działaniem agentów).
 - Badanie na 106 sesjach (1583 tury, ≈ $946 według cennika API): tura p50 $0.21, p90 $1.28, 24 tury > $5; wynik narzędzia > $0.50 w 11 sesjach; kontekst > 400k w 20 sesjach; błędy narzędzi p90 2,3% wywołań
-- Blokady `block-secrets`: z 137 tylko 30 dotyczyło ścieżki z wzorcem reguły; 76 = wzorzec w tekście komendy, 31 = wiadomość agenta (raport subagenta nie dotarł)
+- Blokady przez hook użytkownika (skrypt blokujący po wzorcu w tekście wywołania): z 137 tylko 30 dotyczyło ścieżki z wzorcem reguły; 76 = wzorzec w tekście komendy, 31 = wiadomość agenta (raport subagenta nie dotarł)
 - Parser: `Session::incidents` — przerwania przez usera, limity, błędy API (wcześniej niewidoczne)
 - `Signals` → agregaty (`PARSER` 8) → `App::overview` → `templates/overview.php` na `/`; linki do tury / wywołania / zakładki Blocked; test w `tests/run.php`
 - Decyzje usera: osobna strona startowa (nie zakładka), progi jak wyżej, korekty usera pominięte (wykrywanie po słowach ~50% trafień)
@@ -164,3 +164,44 @@ Cel (user 2026-10-24): big picture — co jest ok, a co wymaga uwagi (koszt, zab
 - [ ] Trend względem poprzedniego okresu (rośnie / maleje)
 - [ ] Sygnał „odbudowa kontekstu” (M16) i koszt startu subagentów, gdy powstaną
 
+## M18 — Wirtualne biuro (widok Office) — zrobione, niesprawdzone na prawdziwych sesjach
+- `OfficeState` (`build` + `merge`) + `/office`, `/office.json`, scena three.js; opis w `CLAUDE.md` (Kod, Stack); testy w `tests/run.php`
+- Wszystkie aktywne sesje maszyny w jednym biurze, rząd biurek i kolor per sesja, legenda; tylko aktywni agenci
+- Sprawdzone na symulatorze transkryptu (sztuczny `HOME`, zwarty JSON jak w Claude Code, dwie sesje naraz): stany, wejście/wyjście drzwiami, archiwum, monety, kopanie za murem, wspinanie i spadanie, rzędy i legenda; konsola bez błędów
+- [ ] Prawdziwe sesje — sandbox agenta nie czyta `~/.claude/projects`
+- [ ] Czas odpowiedzi `/office.json` przy kilku długich aktywnych sesjach — niezmierzony
+
+## M19 — Granica agent / user — zrobione
+Cel (user 2026-10-24): zobaczyć, które wywołania agentów wyszły poza obszar, w którym mają pracować.
+- `Boundary`: `AGENT_ALLOWED_RW` (odczyt i zapis) i `AGENT_ALLOWED_R` (tylko odczyt) z `.env` albo ze zmiennej procesu; `classify(Event)` → `outside` (wykonane poza granicą albo zapis w strefie tylko do odczytu), `suspicious` (Bash wykonany bez ustalonych ścieżek), `stopped` (próba poza granicą, która się nie wykonała); bez konfiguracji wyłączona
+- `Event::osDenied` — odmowa sandboxa systemu („Operation not permitted”), bez niej Bash z kodem ≠ 0 liczyłby się jako wykonany
+- Agregat `boundary` i odcisk konfiguracji w wersji agregatu (`PARSER` 12): zmiana `.env` przelicza sesje z transkryptem
+- Widoki: oś Boundaries w Overview (`outside-executed`, `unknown-paths`, `outside-stopped`), zakładka Boundary w sesji i w „all” (ścieżki zgrupowane, CSV), filtr `boundary=`, znacznik przy wywołaniu w Commands, zachowania postaci w Office
+- Decyzja usera 2026-10-24: `suspicious` obejmuje każdy wykonany Bash ze ślepą plamką — lepiej więcej niż mniej
+- Testy: przypadki `Boundary::classify` w `tests/run.php`, wywołanie poza granicą i zatrzymane w `tests/smoke.php`
+
+## M20 — Test dymny widoków — zrobione
+- `tests/smoke.php`: serwer `php -S` na kopii aplikacji i sztucznym `HOME` z transkryptem (sesja główna, subagent, blokada hooka, wywołanie poza granicą, Bash z kodem ≠ 0, dwie tury); GET każdej trasy sesji, zakresu „all”, Overview i Office → 200 bez ostrzeżeń PHP (w odpowiedzi i w logu serwera), treści kluczowych widoków, bramki dostępu, zrzut sesji
+- Nie dotyka `~/.claude` ani `var/` repozytorium
+- Markery treści: nazwy plików i komend z fixture nie występują w promptach ani w tytule sesji (te są w lewym panelu każdej strony), a asercje widoków plików, komend i logu opierają się na znacznikach tylko z ich szablonów (`<span class="base">…`, `<code class="cmd" …>`, `<code class="summary" …>`); Overview sprawdza licznik ≠ ✓ przy rodzajach sygnałów z fixture (`Outside the boundary — executed`, `Unknown paths — suspicious`) dla `days` domyślnego, 1, 30 i `all`; pokryte są też okna na żywo `recent=1h|5m`, `/version?s=all` i CSV wszystkich zakładek w sesji i w „all”
+- Sprawdzony w obie strony (mutacje na kopii repo: dopisanie `<?php return; ?>` na początku szablonu albo `return` pustych `items` na początku `Signals::of`): `FAIL`, kod 1, dla `files`, `commands`, `log`, `drawer`, `tabs`, `head-session`, `head-all`, `office`, `timeline`, `graph`, `overview`, `boundary`, `blocked`, `messages` i `Signals::of`; bez mutacji `OK`. Dla `files`, `commands`, `log` i `boundary` zawodzi także asercja widoku jednej sesji, nie tylko „all”
+
+## M21 — Office: kolory projektów, odświeżanie co 1 s — zrobione
+Zlecenie usera 2026-10-25.
+- Koszulka (tułów i ręce) i dywan rzędu = kolor projektu: `OfficeState::projectColor(nazwa katalogu sesji)` → stała paleta `PROJECT_COLORS` (11 kolorów, `crc32`, wielkość liter bez znaczenia); `session.projectColor` w `/office.json`; materiały skórek w cache per persona + koszulka. Kolizje przy większej liczbie projektów niż kolorów są akceptowane (rząd biurek i legenda je rozróżniają)
+- Głowa = klasa modelu: persona z `OfficeState::persona` (opus / sonnet / haiku), każdy inny model (także `fable`) ma głowę domyślną; czwartej persony nie projektujemy
+- Legenda „Projects”: linia „head = model · shirt = project” i kolor projektu przy jego nazwie
+- Odświeżanie co 1 s: `/version` w widokach sesji (fragment tylko po zmianie wersji — przewinięcie i zaznaczenie zostają; nowe żądanie dopiero po zakończeniu poprzedniego, także pobranie fragmentu) i `/office.json` w Office. Napis „updated … ago” usunięty; status Office jest pusty, a przy błędzie odświeżania pokazuje „refresh not working”
+- Pomiar (fixture 976 wywołań + 15 subagentów, 4,8 MB; 200 dodatkowych sesji): `/version` 2 ms, `/version?s=all&recent=5m` 8–12 ms, fragmenty 42–123 ms, `/office.json` 9–37 ms — poniżej progu 300 ms
+- Sprawdzone w przeglądarce na fixture: zrzut Office (trzy projekty, modele Opus / Sonnet / Haiku / Fable); bez zmian danych przez 5,5 s: 5 × `/version`, 0 × fragment, ten sam węzeł DOM, przewinięcie i zaznaczenie bez zmian; po dopisaniu wywołania: 1 × fragment, nowe wywołanie widoczne, przewinięcie zachowane; serwer wyłączony → „refresh not working”, po powrocie komunikat znika
+- Testy: `tests/run.php` — głowa per klasa modelu, kolor projektu (stały, deterministyczny, paleta), spójność person z `office.js`, interwały `POLL_MS`; `tests/smoke.php` — linia legendy, `projectColor` i persona w `/office.json`
+- Niesprawdzone: odpowiedź serwera wolniejsza niż 1 s (ochrona przed nakładaniem żądań jest w kodzie, nie była wymuszona w przeglądarce); prawdziwe, duże transkrypty (sandbox)
+- Odporność odświeżania (po review): zapytania `/version` (widoki sesji) i `/office.json` (Office) mają limit czasu 5 s (`AbortController`), więc zawieszone połączenie nie zostawia `_busy` na stałe; błąd (sieć, HTTP ≠ 2xx, limit czasu, fragment bez podmiany sekcji w 10 s) pokazuje komunikat „refresh not working” także w widokach sesji (`[viz-refresh-error]` w `layout.php`), a pierwsze udane odświeżenie albo podmiana sekcji go chowa
+- Testy odporności: `tests/refresh.test.js` (node, bez zależności; wirtualny zegar i sterowany `fetch`: zawieszone połączenie, błąd sieci, HTTP 500, zmiana wersji, fragment bez podmiany, ukryta karta, odłączona sekcja) — `tests/run.php` uruchamia go, gdy `node` jest w `PATH` (inaczej wypisuje SKIP, ręcznie: `node tests/refresh.test.js`); `run.php` zawsze sprawdza też obecność zabezpieczeń w `app.js`, `office.js` i `layout.php`. Mutacje `app.js` (`_busy` niezwalniane, brak limitu czasu, brak `.catch`, brak blokady `_fragmentUntil`, brak komunikatu przy braku podmiany, `Init` nie chowa komunikatu, udane odświeżenie nie chowa komunikatu, HTTP 500 jak sukces) → `FAIL`, bez mutacji `OK`
+
+## M22 — CSV: komórki z danych niezaufanych — zrobione
+Z review całego drzewa przed publicznym pushem.
+- `Viz\Export\Csv::safe` / `cells`: komórka tekstowa zaczynająca się od `=`, `+`, `-`, `@` dostaje prefiks `'`; używane w `files.csv` i `commands.csv` zrzutu sesji (wcześniej bez zabezpieczenia: `program`, `sub`, `contexts`, `wrappers`, `piped_from`, ścieżki mogły być formułą) oraz w CSV zakresu „all” (komórka `tool` w Blocked i Boundary, `contexts` w Commands); `App::csvSafe` deleguje do `Csv::safe`
+- Testy: `tests/run.php` (helper, `files.csv` i `commands.csv` zrzutu z komendą `=HYPERLINK`, `@ctx`, `-wrap`, `+left`), `tests/smoke.php` (zablokowane narzędzie o nazwie `=EVIL` → komórka `'=EVIL` w CSV „all” i w CSV sesji); mutacje (helper bez prefiksu, brak `Csv::cells` w `files.csv` i `commands.csv`, brak `csvSafe` przy `tool` w Blocked) → `FAIL`
+- Nie do przetestowania: `tool` w CSV „Boundary” — wpis ma ścieżki spoza granicy tylko dla znanych narzędzi z plikami (Read, Write, Edit, Bash…), więc nazwa z transkryptu nie może się tam znaleźć; owinięcie jest w kodzie
+- Licencje: `public/assets/vendor/force-graph-1.51.4.LICENSE` (MIT, Vasco Asturiano) i `public/assets/toolkit/LICENSE` (MIT, „Saradom”) obok plików; sha256 `force-graph-1.51.4.min.js` bez zmian

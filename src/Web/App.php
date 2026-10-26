@@ -6,7 +6,9 @@ namespace Viz\Web;
 
 use Viz\Boundary;
 use Viz\Clock;
+use Viz\Export\Csv;
 use Viz\Export\SessionExport;
+use Viz\Office\OfficeState;
 use Viz\Model\Agent;
 use Viz\Model\Event;
 use Viz\Model\Session;
@@ -91,6 +93,8 @@ final class App
             '/session' => $this->fragment($query),
             '/version' => $this->version($query),
             '/graph.json' => $this->graph($query),
+            '/office' => $this->officePage(),
+            '/office.json' => $this->office(),
             '/summary' => $this->summaryRedirect($query),
             '/export.csv' => $this->csv($query),
             default => $this->notFound(),
@@ -195,14 +199,14 @@ final class App
         $p = $view['p'];
         $period = $p['recent'] !== '' ? $p['recent'] : ($p['days'] > 0 ? $p['days'] . 'd' : 'all');
         header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="agent-viz-' . $p['view'] . '-' . Clock::local(Clock::nowUtc(), 'Ymd-His') . '-' . $period . '.csv"');
+        header('Content-Disposition: attachment; filename="agentmonitor-' . $p['view'] . '-' . Clock::local(Clock::nowUtc(), 'Ymd-His') . '-' . $period . '.csv"');
         header('Cache-Control: no-store');
         $out = fopen('php://output', 'w');
         if ($p['view'] === 'boundary') {
             fputcsv($out, ['time', 'kind', 'stopped_by', 'tool', 'call', 'paths_outside', 'session', 'project'], ',', '"', '');
             foreach ($view['boundary'] as $b) {
                 fputcsv($out, [
-                    Clock::local($b['ts'], 'Y-m-d H:i:s'), $b['kind'], self::csvSafe((string) ($b['by'] ?? '')), $b['tool'], self::csvSafe($b['summary']),
+                    Clock::local($b['ts'], 'Y-m-d H:i:s'), $b['kind'], self::csvSafe((string) ($b['by'] ?? '')), self::csvSafe((string) $b['tool']), self::csvSafe($b['summary']),
                     self::csvSafe(implode('; ', array_map(static fn (array $t): string => $t['op'] . ' ' . $t['path'], $b['paths']))),
                     self::csvSafe($b['title'] !== '' ? $b['title'] : (string) $b['session_id']), self::csvSafe(basename($b['cwd'])),
                 ], ',', '"', '');
@@ -214,7 +218,7 @@ final class App
             fputcsv($out, ['time', 'blocked_by', 'rule', 'tool', 'call', 'session', 'project'], ',', '"', '');
             foreach ($view['blocked'] as $b) {
                 fputcsv($out, [
-                    Clock::local($b['ts'], 'Y-m-d H:i:s'), $b['by'], self::csvSafe((string) ($b['detail'] ?? '')), $b['tool'],
+                    Clock::local($b['ts'], 'Y-m-d H:i:s'), $b['by'], self::csvSafe((string) ($b['detail'] ?? '')), self::csvSafe((string) $b['tool']),
                     self::csvSafe($b['summary']), self::csvSafe($b['title'] !== '' ? $b['title'] : (string) $b['session_id']), self::csvSafe(basename($b['cwd'])),
                 ], ',', '"', '');
             }
@@ -227,7 +231,7 @@ final class App
             foreach ($view['commands'] as $i => $c) {
                 fputcsv($out, [
                     $i + 1, self::csvSafe($c['program']), $c['role'], $c['count'], count($c['sessions']), $c['failed'], $c['blocked'],
-                    self::csvSafe($top($c['subs'])), self::csvSafe($top($c['from'])), $top($c['contexts']), Clock::local($c['last'], 'Y-m-d H:i:s'),
+                    self::csvSafe($top($c['subs'])), self::csvSafe($top($c['from'])), self::csvSafe($top($c['contexts'])), Clock::local($c['last'], 'Y-m-d H:i:s'),
                 ], ',', '"', '');
             }
             fclose($out);
@@ -261,7 +265,7 @@ final class App
         $status = static fn (Event $e): string => $e->denial !== null ? 'blocked' : (!$e->failed ? 'ok' : ($e->executed() ? 'exit≠0' : 'tool error'));
         $tab = in_array($p['view'], ['read', 'changed', 'commands', 'blocked', 'boundary', 'messages'], true) ? $p['view'] : 'calls';
         header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="agent-viz-' . substr($view['sid'], 0, 8) . '-' . $tab . '-' . Clock::local(Clock::nowUtc(), 'Ymd-His') . '.csv"');
+        header('Content-Disposition: attachment; filename="agentmonitor-' . substr($view['sid'], 0, 8) . '-' . $tab . '-' . Clock::local(Clock::nowUtc(), 'Ymd-His') . '.csv"');
         header('Cache-Control: no-store');
         $out = fopen('php://output', 'w');
         $row = static fn (array $cells) => fputcsv($out, array_map(static fn ($v): string => is_string($v) ? self::csvSafe($v) : (string) $v, $cells), ',', '"', '');
@@ -327,7 +331,7 @@ final class App
     /** Arkusze wykonują komórki zaczynające się od = + - @ — dane są niezaufane. */
     private static function csvSafe(string $value): string
     {
-        return $value !== '' && str_contains('=+-@', $value[0]) ? "'" . $value : $value;
+        return Csv::safe($value);
     }
 
     /**
@@ -590,6 +594,37 @@ final class App
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP,
         );
     }
+
+    /** Wirtualne biuro: widok globalny (wszystkie aktywne sesje), obok Overview w lewym panelu. */
+    private function officePage(): void
+    {
+        $sessions = SessionIndex::recent(self::SIDEBAR_LIMIT);
+        $view = null;
+        $overview = null;
+        $office = true;
+        $sidebarTokens = SummaryStore::tokenTotals(array_column($sessions, 'id'));
+        header('Content-Type: text/html; charset=utf-8');
+        require dirname(__DIR__, 2) . '/templates/layout.php';
+    }
+
+    /**
+     * Stan biura (`OfficeState`) ze wszystkich sesji aktywnych w oknie `STALE_GONE`: transkrypty zmienione w oknie (mtime jako tani nadzbiór),
+     * dokładny filtr robi `OfficeState` z czasów zdarzeń. Zawsze z transkryptu — hook nie zna odpowiedzi modelu ani modelu agenta.
+     */
+    private function office(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: no-store');
+        $now = time();
+        $limits = Boundary::fromEnv();
+        $reader = new TranscriptReader();
+        $builds = array_map(
+            static fn (string $path): array => OfficeState::build($reader->read($path), $now, $limits),
+            LiveSummary::candidates(OfficeState::STALE_GONE),
+        );
+        echo json_encode(OfficeState::merge($builds, $now), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP);
+    }
+
 
     private function notFound(): void
     {

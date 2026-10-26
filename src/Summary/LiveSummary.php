@@ -44,7 +44,7 @@ final class LiveSummary
     }
 
     /** Transkrypty zmienione w oknie (mtime jako tani nadzbiór; dokładny filtr robi granica czasu zdarzeń). */
-    private static function candidates(int $seconds): array
+    public static function candidates(int $seconds): array
     {
         $since = time() - $seconds;
         $out = [];

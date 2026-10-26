@@ -1,7 +1,7 @@
 ---
 name: analiza-sesji
 description: >
-  Oceń zrzut sesji agenta Claude Code z agent_vizualization: co poszło dobrze, co źle, co usprawnić — każdy wniosek
+  Oceń zrzut sesji agenta Claude Code z agentMonitor: co poszło dobrze, co źle, co usprawnić — każdy wniosek
   z dowodem z metryk albo zdarzeń. Argument: ścieżka do folderu zrzutu (var/session_dump/<nazwa>).
   Użyj gdy: "/analiza-sesji <ścieżka>", "oceń sesję", "przeanalizuj zrzut sesji", "co agent robił źle".
 argument-hint: <ścieżka do var/session_dump/<nazwa>>
