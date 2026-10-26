@@ -24,6 +24,7 @@ It reads Claude Code transcripts (and, optionally, a hook feed), never modifies 
 - [Testing](#testing)
 - [Maintenance](#maintenance)
 - [Security](#security)
+- [Interface language](#interface-language)
 - [Third-party libraries](#third-party-libraries)
 - [Limitations](#limitations)
 - [Project documentation](#project-documentation)
@@ -303,6 +304,10 @@ The app shows **commands run by agents and file paths**. A command can contain a
 - Show or export file contents
 - Modify project files or `~/.claude`
 - Send anything over the network
+
+## Interface language
+
+The UI is available in Polish (default) and English; switch with the PL/EN button in the left panel (stored in the `viz-lang` cookie). English strings in the code are the translation keys, and the Polish dictionary is `lang/pl.php`; a missing key falls back to English. Exports, CSV files and `summary.md` are always English. `php tests/run.php` fails when a string used in the code has no Polish translation.
 
 ## Third-party libraries
 

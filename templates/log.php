@@ -11,6 +11,7 @@
 use Viz\Clock;
 use Viz\Model\Event;
 use Viz\Model\Touch;
+use Viz\Problems;
 use Viz\Web\App;
 
 $pick = $view['p']['pick'];
@@ -29,18 +30,18 @@ $session = $view['session'];
             <div class="ev-head">
                 <time title="<?= h($e->ts) ?>"><?= h(Clock::local($e->ts)) ?></time>
                 <i class="dot" title="<?= h(isset($session->agents[$e->agentId]) ? App::agentLabel($session->agents[$e->agentId]) : $e->agentId) ?>"></i>
-                <span class="tool"><?= h($e->tool === Event::TOOL_CONTEXT ? 'context' : $e->tool) ?></span>
+                <span class="tool"><?= h($e->tool === Event::TOOL_CONTEXT ? t('context') : $e->tool) ?></span>
                 <code class="summary" title="<?= h($e->summary) ?>"><?= h(App::shortText($e->summary, $session->cwd)) ?></code>
                 <?php if ($e->denial !== null): ?>
-                    <span class="badge denied" title="<?= h((string) $e->error) ?>">⊘ <?= h($e->denial['by'] . ($e->denial['detail'] !== null ? ' · ' . $e->denial['detail'] : '')) ?></span>
-                <?php elseif ($e->failed): ?><span class="badge err" title="<?= h((string) $e->error) ?>">error</span><?php endif ?>
+                    <span class="badge denied" title="<?= h((string) $e->error) ?>">⊘ <?= h(t($e->denial['by']) . ($e->denial['detail'] !== null ? ' · ' . $e->denial['detail'] : '')) ?></span>
+                <?php elseif ($e->failed): ?><span class="badge err" title="<?= h((string) $e->error) ?>"><?= th('error') ?></span><?php endif ?>
                 <?php if (isset($view['problems'][$e->toolUseId]) && !$e->failed): ?>
-                    <span class="badge problem" title="<?= h(implode("\n", $view['problems'][$e->toolUseId])) ?>">⚠ <?= h(mb_strimwidth($view['problems'][$e->toolUseId][0], 0, 40, '…')) ?></span>
+                    <span class="badge problem" title="<?= h(implode("\n", array_map([Problems::class, 'reasonText'], $view['problems'][$e->toolUseId]))) ?>">⚠ <?= h(mb_strimwidth(Problems::reasonText($view['problems'][$e->toolUseId][0]), 0, 40, '…')) ?></span>
                 <?php endif ?>
                 <?php if ($blind): ?>
-                    <span class="badge blind" title="<?= h(implode("\n", array_merge($e->unresolved, array_map(static fn ($u): string => 'unknown command: ' . $u, $e->unknown)))) ?>">? blind spot</span>
+                    <span class="badge blind" title="<?= h(implode("\n", array_merge($e->unresolved, array_map(static fn ($u): string => t('unknown command: {cmd}', ['cmd' => $u]), $e->unknown)))) ?>">? <?= th('blind spot') ?></span>
                 <?php elseif ($e->unresolved !== []): ?>
-                    <span class="badge partial-blind" title="<?= h(implode("\n", $e->unresolved)) ?>">? partial</span>
+                    <span class="badge partial-blind" title="<?= h(implode("\n", $e->unresolved)) ?>">? <?= th('partial') ?></span>
                 <?php endif ?>
             </div>
             <?php if ($e->touches !== []): ?>
@@ -51,7 +52,7 @@ $session = $view['session'];
                     <?php endforeach ?>
                 </ul>
                 <?php if (count($visible) < count($e->touches)): ?>
-                    <p class="more muted">+<?= h(count($e->touches) - count($visible)) ?> more — click for details</p>
+                    <p class="more muted"><?= th('+{n} more — click for details', ['n' => count($e->touches) - count($visible)]) ?></p>
                 <?php endif ?>
             <?php endif ?>
         </li>

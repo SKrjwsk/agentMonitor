@@ -11,6 +11,7 @@ use Viz\Model\Event;
 use Viz\Model\Session;
 use Viz\Model\Touch;
 use Viz\Path;
+use Viz\Problems;
 
 /**
  * Geometria widoku „Oś czasu”: tory agentów, prompty, rozmiar kontekstu i raster plik × czas na wspólnej osi X.
@@ -108,8 +109,8 @@ final class Timeline
                 'failed' => $e->failed,
                 'blind' => $e->tool === 'Bash' && $e->isBlind(),
                 'problem' => isset($problems[$e->toolUseId]),
-                'title' => (isset($problems[$e->toolUseId]) ? '⚠ ' . implode(' · ', $problems[$e->toolUseId]) . "\n" : '') . Clock::local($e->ts) . ($e->endTs !== null ? '–' . Clock::local($e->endTs) : '') . ' · '
-                    . ($e->tool === Event::TOOL_CONTEXT ? 'kontekst' : $e->tool) . ' · ' . $e->summary
+                'title' => (isset($problems[$e->toolUseId]) ? '⚠ ' . implode(' · ', array_map([Problems::class, 'reasonText'], $problems[$e->toolUseId])) . "\n" : '') . Clock::local($e->ts) . ($e->endTs !== null ? '–' . Clock::local($e->endTs) : '') . ' · '
+                    . ($e->tool === Event::TOOL_CONTEXT ? t('context') : $e->tool) . ' · ' . $e->summary
                     . ($e->touches !== [] ? "\n" . implode("\n", array_map(static fn (Touch $t): string => $t->op . ' ' . App::shortPath($t->path, $session->cwd), array_slice($e->touches, 0, 8))) : ''),
             ];
         }
@@ -268,7 +269,7 @@ final class Timeline
                         . ($c->contexts !== [] ? ' [' . implode(', ', $c->contexts) . ']' : '')
                         . ($c->pipedFrom !== null ? ' ← ' . $c->pipedFrom : '')
                         . ($c->wrappers !== [] ? ' (' . implode(', ', $c->wrappers) . ')' : '')
-                        . ' · ' . ['ok' => 'ok', 'failed' => 'error', 'blocked' => 'not executed'][$status]
+                        . ' · ' . t(['ok' => 'ok', 'failed' => 'error', 'blocked' => 'not executed'][$status])
                         . "\n" . mb_strimwidth($e->summary, 0, 160, '…'),
                 ];
             }
@@ -279,8 +280,8 @@ final class Timeline
             $failed = count(array_filter($dots, static fn (array $d): bool => $d['op'] !== 'cmd-ok'));
             $out[] = [
                 'y' => $y, 'header' => false, 'hash' => null, 'dots' => $dots,
-                'label' => $program . ' (' . count($dots) . ($failed > 0 ? ', errors ' . $failed : '') . ')',
-                'title' => $program . ' · role: ' . ToolRoles::role($program),
+                'label' => $program . ' (' . count($dots) . ($failed > 0 ? ', ' . t('errors {n}', ['n' => $failed]) : '') . ')',
+                'title' => $program . ' · ' . t('role: {r}', ['r' => t(ToolRoles::role($program))]),
             ];
             $y += self::ROW_H;
         }
@@ -357,7 +358,7 @@ final class Timeline
             $gap = $this->segments[$i]['t0'] - $this->segments[$i - 1]['t1'];
             $h = intdiv((int) $gap, 3600);
             $m = intdiv((int) $gap % 3600, 60);
-            $out[] = ['x' => $this->segments[$i]['x0'] - self::GAP_PX / 2, 'label' => ($h > 0 ? $h . ' h ' : '') . $m . ' min break'];
+            $out[] = ['x' => $this->segments[$i]['x0'] - self::GAP_PX / 2, 'label' => t($h > 0 ? '{h} h {m} min break' : '{m} min break', ['h' => $h, 'm' => $m])];
         }
 
         return $out;

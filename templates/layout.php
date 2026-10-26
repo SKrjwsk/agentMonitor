@@ -24,6 +24,8 @@ $projects = App::sidebarProjects($sessions);
     <link rel="icon" href="data:,">
     <script>try { if (localStorage.getItem('viz-theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}</script>
     <link rel="stylesheet" href="/assets/app.css">
+    <?php /* słownik dla JS (Viz.T): blok danych, nie skrypt; JSON_HEX_* chroni przed </script> i &; pusty obiekt dla EN */ ?>
+    <script type="application/json" id="viz-i18n"><?= json_encode((object) Viz\Web\Lang::dict(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) ?></script>
     <script src="/assets/toolkit/Util.js"></script>
     <script src="/assets/toolkit/Hx.js"></script>
     <script src="/assets/toolkit/SInit.js"></script>
@@ -73,7 +75,7 @@ $projects = App::sidebarProjects($sessions);
                                 · <?php if ($st['usd'] !== null): ?>
                                     <span class="s-tok" title="<?= th('cost of all agents at API prices') ?><?= $st['upTo'] !== null ? h(' · ' . t('counted up to {time}', ['time' => Clock::local($st['upTo'], 'd.m H:i')])) : '' ?>"><?= h(App::usd($st['usd'])) ?></span>
                                 <?php else: ?>
-                                    <span class="s-tok" title="<?= th('output tokens of all agents — no cost in this older summary') ?><?= $st['upTo'] !== null ? h(' · ' . t('counted up to {time}', ['time' => Clock::local($st['upTo'], 'd.m H:i')])) : '' ?>"><?= h(($st['partial'] ? '≥' : '') . App::tokenCount($st['output']) . ' out') ?></span>
+                                    <span class="s-tok" title="<?= th('output tokens of all agents — no cost in this older summary') ?><?= $st['upTo'] !== null ? h(' · ' . t('counted up to {time}', ['time' => Clock::local($st['upTo'], 'd.m H:i')])) : '' ?>"><?= h(($st['partial'] ? '≥' : '') . t('{n} out', ['n' => App::tokenCount($st['output'])])) ?></span>
                                 <?php endif ?>
                             <?php endif ?>
                             <?php if (time() - $s['mtime'] < 120): ?><span class="badge live"><?= th('active') ?></span><?php endif ?>

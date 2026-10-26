@@ -268,6 +268,38 @@ final class Signals
         return ['items' => $items, 'info' => $info];
     }
 
+    /**
+     * Tłumaczy zapisany (angielski) tekst albo szczegół sygnału na bieżący język — dopiero przy renderze, agregat zostaje angielski.
+     * Nieznane fragmenty (ścieżki, komendy, teksty harnessu) zostają bez zmian.
+     */
+    public static function localize(string $text): string
+    {
+        $dur = static fn (string $d): string => preg_match('/^(\d+) (min|h|days)$/', $d, $m) ? t('{n} ' . $m[2], ['n' => $m[1]]) : $d;
+        $d = '(\d+ (?:min|h|days))';
+        $rules = [
+            '/(\d+)% (cache read|new context|output|uncached input) · (\d+) model calls/' => static fn (array $m): string => t('{p}% {part} · {n} model calls', ['p' => $m[1], 'part' => t($m[2]), 'n' => $m[3]]),
+            '/^context of the main session reached (\d+)k tokens$/' => static fn (array $m): string => t('context of the main session reached {k}k tokens', ['k' => $m[1]]),
+            '/^context of a subagent reached (\d+)k tokens$/' => static fn (array $m): string => t('context of a subagent reached {k}k tokens', ['k' => $m[1]]),
+            '/^every later call reads it again$/' => static fn (): string => t('every later call reads it again'),
+            '/^your prompt came ' . $d . ' after the last answer/' => static fn (array $m): string => t('your prompt came {d} after the last answer', ['d' => $dur($m[1])]),
+            '/^a ' . $d . ' pause inside the turn — a permission prompt, a usage limit, a long tool call or a background task/' => static fn (array $m): string => t('a {d} pause inside the turn — a permission prompt, a usage limit, a long tool call or a background task', ['d' => $dur($m[1])]),
+            '/(\d+)k context written to the cache again$/' => static fn (array $m): string => t('{k}k context written to the cache again', ['k' => $m[1]]),
+            '/^back after ' . $d . ' to a (\d+)k context, carried through (\d+) model calls$/' => static fn (array $m): string => t('back after {d} to a {k}k context, carried through {n} model calls', ['d' => $dur($m[1]), 'k' => $m[2], 'n' => $m[3]]),
+            '/^a (\d+)-call answer on top of a (\d+)k context$/' => static fn (array $m): string => t('a {n}-call answer on top of a {k}k context', ['n' => $m[1], 'k' => $m[2]]),
+            '/^\+(\d+)k tokens × (\d+) later calls$/' => static fn (array $m): string => t('+{k}k tokens × {n} later calls', ['k' => $m[1], 'n' => $m[2]]),
+            '/ · stopped by (.+)$/' => static fn (array $m): string => ' · ' . t('stopped by {by}', ['by' => $m[1]]),
+            '/^paths not resolved: /' => static fn (): string => t('paths not resolved:') . ' ',
+            '/ · blocked again right after$/' => static fn (): string => ' · ' . t('blocked again right after'),
+            '/^([\d.]+)% of tool calls failed \((\d+) of (\d+)\)$/' => static fn (array $m): string => t('{p}% of tool calls failed ({a} of {b})', ['p' => $m[1], 'a' => $m[2], 'b' => $m[3]]),
+            '/^file not found, edit conflicts, refused permissions…$/' => static fn (): string => t('file not found, edit conflicts, refused permissions…'),
+        ];
+        foreach ($rules as $re => $fn) {
+            $text = (string) preg_replace_callback($re, $fn, $text);
+        }
+
+        return $text;
+    }
+
     /** „12 min”, „3 h”, „2 days”. */
     public static function duration(int $seconds): string
     {

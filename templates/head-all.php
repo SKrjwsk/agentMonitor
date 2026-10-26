@@ -50,7 +50,7 @@ $live = $p['recent'] !== '';
     <details class="exclude" <?= $p['exclude'] !== '' ? 'open' : '' ?>>
         <summary title="<?= th('hide entries: starting with / or ~ = path prefix, anything else = fragment') ?>"><?= th('exclude') ?><?= $p['exclude'] !== '' ? ' (' . h(count(array_filter(array_map('trim', explode(',', $p['exclude']))))) . ')' : '' ?></summary>
         <input class="rank-search" type="search" name="exclude" value="<?= h($p['exclude']) ?>"
-               placeholder="<?= h(match ($p['view']) { 'commands' => 'cd, echo, shell', 'blocked' => 'user, auto mode, deny rule', default => '/private, ~/projects/archive, scratchpad' }) ?>  (<?= th('comma-separated, Enter') ?>)">
+               placeholder="<?= h(match ($p['view']) { 'commands' => 'cd, echo, shell', 'blocked' => t('user, auto mode, deny rule'), default => '/private, ~/projects/archive, scratchpad' }) ?>  (<?= th('comma-separated, Enter') ?>)">
     </details>
     <?php if ($p['find'] !== '' || $p['exclude'] !== ''): ?><a class="chip" href="/?<?= h(App::query($view, ['find' => '', 'exclude' => ''])) ?>"><?= th('clear search') ?></a><?php endif ?>
 </form>

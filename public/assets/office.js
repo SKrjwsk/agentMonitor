@@ -7,6 +7,8 @@ import * as THREE from '/assets/vendor/three-0.183.2/three.module.min.js';
 
 window.VizOffice = (() => {
 
+    const T = (key, vars) => Viz.T(key, vars);
+
     /** Autorefresh: co 1 s pełne pobranie stanu (jak przycisk „↻ refresh”); kolejne żądanie dopiero po zakończeniu poprzedniego (`root._busy`). */
     const POLL_MS = 1000;
     /** Stan bez odpowiedzi tak długo = błąd odświeżania; bez limitu zawieszone połączenie zostawiłoby `root._busy` na stałe. */
@@ -40,9 +42,12 @@ window.VizOffice = (() => {
             hairStyle: 'short', sleeves: 4, top: 'plain', stubble: '#5a3a26', scale: 1, desk: null },
     };
 
-    const TOOL_VERBS = { Read: 'reading', Edit: 'editing', Write: 'writing', NotebookEdit: 'editing', MultiEdit: 'editing', Bash: '$',
-        Grep: 'searching', Glob: 'looking for', Agent: 'delegating', Task: 'delegating', SendMessage: 'messaging',
-        WebSearch: 'googling', WebFetch: 'browsing', TodoWrite: 'planning' };
+    /** Czasowniki narzędzi — funkcje, bo słownik czytany jest przy pierwszym użyciu. */
+    const TOOL_VERBS = { Read: () => T('reading'), Edit: () => T('editing'), Write: () => T('writing'), NotebookEdit: () => T('editing'),
+        MultiEdit: () => T('editing'), Bash: () => '$', Grep: () => T('searching'), Glob: () => T('looking for'),
+        Agent: () => T('delegating'), Task: () => T('delegating'), SendMessage: () => T('messaging'),
+        WebSearch: () => T('googling'), WebFetch: () => T('browsing'), TodoWrite: () => T('planning') };
+    const verb = tool => TOOL_VERBS[tool] ? TOOL_VERBS[tool]() : tool;
 
     // ---- tekstury rysowane w kodzie (canvas, piksele bez wygładzania) ----
 
@@ -963,7 +968,7 @@ window.VizOffice = (() => {
 
     // ---- wiadomości: nadawca odwraca się i rzuca kopertą do adresata ----
 
-    const MESSAGE_KINDS = { task: 'task', result: 'result', send: 'message', peer: 'from another session' };
+    const MESSAGE_KINDS = { task: () => T('task'), result: () => T('result'), send: () => T('message'), peer: () => T('from another session') };
 
     /** Nowe wiadomości z /office.json; pierwsze wczytanie tylko zapamiętuje id (bez odtwarzania starych). */
     const receiveMessages = (office, messages, replay) => {
@@ -1052,7 +1057,7 @@ window.VizOffice = (() => {
             f.mesh.rotation.z = Math.sin(k * Math.PI * 2) * 0.4;
             if (k < 1) return true;
             office.scene.remove(f.mesh);
-            if (target) target.note = { text: '✉ ' + MESSAGE_KINDS[f.m.kind] + (f.m.text ? ': ' + f.m.text : ''), until: Date.now() + NOTE_MS };
+            if (target) target.note = { text: '✉ ' + (MESSAGE_KINDS[f.m.kind] ? MESSAGE_KINDS[f.m.kind]() : f.m.kind) + (f.m.text ? ': ' + f.m.text : ''), until: Date.now() + NOTE_MS };
             return false;
         });
     };
@@ -1111,20 +1116,20 @@ window.VizOffice = (() => {
     /** Dymek w trzech częściach [początek, cel, koniec]: przy braku miejsca zwęża się tylko cel (`{text, path}` z serwera), czas zostaje. */
     const bubbleParts = (c, now) => {
         const a = c.agent;
-        if (c.leaving) return ['bye 👋', null, ''];
-        if (a.boundary?.kind === 'outside') return ['⛏ outside the boundary:', a.boundary.target, ''];
-        if (a.boundary?.kind === 'stopped') return ['🧱 blocked, can’t climb out:', a.boundary.target, ''];
-        if (a.boundary?.kind === 'trying') return ['🧱 trying to get out:', a.boundary.target, ''];
+        if (c.leaving) return [T('bye 👋'), null, ''];
+        if (a.boundary?.kind === 'outside') return [T('⛏ outside the boundary:'), a.boundary.target, ''];
+        if (a.boundary?.kind === 'stopped') return [T('🧱 blocked, can’t climb out:'), a.boundary.target, ''];
+        if (a.boundary?.kind === 'trying') return [T('🧱 trying to get out:'), a.boundary.target, ''];
         const since = '· ' + elapsed(Math.max(0, (now - Date.parse(a.since)) / 1000));
-        const blocked = a.blocked ? '⛔ blocked (' + a.blocked + ') · ' : '';
+        const blocked = a.blocked ? T('⛔ blocked ({by}) · ', { by: a.blocked }) : '';
         switch (a.state) {
             case 'working':
-                if (a.tool) return [blocked + (TOOL_VERBS[a.tool] || a.tool), a.activity, since];
-                if (a.after) return [blocked + 'working · after ' + (TOOL_VERBS[a.after.tool] || a.after.tool), a.after.activity, since];
-                return [blocked + 'working', null, since];
-            case 'delegated': return ['waiting for ' + a.waitingFor + (a.waitingFor === 1 ? ' subagent' : ' subagents'), null, since];
-            case 'idle': return [(a.interrupted ? 'interrupted · ' : '') + 'waiting for you', null, since];
-            case 'stuck': return [a.stuck === 'limit' ? '⚠ API limit' : '⚠ API error', null, ''];
+                if (a.tool) return [blocked + verb(a.tool), a.activity, since];
+                if (a.after) return [blocked + T('working · after {verb}', { verb: verb(a.after.tool) }), a.after.activity, since];
+                return [blocked + T('working'), null, since];
+            case 'delegated': return [a.waitingFor === 1 ? T('waiting for {n} subagent', { n: a.waitingFor }) : T('waiting for {n} subagents', { n: a.waitingFor }), null, since];
+            case 'idle': return [(a.interrupted ? T('interrupted · ') : '') + T('waiting for you'), null, since];
+            case 'stuck': return [a.stuck === 'limit' ? T('⚠ API limit') : T('⚠ API error'), null, ''];
             default: return [a.state, null, ''];
         }
     };
@@ -1162,7 +1167,7 @@ window.VizOffice = (() => {
     const updateLabel = (office, c, now) => {
         const a = c.agent;
         const burn = a.burn >= office.burnFrom ? ' · 💸 $' + a.burn.toFixed(2) + '/5m' : '';
-        const name = (a.kind === 'main' ? 'main' : a.label) + (a.modelName ? ' · ' + a.modelName : '') + burn;
+        const name = (a.kind === 'main' ? T('main') : a.label) + (a.modelName ? ' · ' + a.modelName : '') + burn;
         if (c.label.name.textContent !== name) c.label.name.textContent = name;
         const session = office.sessions.get(a.session);
         c.label.el.title = (session?.title || '') + (a.description ? ' — ' + a.description : '');
@@ -1347,7 +1352,7 @@ window.VizOffice = (() => {
                 const meta = document.createElement('span');
                 meta.className = 'muted';
                 const n = counts.get(id);
-                meta.textContent = n + (n === 1 ? ' agent' : ' agents');
+                meta.textContent = n === 1 ? T('{n} agent', { n }) : T('{n} agents', { n });
                 a.append(dot, title, meta);
                 return a;
             }));
@@ -1535,7 +1540,7 @@ window.VizOffice = (() => {
             office.renderer.render(office.scene, office.camera);
 
             // przy odświeżaniu co sekundę „zaktualizowano N s temu” nic nie mówi — komunikat tylko przy błędzie
-            const status = office.failed ? 'refresh not working' : '';
+            const status = office.failed ? T('refresh not working') : '';
             if (office.status && office.status.textContent !== status) office.status.textContent = status;
             for (const c of office.chars.values()) {
                 updateLabel(office, c, now);

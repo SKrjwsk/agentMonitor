@@ -22,26 +22,26 @@
 <section class="office" viz-office viz-office-url="/office.json">
     <div class="office-top">
     <div class="office-bar">
-        <span class="muted">only active agents · drag = rotate · right-drag / shift-drag = move · wheel = zoom</span>
+        <span class="muted"><?= th('only active agents · drag = rotate · right-drag / shift-drag = move · wheel = zoom') ?></span>
         <span class="office-bar-sep"></span>
         <span class="muted" viz-office-status></span>
-        <button type="button" class="btn" onclick="VizOffice.Refresh(this)">↻ refresh</button>
+        <button type="button" class="btn" onclick="VizOffice.Refresh(this)">↻ <?= th('refresh') ?></button>
     </div>
     <div class="office-side" viz-office-side>
         <section class="office-legend office-projects">
-            <h3>Projects</h3>
-            <p class="muted" viz-office-legend-note>head = model · shirt = project</p>
+            <h3><?= th('Projects') ?></h3>
+            <p class="muted" viz-office-legend-note><?= th('head = model · shirt = project') ?></p>
             <nav viz-office-legend></nav>
         </section>
         <section class="office-legend">
-            <h3>Status</h3>
-            <span class="office-legend-item"><i class="office-dot" viz-office-state="working"></i><span>working</span><span class="muted">also waiting for your permission</span></span>
-            <span class="office-legend-item"><i class="office-dot" viz-office-state="delegated"></i><span>waiting for subagents</span></span>
-            <span class="office-legend-item"><i class="office-dot" viz-office-state="idle"></i><span>waiting for you</span><span class="muted">hand up</span></span>
-            <span class="office-legend-item"><i></i><span>climbing the wall</span><span class="muted">blocked outside the boundary</span></span>
-            <span class="office-legend-item"><i></i><span>digging on the grass</span><span class="muted">worked outside the boundary</span></span>
-            <span class="office-legend-item"><i class="office-dot" style="background: #f5c542"></i><span>coins</span><span class="muted">1 coin = $<?= h(rtrim(rtrim(number_format(\Viz\Office\OfficeState::COIN_USD, 4, '.', ''), '0'), '.')) ?> spent</span></span>
-            <span class="office-legend-item"><i class="office-dot" style="background: #f4f1e6"></i><span>envelope</span><span class="muted">task, result or message between agents</span></span>
+            <h3><?= th('Status') ?></h3>
+            <span class="office-legend-item"><i class="office-dot" viz-office-state="working"></i><span><?= th('working') ?></span><span class="muted"><?= th('also waiting for your permission') ?></span></span>
+            <span class="office-legend-item"><i class="office-dot" viz-office-state="delegated"></i><span><?= th('waiting for subagents') ?></span></span>
+            <span class="office-legend-item"><i class="office-dot" viz-office-state="idle"></i><span><?= th('waiting for you') ?></span><span class="muted"><?= th('hand up') ?></span></span>
+            <span class="office-legend-item"><i></i><span><?= th('climbing the wall') ?></span><span class="muted"><?= th('blocked outside the boundary') ?></span></span>
+            <span class="office-legend-item"><i></i><span><?= th('digging on the grass') ?></span><span class="muted"><?= th('worked outside the boundary') ?></span></span>
+            <span class="office-legend-item"><i class="office-dot" style="background: #f5c542"></i><span><?= th('coins') ?></span><span class="muted"><?= th('1 coin = ${usd} spent', ['usd' => rtrim(rtrim(number_format(\Viz\Office\OfficeState::COIN_USD, 4, '.', ''), '0'), '.')]) ?></span></span>
+            <span class="office-legend-item"><i class="office-dot" style="background: #f4f1e6"></i><span><?= th('envelope') ?></span><span class="muted"><?= th('task, result or message between agents') ?></span></span>
         </section>
     </div>
     </div>
@@ -50,6 +50,6 @@
          onpointerup="VizOffice.Up(this)" onpointercancel="VizOffice.Up(this)" onwheel="VizOffice.Wheel(this, event)"
          oncontextmenu="return false"></div>
     <div class="office-labels" viz-office-labels></div>
-    <p class="office-empty" viz-office-empty hidden>No active agents right now.</p>
+    <p class="office-empty" viz-office-empty hidden><?= th('No active agents right now.') ?></p>
     <s-init run="(el) => import('/assets/office.js').then(() => VizOffice.Init(el))"></s-init>
 </section>

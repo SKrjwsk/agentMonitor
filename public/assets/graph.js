@@ -7,6 +7,8 @@
  */
 const VizGraph = (() => {
 
+    const T = (key, vars) => Viz.T(key, vars);
+
     const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
     /** nodeLabel force-graph renderuje HTML — dane są niezaufane. */
@@ -14,7 +16,10 @@ const VizGraph = (() => {
 
     const alpha = (hex, a) => /^#[0-9a-f]{6}$/i.test(hex) ? hex + Math.round(a * 255).toString(16).padStart(2, '0') : hex;
 
-    const OPS = { read: 'read', context: 'context', search: 'search', list: 'listing', edit: 'edit', write: 'write', exec: 'exec' };
+    const OPS = {
+        read: () => T('read'), context: () => T('context'), search: () => T('search'), list: () => T('listing'),
+        edit: () => T('edit'), write: () => T('write'), exec: () => T('exec'),
+    };
 
     /** Podpisy plików od tego przybliżenia; nazwy folderów zawsze. */
     const FILE_LABEL_SCALE = 0.9;
@@ -232,12 +237,12 @@ const VizGraph = (() => {
         info.hidden = !node;
         if (!node) return;
         info.one('[viz-graph-info-title]').textContent = node.type === 'dir' ? node.label + '/' : node.label;
-        info.one('[viz-graph-info-path]').textContent = node.type === 'agent' ? 'agent' : node.path;
-        const ops = Object.entries(node.ops || {}).map(([op, n]) => `${OPS[op] || op} ×${n}`).join(' · ');
+        info.one('[viz-graph-info-path]').textContent = node.type === 'agent' ? T('agent') : node.path;
+        const ops = Object.entries(node.ops || {}).map(([op, n]) => `${OPS[op] ? OPS[op]() : op} ×${n}`).join(' · ');
         info.one('[viz-graph-info-ops]').textContent = node.type === 'agent'
-            ? `${(g.adj.get(node.id)?.size || 0)} files`
-            : (node.type === 'dir' ? `${node.files} files · ` : '') + ops;
-        info.one('[viz-graph-info-agents]').textContent = node.type === 'file' && node.agents?.length ? 'agents: ' + node.agents.join(', ') : '';
+            ? T('{n} files', { n: g.adj.get(node.id)?.size || 0 })
+            : (node.type === 'dir' ? T('{n} files', { n: node.files }) + ' · ' : '') + ops;
+        info.one('[viz-graph-info-agents]').textContent = node.type === 'file' && node.agents?.length ? T('agents: {names}', { names: node.agents.join(', ') }) : '';
         const link = info.one('[viz-graph-info-link]');
         link.hidden = !hash;
         if (hash) link.attr('href', root.attr('viz-graph-logs') + '&pick=' + hash);

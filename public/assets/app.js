@@ -4,6 +4,19 @@
  */
 const Viz = (() => {
 
+    /**
+     * Tłumaczenie tekstów interfejsu: kluczem jest tekst angielski, słownik wstawia serwer (layout.php, `#viz-i18n`, pusty dla EN).
+     * Składnia: T("English text") albo T("{n} files", { n: 3 }). Brak klucza = tekst angielski. Słownik czytany raz, przy pierwszym użyciu.
+     */
+    let dict = null;
+    const T = (key, vars) => {
+        if (dict === null) {
+            try { dict = JSON.parse(document.getElementById('viz-i18n')?.textContent || '{}') || {}; } catch { dict = {}; }
+        }
+        const text = Object.prototype.hasOwnProperty.call(dict, key) ? dict[key] : key;
+        return vars ? text.replace(/\{(\w+)\}/g, (m, name) => name in vars ? String(vars[name]) : m) : text;
+    };
+
     /** Co tyle ms zapytanie o wersję źródła (`/version`, kilka ms); fragment jest pobierany tylko przy jej zmianie. */
     const POLL_MS = 1000;
     /** Fragment w drodze: Hx nie zwraca obietnicy, więc do tej chwili (albo do podmiany sekcji) nie zaczynamy kolejnego. */
@@ -207,5 +220,5 @@ const Viz = (() => {
         link.href = url.pathname + url.search;
     };
 
-    return { Init, Query, LiveToggle, Open, OpenCmd, Close, Go, Theme, Lang, Project, ProjectInit, SessionLink };
+    return { T, Init, Query, LiveToggle, Open, OpenCmd, Close, Go, Theme, Lang, Project, ProjectInit, SessionLink };
 })();

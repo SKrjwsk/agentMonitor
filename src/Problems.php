@@ -94,6 +94,30 @@ final class Problems
         return $tags;
     }
 
+    /** Powód problemu (zapisany po angielsku) w bieżącym języku — tylko do wyświetlenia, eksport używa surowego tekstu. */
+    public static function reasonText(string $reason): string
+    {
+        foreach (['retry after error', 'blind spot', 'partial parse'] as $plain) {
+            if ($reason === $plain) {
+                return t($plain);
+            }
+        }
+        if (preg_match('/^error(?:: (.*))?$/s', $reason, $m)) {
+            return isset($m[1]) ? t('error: {msg}', ['msg' => $m[1]]) : t('error');
+        }
+        if (preg_match('/^read of a file already in context: (.*)$/s', $reason, $m)) {
+            return t('read of a file already in context: {file}', ['file' => $m[1]]);
+        }
+        if (preg_match('/^re-read \((\d+)\/(\d+)\): (.*)$/s', $reason, $m)) {
+            return t('re-read ({a}/{b}): {file}', ['a' => $m[1], 'b' => $m[2], 'file' => $m[3]]);
+        }
+        if (preg_match('/^edit without prior read: (.*)$/s', $reason, $m)) {
+            return t('edit without prior read: {file}', ['file' => $m[1]]);
+        }
+
+        return $reason;
+    }
+
     private static function seconds(string $from, string $to): float
     {
         try {

@@ -22,19 +22,19 @@ $p = $view['p'];
      viz-graph-key="<?= h(implode('|', [$view['sid'], $view['agentFilter'], $p['origin'], (int) $p['all'], (int) $p['dirs']])) ?>"
      viz-graph-logs="/?<?= h(App::query($view, ['view' => ''])) ?>">
     <div class="graph-bar">
-        <span><i class="gdot" viz-origin="context"></i>auto-injected context</span>
-        <span><i class="gdot" viz-origin="self"></i>read by agent</span>
-        <span><i class="gdot" viz-origin="both"></i>both</span>
-        <span><i class="gdot" viz-origin="mod"></i>modified</span>
-        <?php if ($p['all']): ?><span><i class="gdot" viz-origin="other"></i>listing/search</span><?php endif ?>
-        <span><i class="gdot" viz-origin="agent"></i>agent</span>
-        <?php if ($p['dirs']): ?><span><i class="gdot" viz-origin="dir"></i>folder (area)</span><?php endif ?>
+        <span><i class="gdot" viz-origin="context"></i><?= th('auto-injected context') ?></span>
+        <span><i class="gdot" viz-origin="self"></i><?= th('read by agent') ?></span>
+        <span><i class="gdot" viz-origin="both"></i><?= th('both') ?></span>
+        <span><i class="gdot" viz-origin="mod"></i><?= th('modified') ?></span>
+        <?php if ($p['all']): ?><span><i class="gdot" viz-origin="other"></i><?= th('listing/search') ?></span><?php endif ?>
+        <span><i class="gdot" viz-origin="agent"></i><?= th('agent') ?></span>
+        <?php if ($p['dirs']): ?><span><i class="gdot" viz-origin="dir"></i><?= th('folder (area)') ?></span><?php endif ?>
         <span class="sep"></span>
-        <a href="/?<?= h(App::query($view, ['dirs' => $p['dirs'] ? '0' : ''])) ?>"><?= $p['dirs'] ? '☑' : '☐' ?> folders</a>
+        <a href="/?<?= h(App::query($view, ['dirs' => $p['dirs'] ? '0' : ''])) ?>"><?= $p['dirs'] ? '☑' : '☐' ?> <?= th('folders') ?></a>
 
-        <a href="/?<?= h(App::query($view, ['all' => $p['all'] ? '' : '1'])) ?>"><?= $p['all'] ? '☑' : '☐' ?> listing and search</a>
-        <span class="muted">hidden: <span viz-graph-hidden>…</span></span>
-        <span class="muted">click = details and link to file calls · wheel = zoom (file labels when zoomed in) · drag</span>
+        <a href="/?<?= h(App::query($view, ['all' => $p['all'] ? '' : '1'])) ?>"><?= $p['all'] ? '☑' : '☐' ?> <?= th('listing and search') ?></a>
+        <span class="muted"><?= th('hidden') ?>: <span viz-graph-hidden>…</span></span>
+        <span class="muted"><?= th('click = details and link to file calls · wheel = zoom (file labels when zoomed in) · drag') ?></span>
     </div>
     <div class="graph-canvas" viz-graph-canvas></div>
     <aside class="graph-info" viz-graph-info hidden>
@@ -42,7 +42,7 @@ $p = $view['p'];
         <div class="muted" viz-graph-info-path></div>
         <div viz-graph-info-ops></div>
         <div class="muted" viz-graph-info-agents></div>
-        <a viz-graph-info-link hidden>show file calls →</a>
+        <a viz-graph-info-link hidden><?= th('show file calls →') ?></a>
     </aside>
     <s-init run="(el) => VizGraph.Init(el)"></s-init>
 </div>

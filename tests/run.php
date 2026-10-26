@@ -537,8 +537,42 @@ if ($nodeCode === 127) {
     echo "FAIL: tests/refresh.test.js\n  " . implode("\n  ", $nodeOut) . "\n";
 }
 
+// słownik PL: każdy literał z t() / th() (PHP) i T() (JS) ma wpis w lang/pl.php, a {placeholdery} klucza i tłumaczenia są te same
+$dict = require __DIR__ . '/../lang/pl.php';
+$langKeys = [];
+foreach (['src', 'templates', 'public/assets'] as $dir) {
+    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(__DIR__ . '/../' . $dir, FilesystemIterator::SKIP_DOTS)) as $file) {
+        $ext = $file->getExtension();
+        if (($ext !== 'php' && $ext !== 'js') || str_contains($file->getPathname(), '/vendor/')) {
+            continue;
+        }
+        $pattern = $ext === 'php' ? "/(?<![\\w>\$])th?\\(\\s*'((?:[^'\\\\]|\\\\.)*)'(?=\\s*[,)])/" : "/(?<![\\w\$])T\\(\\s*'((?:[^'\\\\]|\\\\.)*)'(?=\\s*[,)])/";
+        preg_match_all($pattern, (string) file_get_contents($file->getPathname()), $m);
+        foreach ($m[1] as $key) {
+            $langKeys[stripslashes($key)] = basename($file->getPathname());
+        }
+    }
+}
+$langCases = [
+    ['lang/pl.php: keys used in code without a translation', array_keys(array_diff_key($langKeys, $dict)), []],
+    ['lang/pl.php: placeholders differ from the key', array_keys(array_filter($dict, static function (string $pl, string $en): bool {
+        preg_match_all('/\{\w+\}/', $en, $a);
+        preg_match_all('/\{\w+\}/', $pl, $b);
+        sort($a[0]);
+        sort($b[0]);
+
+        return $a[0] !== $b[0];
+    }, ARRAY_FILTER_USE_BOTH)), []],
+];
+foreach ($langCases as [$name, $got, $expected]) {
+    if ($got !== $expected) {
+        $failures++;
+        echo "FAIL: $name\n  " . implode("\n  ", array_slice($got, 0, 30)) . (count($got) > 30 ? "\n  … (" . count($got) . ')' : '') . "\n";
+    }
+}
+
 exec('rm -rf ' . escapeshellarg($root));
-$total = count($cases) + count($toolCases) + count($commandCases) + count($roles) + count($denialCases) + count($boundaryCases) + count($officeCases) + count($csvCases) + count($guardCases) + $nodeRan + 4;
+$total = count($langCases) +count($cases) + count($toolCases) + count($commandCases) + count($roles) + count($denialCases) + count($boundaryCases) + count($officeCases) + count($csvCases) + count($guardCases) + $nodeRan + 4;
 echo $failures === 0 ? "OK ($total przypadków)\n" : "$failures/$total nieudanych\n";
 exit($failures === 0 ? 0 : 1);
 

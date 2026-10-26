@@ -25,8 +25,8 @@ use Viz\Web\App;
 if ($view['missing']) {
     ?>
     <section viz-session>
-        <p class="empty">No data from source “<?= h($view['p']['src']) ?>” for session <?= h($view['sid']) ?>.
-            <?php if ($view['hookAvailable']): ?><a href="/?<?= h(App::query($view, ['src' => 'hook'])) ?>">Show hook data</a><?php endif ?>
+        <p class="empty"><?= th('No data from source “{src}” for session {sid}.', ['src' => $view['p']['src'], 'sid' => $view['sid']]) ?>
+            <?php if ($view['hookAvailable']): ?><a href="/?<?= h(App::query($view, ['src' => 'hook'])) ?>"><?= th('Show hook data') ?></a><?php endif ?>
         </p>
     </section>
     <?php
@@ -42,6 +42,7 @@ $drawer = $all
     ? in_array($p['view'], ['read', 'changed', 'commands'], true) && ($p['pick'] !== '' || $p['pcmd'] !== '')
     : in_array($p['view'], ['read', 'changed', 'commands', 'blocked', 'boundary', 'log'], true) && ($p['pick'] !== '' || $p['pev'] !== '');
 $tab = static fn (string $v): string => '/?' . App::query($view, ['view' => $v === 'read' ? '' : $v, 'sort' => '', 'pcmd' => '', 'pev' => '', 'pick' => '']);
+// etykiety tłumaczy tabs.php (th)
 $tabs = ['read' => 'Files read', 'changed' => 'Files changed', 'commands' => 'Commands', 'blocked' => 'Blocked', 'boundary' => 'Boundary', 'messages' => 'Messages'];
 ?>
 <section viz-session
@@ -66,7 +67,7 @@ $tabs = ['read' => 'Files read', 'changed' => 'Files changed', 'commands' => 'Co
     </header>
 
     <?php if ($all && !in_array($p['view'], App::ALL_VIEWS, true)): ?>
-        <p class="empty">This view needs single calls, messages and times — open one session from the list.</p>
+        <p class="empty"><?= th('This view needs single calls, messages and times — open one session from the list.') ?></p>
     <?php elseif ($p['view'] === 'graph'): ?>
         <?php require __DIR__ . '/graph.php' ?>
     <?php elseif ($p['view'] === 'timeline'): ?>

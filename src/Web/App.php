@@ -64,19 +64,19 @@ final class App
     public static function toolHelp(string $tool): string
     {
         return match (true) {
-            $tool === Event::TOOL_CONTEXT => 'not a tool call: Claude Code put this file into the agent context by itself',
-            $tool === 'Bash' => 'shell command run by the agent',
-            in_array($tool, ['Read', 'NotebookRead'], true) => 'file read tool',
-            in_array($tool, ['Edit', 'MultiEdit', 'NotebookEdit'], true) => 'file edit tool',
-            $tool === 'Write' => 'file write tool (creates or overwrites the whole file)',
-            $tool === 'Grep' => 'content search tool',
-            $tool === 'Glob' => 'file name search tool',
-            in_array($tool, ['Agent', 'Task'], true) => 'started a subagent with a task',
-            $tool === 'SubagentHandback' => 'a subagent sent its reply back',
-            $tool === 'SendMessage' => 'message to another agent or session',
-            $tool === 'Skill' => 'loaded a skill (instructions)',
-            str_starts_with($tool, 'mcp__') => 'tool of an MCP server',
-            default => 'tool call',
+            $tool === Event::TOOL_CONTEXT => t('not a tool call: Claude Code put this file into the agent context by itself'),
+            $tool === 'Bash' => t('shell command run by the agent'),
+            in_array($tool, ['Read', 'NotebookRead'], true) => t('file read tool'),
+            in_array($tool, ['Edit', 'MultiEdit', 'NotebookEdit'], true) => t('file edit tool'),
+            $tool === 'Write' => t('file write tool (creates or overwrites the whole file)'),
+            $tool === 'Grep' => t('content search tool'),
+            $tool === 'Glob' => t('file name search tool'),
+            in_array($tool, ['Agent', 'Task'], true) => t('started a subagent with a task'),
+            $tool === 'SubagentHandback' => t('a subagent sent its reply back'),
+            $tool === 'SendMessage' => t('message to another agent or session'),
+            $tool === 'Skill' => t('loaded a skill (instructions)'),
+            str_starts_with($tool, 'mcp__') => t('tool of an MCP server'),
+            default => t('tool call'),
         };
     }
 
@@ -127,7 +127,7 @@ final class App
         $view = $this->view($q);
         header('Content-Type: text/html; charset=utf-8');
         if ($view === null) {
-            echo '<section viz-session><p class="empty">No session.</p></section>';
+            echo '<section viz-session><p class="empty">' . th('No session.') . '</p></section>';
             return;
         }
         require dirname(__DIR__, 2) . '/templates/session.php';
@@ -261,7 +261,7 @@ final class App
         $p = $view['p'];
         /** @var Session $session */
         $session = $view['session'];
-        $agent = static fn (string $id): string => isset($session->agents[$id]) ? self::agentLabel($session->agents[$id]) : $id;
+        $agent = static fn (string $id): string => isset($session->agents[$id]) ? self::agentLabel($session->agents[$id], true) : $id;
         $status = static fn (Event $e): string => $e->denial !== null ? 'blocked' : (!$e->failed ? 'ok' : ($e->executed() ? 'exit≠0' : 'tool error'));
         $tab = in_array($p['view'], ['read', 'changed', 'commands', 'blocked', 'boundary', 'messages'], true) ? $p['view'] : 'calls';
         header('Content-Type: text/csv; charset=utf-8');
@@ -425,7 +425,7 @@ final class App
             'missing' => false,
             'sid' => self::ALL,
             'p' => $p,
-            'title' => $p['recent'] !== '' ? 'All sessions — last ' . ($p['recent'] === '5m' ? '5 minutes' : 'hour') : 'All sessions',
+            'title' => $p['recent'] !== '' ? ($p['recent'] === '5m' ? t('All sessions — last 5 minutes') : t('All sessions — last hour')) : t('All sessions'),
             'agentFilter' => '',
             'agentColors' => [],
             'read' => FileTable::sort($read, $p['sort'] !== '' ? $p['sort'] : 'count', 'reads'),
@@ -1056,9 +1056,10 @@ final class App
         return http_build_query(array_filter(array_merge($q, $override), static fn (string $v): bool => $v !== ''));
     }
 
-    public static function agentLabel(Agent $a): string
+    /** `$raw` = bez tłumaczenia (CSV zostaje po angielsku). */
+    public static function agentLabel(Agent $a, bool $raw = false): string
     {
-        return $a->id === Agent::MAIN ? 'main' : $a->label();
+        return $a->id === Agent::MAIN ? ($raw ? 'main' : t('main')) : $a->label();
     }
 
     /** 812 · 43k · 1.1M */
@@ -1095,8 +1096,8 @@ final class App
 
         return [
             'short' => $usd,
-            'long' => $usd . ' · ' . $t['calls'] . ($t['calls'] === 1 ? ' model call' : ' model calls') . ($t['subagentCalls'] > 0 ? ' (' . $t['subagentCalls'] . ' by subagents)' : '')
-                . ' · output ' . $out . ' · new context ' . self::tokenCount($t['cacheWrite']) . ' · cache read ' . self::tokenCount($t['cacheRead'] + $t['input']),
+            'long' => $usd . ' · ' . t($t['calls'] === 1 ? '{n} model call' : '{n} model calls', ['n' => $t['calls']]) . ($t['subagentCalls'] > 0 ? ' (' . t('{n} by subagents', ['n' => $t['subagentCalls']]) . ')' : '')
+                . ' · ' . t('output {v}', ['v' => $out]) . ' · ' . t('new context {v}', ['v' => self::tokenCount($t['cacheWrite'])]) . ' · ' . t('cache read {v}', ['v' => self::tokenCount($t['cacheRead'] + $t['input'])]),
         ];
     }
 }

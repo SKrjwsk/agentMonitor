@@ -69,12 +69,14 @@ $infoText = [
 ];
 $item = static function (array $it) use ($value, $kinds): string {
     $v = $value($it);
+    $text = Signals::localize($it['text']);
+    $detail = Signals::localize($it['detail']);
     $who = '<span class="ov-where">' . h(($it['title'] !== '' ? mb_strimwidth($it['title'], 0, 40, '…') : substr($it['session_id'], 0, 8)) . ' · ' . Clock::local($it['ts'], 'd.m H:i')) . '</span>';
 
-    return '<li viz-sev="' . h($it['sev']) . '"><a href="' . h(App::signalLink($it)) . '" title="' . h(t($kinds[$it['kind']][0]) . ': ' . $it['text'] . ($it['detail'] !== '' ? "\n" . $it['detail'] : '')) . '">'
+    return '<li viz-sev="' . h($it['sev']) . '"><a href="' . h(App::signalLink($it)) . '" title="' . h(t($kinds[$it['kind']][0]) . ': ' . $text . ($detail !== '' ? "\n" . $detail : '')) . '">'
         . ($v !== '' ? '<span class="ov-val">' . h($v) . '</span>' : '')
-        . '<span class="ov-text">' . h(App::shortText($it['text'], $it['cwd'] !== '' ? $it['cwd'] : null)) . '</span>'
-        . ($it['detail'] !== '' ? '<span class="ov-detail">' . h($it['detail']) . '</span>' : '')
+        . '<span class="ov-text">' . h(App::shortText($text, $it['cwd'] !== '' ? $it['cwd'] : null)) . '</span>'
+        . ($detail !== '' ? '<span class="ov-detail">' . h($detail) . '</span>' : '')
         . $who . '</a></li>';
 };
 // rodzaj sygnału z liczbą, kwotą, „dlaczego”, „co zrobić” i przypadkami do rozwinięcia

@@ -23,45 +23,45 @@ $labelW = 230;
 $H = $tl['height'];
 $W = $tl['width'];
 $p = $view['p'];
-$kinds = ['read' => 'read', 'search' => 'search', 'list' => 'listing', 'edit' => 'edit', 'exec' => 'Bash without files / program', 'agent' => 'subagent start', 'context' => 'context'];
+$kinds = ['read' => t('read'), 'search' => t('search'), 'list' => t('listing'), 'edit' => t('edit'), 'exec' => t('Bash without files / program'), 'agent' => t('subagent start'), 'context' => t('context')];
 ?>
 <div class="tl" viz-tl>
     <div class="tl-bar">
         <?php foreach ($kinds as $kind => $label): ?>
             <span><svg width="14" height="10"><rect width="14" height="10" rx="2" viz-kind="<?= h($kind) ?>"/></svg><?= h($label) ?></span>
         <?php endforeach ?>
-        <span><svg width="12" height="12"><circle cx="6" cy="6" r="5" class="prompt"/></svg>prompt</span>
-        <span><svg width="12" height="12"><polygon points="6,1 11,11 1,11" class="notify"/></svg>background task</span>
-        <span><svg width="12" height="12"><polygon points="6,1 11,11 1,11" class="peer"/></svg>message from agent</span>
+        <span><svg width="12" height="12"><circle cx="6" cy="6" r="5" class="prompt"/></svg><?= th('prompt') ?></span>
+        <span><svg width="12" height="12"><polygon points="6,1 11,11 1,11" class="notify"/></svg><?= th('background task') ?></span>
+        <span><svg width="12" height="12"><polygon points="6,1 11,11 1,11" class="peer"/></svg><?= th('message from agent') ?></span>
         <span class="sep"></span>
-        raster rows:
-        <?php foreach (['' => 'files', 'dirs' => 'folders', 'commands' => 'commands'] as $rowsKey => $rowsLabel): ?>
+        <?= th('raster rows') ?>:
+        <?php foreach (['' => t('files'), 'dirs' => t('folders'), 'commands' => t('commands')] as $rowsKey => $rowsLabel): ?>
             <?php if (($p['rows'] === 'files' ? '' : $p['rows']) === $rowsKey): ?>
                 <strong><?= h($rowsLabel) ?></strong>
             <?php else: ?>
                 <a href="/?<?= h(App::query($view, ['rows' => $rowsKey])) ?>"><?= h($rowsLabel) ?></a>
             <?php endif ?>
         <?php endforeach ?>
-        <span class="muted">· name column width: drag the edge, double-click = fit</span>
+        <span class="muted">· <?= th('name column width: drag the edge, double-click = fit') ?></span>
     </div>
     <?php if ($tl['empty']): ?>
-        <p class="empty">No events.</p>
+        <p class="empty"><?= th('No events.') ?></p>
     <?php else: ?>
     <div class="tl-scroll" viz-pane="tl">
         <div class="tl-grid">
             <div class="tl-labels-wrap" viz-tl-labels>
             <svg class="tl-labels" width="<?= $labelW ?>" height="<?= h($H) ?>">
-                <text x="8" y="12" class="axis">time →</text>
-                <text x="8" y="28" class="muted-text">prompts</text>
+                <text x="8" y="12" class="axis"><?= th('time →') ?></text>
+                <text x="8" y="28" class="muted-text"><?= th('prompts') ?></text>
                 <?php foreach ($tl['lanes'] as $lane): ?>
                     <circle cx="12" cy="<?= h($lane['y'] + $tl['laneH'] / 2) ?>" r="4" class="ag" viz-agent-color="<?= h($lane['color']) ?>"/>
                     <text x="22" y="<?= h($lane['y'] + $tl['laneH'] / 2 + 4) ?>"><title><?= h($lane['label']) ?></title><?= h(mb_strimwidth($lane['label'], 0, 90, '…')) ?></text>
                 <?php endforeach ?>
                 <?php if ($tl['context'] !== null): ?>
-                    <text x="8" y="<?= h($tl['context']['y'] + 10) ?>">context (tokens)</text>
-                    <text x="8" y="<?= h($tl['context']['y'] + 24) ?>" class="muted-text">max <?= h(number_format($tl['context']['max'], 0, ',', ' ')) ?></text>
+                    <text x="8" y="<?= h($tl['context']['y'] + 10) ?>"><?= th('context (tokens)') ?></text>
+                    <text x="8" y="<?= h($tl['context']['y'] + 24) ?>" class="muted-text"><?= th('max {n}', ['n' => number_format($tl['context']['max'], 0, ',', ' ')]) ?></text>
                 <?php endif ?>
-                <text x="8" y="<?= h($tl['raster']['top'] - 6) ?>"><?= ($tl['raster']['kind'] ?? '') === 'commands' ? 'commands × time' : 'files × time' ?> (<?= h($tl['raster']['count']) ?>)</text>
+                <text x="8" y="<?= h($tl['raster']['top'] - 6) ?>"><?= ($tl['raster']['kind'] ?? '') === 'commands' ? th('commands × time') : th('files × time') ?> (<?= h($tl['raster']['count']) ?>)</text>
                 <?php foreach ($tl['raster']['rows'] as $row): ?>
                     <?php if ($row['hash'] !== null): ?>
                         <a href="/?<?= h(App::query($view, ['view' => '', 'pick' => $row['hash']])) ?>">
@@ -72,7 +72,7 @@ $kinds = ['read' => 'read', 'search' => 'search', 'list' => 'listing', 'edit' =>
                     <?php endif ?>
                 <?php endforeach ?>
             </svg>
-            <div class="tl-resize" viz-tl-resize title="drag to resize · double-click = fit to names"
+            <div class="tl-resize" viz-tl-resize title="<?= th('drag to resize · double-click = fit to names') ?>"
                  onpointerdown="VizTl.Down(this, event)" onpointermove="VizTl.Move(this, event)"
                  onpointerup="VizTl.Up(this, event)" ondblclick="VizTl.Fit(this)"></div>
             </div>
@@ -92,7 +92,7 @@ $kinds = ['read' => 'read', 'search' => 'search', 'list' => 'listing', 'edit' =>
                     <line x1="<?= h($pr['x']) ?>" x2="<?= h($pr['x']) ?>" y1="30" y2="<?= h($H) ?>" class="prompt-line" viz-prompt-kind="<?= h($pr['kind']) ?>"/>
                     <?php if ($pr['kind'] === 'prompt'): ?>
                         <a href="/?<?= h(App::query($view, ['turn' => $view['turn'] === $pr['n'] ? '' : (string) $pr['n']])) ?>">
-                            <g class="prompt-mark" <?= $view['turn'] === $pr['n'] ? 'viz-current' : '' ?>><title><?= h('Turn ' . $pr['n'] . ' (click = filter) · ' . $pr['title']) ?></title>
+                            <g class="prompt-mark" <?= $view['turn'] === $pr['n'] ? 'viz-current' : '' ?>><title><?= h(t('Turn {n} (click = filter)', ['n' => $pr['n']]) . ' · ' . $pr['title']) ?></title>
                                 <circle cx="<?= h($pr['x']) ?>" cy="24" r="7" class="prompt"/>
                                 <text x="<?= h($pr['x']) ?>" y="27.5" class="prompt-n"><?= h($pr['n']) ?></text>
                             </g>
