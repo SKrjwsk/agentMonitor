@@ -216,7 +216,7 @@ The "â‡© export session" button (or `php bin/export.php <session_id> [--agent=â€
 To evaluate a session, run the bundled skill from the project directory:
 
 ```text
-/analiza-sesji var/session_dump/<name>
+/sk-analiza-sesji var/session_dump/<name>
 ```
 
 It writes `analiza.md` into the dump folder: what went well, what went badly and what to improve, with evidence from the metrics for every point.

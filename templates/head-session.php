@@ -174,7 +174,7 @@ $pct = $stats->bashCalls > 0 ? round(100 * $stats->blind / $stats->bashCalls) : 
             </details>
         </div>
         <?php if ($p['dumped'] !== ''): ?>
-            <p class="notice"><?= th('Saved') ?> <code>var/session_dump/<?= h($p['dumped']) ?>/</code> — <?= th('analysis') ?>: <code>/analiza-sesji var/session_dump/<?= h($p['dumped']) ?></code></p>
+            <p class="notice"><?= th('Saved') ?> <code>var/session_dump/<?= h($p['dumped']) ?>/</code> — <?= th('analysis') ?>: <code>/sk-analiza-sesji var/session_dump/<?= h($p['dumped']) ?></code></p>
         <?php endif ?>
         <?php if ($view['emptyWarning']): ?>
             <p class="warn"><?= th('The transcript is large but the parser found no tool calls — the transcript format may have changed.') ?></p>

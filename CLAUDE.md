@@ -64,7 +64,7 @@ Niezdefiniowane — do ustalenia przez usera. Od nich zależy, co ma być na pie
   - `Metrics` — metryki deterministyczne dla analizy
   - `TextReport` — raport tekstowy
 - `src/Web/Timeline.php` + `templates/timeline.php` — oś czasu (SVG renderowane przez serwer)
-- `.claude/skills/analiza-sesji/` — skill oceny zrzutu sesji (`/analiza-sesji <folder zrzutu>`)
+- `.claude/skills/sk-analiza-sesji/` — skill oceny zrzutu sesji (`/sk-analiza-sesji <folder zrzutu>`)
 - `src/Verify` — parser logu `fs_usage`/`strace` i porównanie
 - `bin/`:
   - `hook.php` — hook

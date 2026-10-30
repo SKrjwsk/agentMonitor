@@ -12,7 +12,7 @@ use Viz\Model\Touch;
 use Viz\Stats;
 
 /**
- * Zrzut sesji do dalszej analizy (skill `analiza-sesji`, skrypt, arkusz): folder w var/session_dump albo ZIP.
+ * Zrzut sesji do dalszej analizy (skill `sk-analiza-sesji`, skrypt, arkusz): folder w var/session_dump albo ZIP.
  * Zawiera komendy, ścieżki i prompty usera — nigdy treść plików.
  */
 final class SessionExport

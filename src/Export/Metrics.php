@@ -14,7 +14,7 @@ use Viz\Problems;
 use Viz\Web\App;
 
 /**
- * Deterministyczne metryki sesji — materiał dowodowy dla analizy (skill `analiza-sesji`), bez interpretacji.
+ * Deterministyczne metryki sesji — materiał dowodowy dla analizy (skill `sk-analiza-sesji`), bez interpretacji.
  */
 final class Metrics
 {

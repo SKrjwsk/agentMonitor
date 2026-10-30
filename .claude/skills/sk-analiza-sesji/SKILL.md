@@ -1,5 +1,5 @@
 ---
-name: analiza-sesji
+name: sk-analiza-sesji
 description: >
   Oceń zrzut sesji agenta Claude Code z agentMonitor: co poszło dobrze, co źle, co usprawnić — każdy wniosek
   z dowodem z metryk albo zdarzeń. Argument: ścieżka do folderu zrzutu (var/session_dump/<nazwa>).

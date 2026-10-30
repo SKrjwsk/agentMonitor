@@ -53,7 +53,7 @@ Fakty są w `CLAUDE.md` (sekcja „Źródła danych”). Otwarte:
   - raster plik × czas
   - ściskanie przerw
 - Zrzut do `var/session_dump/` (POST z kontrolą pochodzenia) z `metrics.json` i `prompts.json`
-- Skill `.claude/skills/analiza-sesji` — przetestowany przez `claude -p` (sonnet, 0,38 USD) na zrzucie sesji roboczej. Pierwszy przebieg przeliczył się w liczbie blokad hooka (podał 25, w danych jest 18), więc powody błędów są teraz liczone w `metrics.json` (`failed_reasons`), a nie przez model
+- Skill `.claude/skills/sk-analiza-sesji` — przetestowany przez `claude -p` (sonnet, 0,38 USD) na zrzucie sesji roboczej. Pierwszy przebieg przeliczył się w liczbie blokad hooka (podał 25, w danych jest 18), więc powody błędów są teraz liczone w `metrics.json` (`failed_reasons`), a nie przez model
 
 ## M8 — Filtry analizy — zrobione
 - Tura (prompt usera → następny prompt): pasek „tura: 1 2 3…” w nagłówku, klik w numer promptu na osi czasu, baner z treścią i strzałkami ← →
@@ -98,7 +98,7 @@ Zrobione:
 - Oś czasu: wiersze rastra „komendy” (kolor = status wywołania: ok / błąd / niewykonane)
 - Logi: lewy panel „files | commands | prompts” (programy z bieżącego zakresu filtrów, klik = podświetlenie wywołań, które go użyły — `viz-pick-cmd`, parametr `pcmd`); przy każdym wywołaniu Bash lista programów (`| ` = po prawej stronie potoku)
 - Podsumowanie: „ranking: komendy” z tymi samymi filtrami (okres, projekt, 1 h / 5 min, szukanie, wyklucz programy albo role), szczegóły programu (podkomendy, potoki, konteksty, sesje), CSV
-- Zrzut: `commands.csv`, `metrics.commands`; skill `analiza-sesji` z kryterium „komendy”
+- Zrzut: `commands.csv`, `metrics.commands`; skill `sk-analiza-sesji` z kryterium „komendy”
 - Wynik na wszystkich sesjach: 19 402 wystąpienia, 147 programów; konteksty: pipe 5754, stdin-script 449, subst 395, xargs 35, remote 30, inner 26 — rekurencja `bash -c`/`ssh` jest rzadka, ale tania, więc zostaje
 
 Ustalenie o `permissionDecision` (linia `tool_result`): pole mówi, **kto** zatwierdził wywołanie — `{"decision": "accept", "source": "config", "reasonType": "classifier|rule|mode|other"}`, `{"source": "user_temporary"}` (zgoda usera, 82×), `{"decision": "reject", "source": "hook"}` (67×) — ale nie **ile trwało czekanie**. Wywołania z `source: user_*` mają w czasie trwania czekanie na usera; pozostałe nie.
