@@ -205,3 +205,40 @@ Z review całego drzewa przed publicznym pushem.
 - Testy: `tests/run.php` (helper, `files.csv` i `commands.csv` zrzutu z komendą `=HYPERLINK`, `@ctx`, `-wrap`, `+left`), `tests/smoke.php` (zablokowane narzędzie o nazwie `=EVIL` → komórka `'=EVIL` w CSV „all” i w CSV sesji); mutacje (helper bez prefiksu, brak `Csv::cells` w `files.csv` i `commands.csv`, brak `csvSafe` przy `tool` w Blocked) → `FAIL`
 - Nie do przetestowania: `tool` w CSV „Boundary” — wpis ma ścieżki spoza granicy tylko dla znanych narzędzi z plikami (Read, Write, Edit, Bash…), więc nazwa z transkryptu nie może się tam znaleźć; owinięcie jest w kodzie
 - Licencje: `public/assets/vendor/force-graph-1.51.4.LICENSE` (MIT, Vasco Asturiano) i `public/assets/toolkit/LICENSE` (MIT, „Saradom”) obok plików; sha256 `force-graph-1.51.4.min.js` bez zmian
+
+## M23 — Live: tablica decyzji i wspólny zakres projektów — zrobione, niesprawdzone na prawdziwych sesjach
+Zlecenie usera 2026-10-26: widok „pro” obok biura 3D — big picture wielu sesji, granica / sandbox, coś, czego nie widać w Claude Code. Makiety: 3D (odrzucona: „3D nie jest konieczne”), oś czasu (odrzucona: za dużo danych, granica ginie), tablica decyzji (przyjęta) — `plans/live.mockup.html`, plan `plans/live.llm.md`.
+- Decyzje usera: nazwa Live (propozycja), Live = domyślny link (biuro 3D pod przełącznikiem), kontekst jako pojemnik w %, mniej podpisów (tabela + legenda), jeden wspólny zakres projektów dla widoków przeglądowych (`Scope`, ciasteczko `viz-scope`), szkielet widoków przeglądowych (`ScopeViews`) + Live + Office teraz, Overview i „all” później
+- `OfficeState::rows` (wspólne wiersze agentów), `LiveState`, `Scope`, `ScopeViews`, `Projects`, `templates/live.php`, `templates/scope-switch.php`, `public/assets/live.js`; lewy panel: checkboxy projektów zamiast `<select>` jednego projektu (`Viz.Project` / `viz-project` usunięte)
+- Okna kontekstu: dokumentacja API 2026-10-06 — modele 5.x i Opus/Sonnet 4.6+ = 1M, Haiku 4.5 = 200k
+- Przy okazji: `--mono` było zdefiniowane tylko w motywie jasnym, więc w domyślnym ciemnym `var(--mono)` było nieważne w całej aplikacji (ścieżki i komendy bez kroju monospace) — teraz w obu
+- Testy: `tests/run.php` — `LiveState` (okno, `done`, kontekst i okno modelu, zablokowany raport i raport dostarczony po blokadzie, rodzaje granicy w kolejności, granica wyłączona, `merge`), `Scope` (biała lista, parametr vs ciasteczko, dopasowanie katalogu), `ScopeViews` (trasy, szablony, tłumaczenia), zabezpieczenia odświeżania `live.js`; mutacje `LiveState` (bez `done`, bez `trying`, raport zawsze zablokowany, okno 10 min) → `FAIL`. `tests/smoke.php` — `/live`, `/live.json`, zakres z parametru i ciasteczka dla `/live.json` i `/office.json`, przełącznik w obu widokach
+- Sprawdzone w przeglądarce na kopii aplikacji ze sztucznym HOME (6 sesji: czeka na usera po wyjściu poza granicę, długie wywołanie poza granicą, deleguje z zablokowanym raportem i kontekstem 46%, limit API, Bash bez ścieżek, bez uwag): komórki i werdykt, szczegóły, grupa „bez uwag”, zakres projektów (filtr tablicy i listy, ciasteczko, przejście do biura 3D i z powrotem, „wszystkie”), motyw jasny, 420 px bez przewijania w poziomie, konsola bez błędów
+- [ ] Prawdziwe sesje — sandbox agenta nie czyta `~/.claude/projects`
+- [ ] `tests/refresh.test.js` dla `live.js` — node niedostępny w sandboxie tej sesji; zabezpieczenia sprawdzane tylko obecnością w kodzie
+- [ ] Overview i „all” na `Scope` (dziś własny filtr `project` z jednym projektem)
+- [ ] Nieznana komenda Bash ze ścieżką, która jeszcze nie istnieje (np. cel `rsync`), nie jest ani poza granicą, ani „nie wiadomo” — reguła parsera „ścieżka liczy się, gdy istnieje”
+
+## M24 — Wspólny feed widoków przeglądowych, panel boczny, biuro bez przycisku — zrobione
+Zlecenie usera 2026-10-26: kilka widoków do porównania przy niskim koszcie; panel sesji przesuwany; przycisk odświeżania w biurze zbędny.
+- `Feed` (`GET /feed.json`) zamiast `/live.json`: jedno źródło dla widoków na feedzie, pamięć podręczna `var/cache/` (sygnatura plików + maks. 1 s) — wcześniej każda karta parsowała wszystkie aktywne transkrypty co sekundę osobno. Do feedu doszły `calls` (wywołania agenta w oknie ze statusem) i `messages` (okno 30 min) — pod osie czasu, listy, grafy
+- `VizFeed` (`public/assets/feed.js`): odpytywanie z zabezpieczeniami w jednym miejscu; `live.js` tylko rysuje
+- Lewy panel: szerokość uchwytem (`Viz.SideDown`, `--side-w`, `localStorage` `viz-side-w`; < 120 px = schowany, dwuklik = 280 px)
+- Biuro 3D: bez przycisku „↻ odśwież” (autoodświeżanie co 1 s, od razu po zmianie zakresu)
+- Testy: `tests/run.php` — statusy wywołań, `isData`, zabezpieczenia w `feed.js`, Live korzysta z `VizFeed`; `tests/smoke.php` — `/feed.json` (wywołania, wiadomości, zakres), plik pamięci podręcznej `0600`, `/live.json` → 404. Przeglądarka (kopia aplikacji, 6 sesji): Live bez zmian, panel 280 → 400 → po przeładowaniu 400 → schowany → dwuklik 280, biuro bez przycisku, konsola bez błędów
+- [ ] Widoki do porównania — czekają na wybór usera
+
+## M25 — Biuro 3D na wspólnym feedzie, Mapa granicy — zrobione
+Zlecenie usera 2026-10-26: biuro od razu na wspólnych danych; trzeci widok do porównania obok Live i biura — mapa granicy.
+- Biuro 3D: `/office.json` i `OfficeState::merge` usunięte; feed niesie pola biura (`gone` progami biura, `persona`, `start`, `archive`, `boundaryRecent`, `burnFrom`, `coinUsd`), `office.js` składa scenę adapterem `fromFeed` i odpytuje przez `VizFeed`
+- Mapa granicy (`/map`, później usunięta — M26): strefy z konfiguracji jako karty, katalogi dotknięte w 30 min z paskiem operacji i kolorem sesji, karta „Poza granicą” i „Nieustalone ścieżki”, filtr sesji. Dane: `feed.zones`, `sessions[].map` (`LiveState::map`, `Boundary::zoneOf`)
+- `Boundary::zoneOf` — reguła strefy w jednym miejscu (`allows` z niej korzysta; testy granicy bez zmian)
+- Usunięty `bin/live-check.php` (jednorazowa diagnostyka pustej tablicy — przyczyną był zapamiętany zakres projektów w przeglądarce)
+- Testy: `tests/run.php` — dane biura w feedzie (`gone`, persona, start), wiadomości `OfficeState::messages`, mapa (strefy, katalogi, `stopped`), `zoneOf` (rw, r, zapis w r, program systemowy, poza), `office.js` na `VizFeed`; `tests/smoke.php` — `/map`, przełącznik w trzech widokach, `zones` i `map` w feedzie, `/office.json` → 404. Przeglądarka (kopia aplikacji, 6 sesji): mapa (werdykt, karty, filtr sesji, ścieżki), biuro z 6 agentami na feedzie, konsola bez błędów
+- [ ] `fromFeed` (biuro) bez testu jednostkowego — node niedostępny w sandboxie; sprawdzone w przeglądarce
+
+## M26 — Graf i przepływ granicy zamiast mapy w kartach — zrobione
+Decyzja usera 2026-10-27: mapa w kartach „to nie to”; do porównania dwie formy wykresów: graf agenci ↔ katalogi i przepływ (Sankey) sesje → strefy. Mapa usunięta, dane w feedzie (`zones`, `sessions[].map`) zostają.
+- `/boundary-graph` (force-graph, strefy jako obszary, czerwone krawędzie poza granicę, przerywane do zatrzymanych i nieustalonych) i `/boundary-flow` (SVG); wspólne `VizViews` (`public/assets/views.js`)
+- Testy: `tests/run.php` — rejestr widoków; `tests/smoke.php` — obie strony z przełącznikiem we wszystkich widokach, `/map` → 404. Przeglądarka (kopia aplikacji, 6 sesji): werdykt, węzły i strefy grafu, wstęgi i podpowiedź przepływu, panel grafu ukryty bez zaznaczenia, bez przewijania w poziomie, konsola bez błędów
+- [ ] Ocena usera na prawdziwych sesjach: który widok (Live, Biuro 3D, Graf granicy, Przepływ granicy) zostaje

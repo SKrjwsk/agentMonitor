@@ -1,6 +1,6 @@
 /*
  * VizOffice — wirtualne biuro: agenci sesji jako postacie w stylu Minecrafta (three.js, bez assetów — tekstury rysowane w kodzie).
- * Sygnatura: templates/office.php. Stan agentów: GET /office.json (src/Office/OfficeState.php).
+ * Sygnatura: templates/office.php. Stan agentów: wspólny feed GET /feed.json (VizFeed, src/Office/Feed.php) → fromFeed.
  * Moduł ES (three.js nie ma już buildu UMD), ładowany dynamicznie tylko w zakładce Office; API wystawione jako globalny VizOffice.
  */
 import * as THREE from '/assets/vendor/three-0.183.2/three.module.min.js';
@@ -9,10 +9,8 @@ window.VizOffice = (() => {
 
     const T = (key, vars) => Viz.T(key, vars);
 
-    /** Autorefresh: co 1 s pełne pobranie stanu (jak przycisk „↻ refresh”); kolejne żądanie dopiero po zakończeniu poprzedniego (`root._busy`). */
+    /** Takt danych (VizFeed odpytuje feed co 1 s) — tempo rzucania monet liczy się względem niego. */
     const POLL_MS = 1000;
-    /** Stan bez odpowiedzi tak długo = błąd odświeżania; bez limitu zawieszone połączenie zostawiłoby `root._busy` na stałe. */
-    const FETCH_TIMEOUT_MS = 5000;
     /** Jeden piksel skina. Postać ma proporcje Minecrafta: głowa 8, tułów 12, ręce i nogi 12 pikseli. */
     const P = 1 / 16;
     const SLOT_X = 3.2;
@@ -970,7 +968,7 @@ window.VizOffice = (() => {
 
     const MESSAGE_KINDS = { task: () => T('task'), result: () => T('result'), send: () => T('message'), peer: () => T('from another session') };
 
-    /** Nowe wiadomości z /office.json; pierwsze wczytanie tylko zapamiętuje id (bez odtwarzania starych). */
+    /** Nowe wiadomości z feedu; pierwsze wczytanie tylko zapamiętuje id (bez odtwarzania starych). */
     const receiveMessages = (office, messages, replay) => {
         const now = Date.now();
         for (const m of messages) {
@@ -1249,8 +1247,19 @@ window.VizOffice = (() => {
         loadCamera(office);
         ensureRoom(office, 2, 3);
         loop(root);
-        refresh(root, true);
-        root._timer = setInterval(() => refresh(root, false), POLL_MS);
+        // dane: wspólny feed widoków przeglądowych (VizFeed — odpytywanie co 1 s, zabezpieczenia, zakres projektów)
+        office.feed = VizFeed.Start(root, {
+            url: root.attr('viz-office-url'),
+            onUpdate: feed => {
+                office.failed = feed.failed;
+                // ta sama odpowiedź po nieudanym odświeżeniu nie jest stosowana drugi raz
+                if (feed.data && feed.data !== office.applied) {
+                    office.applied = feed.data;
+                    apply(root, fromFeed(feed.data));
+                }
+            },
+            onStop: () => destroy(root),
+        });
     };
 
     /** Pokój rośnie, gdy brakuje rzędu albo kolumny; nie maleje w trakcie oglądania (biurka nie skaczą przy każdym wyjściu). */
@@ -1439,30 +1448,31 @@ window.VizOffice = (() => {
         }
     };
 
-    const refresh = (root, force) => {
-        const office = root._office;
-        if (!root.isConnected) return destroy(root);
-        // ukryta karta nie odpytuje serwera (przycisk działa zawsze)
-        if ((document.hidden && !force) || root._busy) return;
-        root._busy = true;
-        const abort = new AbortController();
-        const timer = setTimeout(() => abort.abort(), FETCH_TIMEOUT_MS);
-        fetch(root.attr('viz-office-url'), { cache: 'no-store', signal: abort.signal })
-            .then(res => {
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                return res.json();
-            })
-            .then(data => {
-                office.failed = false;
-                if (!data || !root.isConnected) return;
-                apply(root, data);
-            })
-            // serwer wyłączony, zrestartowany albo bez odpowiedzi w FETCH_TIMEOUT_MS: scena zostaje, następna próba za POLL_MS
-            .catch(() => { office.failed = true; })
-            .finally(() => {
-                clearTimeout(timer);
-                root._busy = false;
-            });
+    /** Wiadomość widoczna w biurze tak długo od wysłania (OfficeState::MESSAGE_SHOW). */
+    const MESSAGE_SHOW = 30;
+
+    /**
+     * Feed (Viz\Office\Feed) → stan biura: kto jest w biurze, decyduje serwer progami biura (`gone`); sesja główna zostaje, dopóki
+     * pracuje któryś jej subagent. Sesje w kolejności startu (rzędy), id agenta i wiadomości z prefiksem sesji, wiadomości z MESSAGE_SHOW s.
+     */
+    const fromFeed = data => {
+        const now = Date.parse(data.now) / 1000;
+        const builds = (data.sessions || []).map(s => {
+            const subs = s.agents.filter(a => a.kind === 'sub' && !a.gone);
+            const main = s.agents.find(a => a.kind === 'main');
+            const present = [...(main && (!main.gone || subs.length) ? [main] : []), ...subs];
+            return { s, present };
+        }).filter(b => b.present.length).sort((x, y) => Date.parse(x.present[0].start) - Date.parse(y.present[0].start));
+        const out = { now: data.now, burnFrom: data.burnFrom, coinUsd: data.coinUsd, sessions: [], agents: [], messages: [] };
+        for (const { s, present } of builds) {
+            out.sessions.push({ id: s.id, title: s.title, project: s.project, cwd: s.cwd, projectColor: s.projectColor });
+            for (const a of present) out.agents.push({ ...a, id: s.id + ':' + a.id, session: s.id, boundary: a.boundaryRecent });
+            for (const m of s.messages || []) {
+                if (now - Date.parse(m.ts) / 1000 > MESSAGE_SHOW) continue;
+                out.messages.push({ ...m, id: s.id + ':' + m.id, from: m.from !== null ? s.id + ':' + m.from : null, to: s.id + ':' + m.to });
+            }
+        }
+        return out;
     };
 
     const screenState = (office, index) => {
@@ -1640,11 +1650,5 @@ window.VizOffice = (() => {
         saveCamera(root._office);
     };
 
-    /** Ręczne odświeżenie (przycisk w pasku biura): pobiera stan od razu, bez sprawdzania wersji. */
-    const Refresh = el => {
-        const root = space(el);
-        if (root?._office) refresh(root, true);
-    };
-
-    return { Init, Down, Move, Up, Wheel, Refresh };
+    return { Init, Down, Move, Up, Wheel };
 })();

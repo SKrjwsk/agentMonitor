@@ -48,7 +48,8 @@ final class CommandRanking
             foreach (['from', 'subs', 'contexts'] as $k) {
                 arsort($rows[$program][$k]);
             }
-            $rows[$program]['role'] = ToolRoles::role($program);
+            // klucz „2026” PHP zamienia na int — nazwę bierzemy z wiersza
+            $rows[$program]['role'] = ToolRoles::role($r['program']);
         }
         uasort($rows, match ($sort) {
             'program' => static fn (array $a, array $b): int => strnatcasecmp($a['program'], $b['program']),

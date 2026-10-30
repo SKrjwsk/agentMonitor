@@ -123,7 +123,8 @@ final class SessionIndex
         return [$commands !== [] ? implode(' ', array_unique($commands)) : '', false, ''];
     }
 
-    private static function cwd(string $f): string
+    /** Katalog roboczy sesji z początku transkryptu (bez czytania całego pliku); '' = nieznany. */
+    public static function cwd(string $f): string
     {
         if (preg_match('/"cwd":"((?:[^"\\\\]|\\\\.)*)"/', self::chunk($f, 0), $m)) {
             return (string) json_decode('"' . $m[1] . '"');

@@ -14,6 +14,7 @@ It reads Claude Code transcripts (and, optionally, a hook feed), never modifies 
   - [Session view](#session-view)
   - [Overview](#overview)
   - [All sessions](#all-sessions)
+  - [Live](#live)
   - [Office](#office)
   - [Agent boundary](#agent-boundary)
   - [Blocked calls](#blocked-calls)
@@ -39,6 +40,7 @@ It reads Claude Code transcripts (and, optionally, a hook feed), never modifies 
 - **Overview** – a start page that flags context-hygiene, communication and boundary problems across your sessions
 - **Agent boundary** – declare where agents may work and see every call that left it
 - **All sessions** – the same tables across every session, including ones whose transcripts Claude Code has already deleted
+- **Live** – one row per active session: what waits for you, boundary, context fill and pace, across the projects you choose
 - **Office** – a live, Minecraft-style 3D view of currently active agents
 - **Export** – session dump (Markdown, JSON, CSV, ZIP) and a skill that evaluates it
 - **Live refresh** – the UI polls every second and re-renders only when data changed, so scroll position and text selection stay intact
@@ -148,9 +150,20 @@ Below the axes: usage limits and API errors, the most expensive turns (> $5), an
 
 Messages, Timeline, Graph, Log and Commands "in order" need individual calls and are available for a single session only.
 
+### Live
+
+`/live` – the default overview of all sessions active in the last 30 min, for the projects chosen in the left panel ("Projects": all or selected; stored in the `viz-scope` cookie, shared by Live, the 3D office and the session list). One row per session, one column per question you can act on:
+
+- **You** – API limit, a subagent report blocked by a hook, "permission?" (a call running for 90 s or more: usually a permission prompt, but a transcript cannot tell it from a long command), waiting for you.
+- **Boundary** – executed outside, attempt running, unknown paths (Bash without resolved paths), stopped; "boundary off" without `AGENT_ALLOWED_*`.
+- **Context** – fill of the model's context window, with the 400k threshold from Overview.
+- **Pace** – cost in the last 5 min and since the session started.
+
+Rows that need nothing are folded into one line. Counters on top filter the table; a cell opens its evidence and what to do. "Reviewed" is remembered only in your browser.
+
 ### Office
 
-`/office` – a global view (not a session tab). A three.js scene shows what active agents across all sessions are doing right now, built from transcripts only.
+`/office` ("3D office", switch in the Live header) – a global view (not a session tab). A three.js scene shows what active agents across all sessions are doing right now, built from transcripts only.
 
 - **Who is present:** only active agents. A main session disappears after 10 min of silence (30 min during a running tool call) and stays while any of its subagents works; a subagent disappears right after it finishes.
 - **Layout:** one desk row per project, a coloured marker above each character per session. Legends "Projects" and "Status" on the left (click = open session).

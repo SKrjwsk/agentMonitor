@@ -224,11 +224,41 @@ try {
         $get($overviewPath, 200, ['Boundaries'], $signals);
     }
     $get('/office', 200, ['viz-office-canvas', 'head = model · shirt = project']);
-    $office = json_decode($get('/office.json'), true);
-    $check('office.json zawiera agenta sesji', is_array($office) && count($office['agents'] ?? []) >= 1);
+    // biuro 3D czyta wspólny feed; stara trasa danych biura nie istnieje
+    $check('GET /office.json → 404 (dane biura = /feed.json)', $request('/office.json')[0] === 404);
+    $office = json_decode($get('/feed.json'), true);
+    $officeAgent = $office['sessions'][0]['agents'][0] ?? [];
+    $check('feed.json: dane biura (persona, start, gone, archiwum, monety)', isset($officeAgent['persona'], $officeAgent['start'], $officeAgent['gone'], $officeAgent['archive'], $office['coinUsd'], $office['burnFrom']));
     // koszulka = kolor projektu (z nazwy katalogu sesji), głowa = klasa modelu (persona)
-    $check('office.json: sesja ma kolor projektu ze stałej palety', preg_match('/^#[0-9a-f]{6}$/', (string) ($office['sessions'][0]['projectColor'] ?? '')) === 1);
-    $check('office.json: agent opus ma personę opus', ($office['agents'][0]['persona'] ?? '') === 'opus', (string) ($office['agents'][0]['persona'] ?? ''));
+    $check('feed.json: sesja ma kolor projektu ze stałej palety', preg_match('/^#[0-9a-f]{6}$/', (string) ($office['sessions'][0]['projectColor'] ?? '')) === 1);
+    $check('feed.json: agent opus ma personę opus', ($officeAgent['persona'] ?? '') === 'opus', (string) ($officeAgent['persona'] ?? ''));
+    $get('/office', 200, ['scope-switch', 'href="/live"', 'viz-office-url="/feed.json"']);
+
+    // Live (widok przeglądowy): strona, dane, zakres projektów z parametru i z ciasteczka
+    $get('/live', 200, ['viz-live-rows', 'scope-switch', 'viz-scope-label', 'href="/office"']);
+    // widoki granicy (graf, przepływ): strony, przełącznik we wszystkich widokach; dane mapy w feedzie (strefy z konfiguracji, katalogi poza granicą z fixture)
+    $get('/boundary-graph', 200, ['viz-bgraph-canvas', 'href="/live"', 'href="/office"', 'href="/boundary-flow"', 'href="/boundary-graph" viz-current']);
+    $get('/boundary-flow', 200, ['viz-bflow-chart', 'href="/boundary-graph"', 'href="/boundary-flow" viz-current']);
+    $check('GET /map → 404 (mapa w kartach usunięta)', $request('/map')[0] === 404);
+    $mapFeed = json_decode($get('/feed.json'), true);
+    $mapRows = $mapFeed['sessions'][0]['map'] ?? [];
+    $check('feed.json: strefy granicy z konfiguracji', count($mapFeed['zones']['rw'] ?? []) === 1);
+    $check('feed.json: mapa ma katalog poza granicą i katalog w strefie', in_array('out', array_column($mapRows, 'zone'), true) && in_array('rw', array_column($mapRows, 'zone'), true), json_encode(array_column($mapRows, 'zone')));
+    $live = json_decode($get('/feed.json'), true);
+    $liveSession = $live['sessions'][0] ?? [];
+    $check('feed.json zawiera sesję fixture', count($live['sessions'] ?? []) >= 1);
+    $check('feed.json: agent ma kontekst, okno modelu i wywołania', isset($liveSession['agents'][0]['context'], $liveSession['agents'][0]['contextMax']) && count($liveSession['agents'][0]['calls'] ?? []) >= 1 && is_array($liveSession['messages'] ?? null));
+    $check('feed.json: granica skonfigurowana w fixture', ($live['boundary'] ?? null) === true && is_array($liveSession['boundary'] ?? null));
+    $check('feed.json: próg kontekstu i okno', ($live['contextHigh'] ?? 0) > 0 && ($live['window'] ?? 0) === 1800);
+    $projectKey = (string) ($liveSession['projectKey'] ?? '');
+    $check('feed.json: zakres = projekt sesji → sesja jest', count(json_decode($get('/feed.json?projects=' . $projectKey), true)['sessions'] ?? []) >= 1);
+    $check('feed.json: zakres = inny projekt → pusto', (json_decode($get('/feed.json?projects=000000000000'), true)['sessions'] ?? null) === []);
+    $check('feed.json: zakres z ciasteczka viz-scope', (json_decode($request('/feed.json', 'GET', ['Cookie: viz-scope=000000000000'])[1], true)['sessions'] ?? null) === []);
+    // pamięć podręczna feedu w var/ kopii: plik per zakres, 0600; stara trasa danych Live nie istnieje
+    $feedCache = glob("$app/var/cache/feed-*.json") ?: [];
+    $check('feed: pamięć podręczna w var/cache, plik 0600', $feedCache !== [] && (fileperms($feedCache[0]) & 0777) === 0600, implode(', ', $feedCache));
+    $check('GET /live.json → 404 (dane Live = /feed.json)', $request('/live.json')[0] === 404);
+    $get('/live?projects=' . $projectKey, 200, ['value="' . $projectKey . '" viz-scope-name']);
 
     // przekierowanie ze starego adresu i nieznana trasa
     [$status, , $head] = $request('/summary?kind=blocked');

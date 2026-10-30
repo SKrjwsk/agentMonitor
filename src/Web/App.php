@@ -8,7 +8,7 @@ use Viz\Boundary;
 use Viz\Clock;
 use Viz\Export\Csv;
 use Viz\Export\SessionExport;
-use Viz\Office\OfficeState;
+use Viz\Office\Feed;
 use Viz\Model\Agent;
 use Viz\Model\Event;
 use Viz\Model\Session;
@@ -88,13 +88,20 @@ final class App
             $path === '/export' ? $this->export($query) : $this->notFound();
             return;
         }
+        // widoki przeglądowe (ScopeViews): strona i dane JSON, zakres projektów z Scope
+        if (($view = ScopeViews::page($path)) !== null) {
+            $this->scopePage($view, $query);
+            return;
+        }
+        if (ScopeViews::isData($path)) {
+            $this->scopeData($path, Scope::fromRequest($query, $_COOKIE));
+            return;
+        }
         match ($path) {
             '/' => $this->page($query),
             '/session' => $this->fragment($query),
             '/version' => $this->version($query),
             '/graph.json' => $this->graph($query),
-            '/office' => $this->officePage(),
-            '/office.json' => $this->office(),
             '/summary' => $this->summaryRedirect($query),
             '/export.csv' => $this->csv($query),
             default => $this->notFound(),
@@ -112,6 +119,7 @@ final class App
         $view = $this->view($q);
         // bez sesji: strona startowa „Overview” (przelicza agregaty, więc przed odczytem kosztów do lewego panelu)
         $overview = $view === null ? $this->overview($q) : null;
+        $scope = Scope::fromRequest($q, $_COOKIE);
         $sidebarTokens = SummaryStore::tokenTotals(array_column($sessions, 'id'));
         // otwarta sesja: liczniki z transkryptu, agregat bywa sprzed ostatnich wywołań
         if (isset($view['session']) && $view['session']->usage !== []) {
@@ -595,34 +603,27 @@ final class App
         );
     }
 
-    /** Wirtualne biuro: widok globalny (wszystkie aktywne sesje), obok Overview w lewym panelu. */
-    private function officePage(): void
+    /** Widok przeglądowy (`ScopeViews`): strona z lewym panelem; dane pobiera przeglądarka z trasy JSON widoku. */
+    private function scopePage(array $scopeView, array $q): void
     {
         $sessions = SessionIndex::recent(self::SIDEBAR_LIMIT);
         $view = null;
         $overview = null;
-        $office = true;
+        $scope = Scope::fromRequest($q, $_COOKIE);
         $sidebarTokens = SummaryStore::tokenTotals(array_column($sessions, 'id'));
         header('Content-Type: text/html; charset=utf-8');
         require dirname(__DIR__, 2) . '/templates/layout.php';
     }
 
     /**
-     * Stan biura (`OfficeState`) ze wszystkich sesji aktywnych w oknie `STALE_GONE`: transkrypty zmienione w oknie (mtime jako tani nadzbiór),
-     * dokładny filtr robi `OfficeState` z czasów zdarzeń. Zawsze z transkryptu — hook nie zna odpowiedzi modelu ani modelu agenta.
+     * Dane widoków przeglądowych: wspólny feed (`Feed`, z pamięcią podręczną) dla sesji w zakresie projektów — jedyna trasa danych
+     * (`ScopeViews::isData`). Zawsze z transkryptu — hook nie zna odpowiedzi modelu ani modelu agenta.
      */
-    private function office(): void
+    private function scopeData(string $path, Scope $scope): void
     {
         header('Content-Type: application/json; charset=utf-8');
         header('Cache-Control: no-store');
-        $now = time();
-        $limits = Boundary::fromEnv();
-        $reader = new TranscriptReader();
-        $builds = array_map(
-            static fn (string $path): array => OfficeState::build($reader->read($path), $now, $limits),
-            LiveSummary::candidates(OfficeState::STALE_GONE),
-        );
-        echo json_encode(OfficeState::merge($builds, $now), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP);
+        echo json_encode(Feed::build($scope, time(), Boundary::fromEnv()), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP);
     }
 
 
@@ -974,28 +975,14 @@ final class App
 
     /** Ścieżka do wyświetlenia: względna wobec cwd sesji, inaczej z `~`. */
     /**
-     * Projekty (cwd sesji) do wyboru w lewym panelu, od ostatnio aktywnego. Klucz jak w podsumowaniu (`fileHash` cwd).
-     * Nazwa = ostatni katalog; przy powtórzeniu (ten sam katalog w różnych miejscach) dwa ostatnie.
+     * Projekty do wyboru zakresu w lewym panelu (`Projects::of`).
      *
      * @param list<array{cwd: string, mtime: int}> $sessions
      * @return array<string, array{label: string, cwd: string, sessions: int}>
      */
     public static function sidebarProjects(array $sessions): array
     {
-        $projects = [];
-        foreach ($sessions as $s) {
-            $key = self::fileHash($s['cwd']);
-            $projects[$key] ??= ['label' => basename($s['cwd']) ?: '?', 'cwd' => $s['cwd'], 'sessions' => 0];
-            $projects[$key]['sessions']++;
-        }
-        $names = array_count_values(array_column($projects, 'label'));
-        foreach ($projects as &$pr) {
-            if ($names[$pr['label']] > 1) {
-                $pr['label'] = basename(dirname($pr['cwd'])) . '/' . $pr['label'];
-            }
-        }
-
-        return $projects;
+        return Projects::of($sessions);
     }
 
     public static function shortPath(string $path, ?string $cwd): string

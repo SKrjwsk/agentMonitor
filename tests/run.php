@@ -412,15 +412,13 @@ $officeCases = [
     ['boundary older than 2 min is forgotten', $officeState([$officeEv('main', '10:07:00', '10:07:01', 'Read', touches: [new Viz\Model\Touch('/etc/hosts', 'read', true)])], [$officeResp('main', '10:09:30')]), ['main:idle']],
     ['archive = Claude Code files, recent call', $officeState([$officeEv('main', '10:09:40', '10:09:41', 'Read', touches: [new Viz\Model\Touch('/tmp/claude-1000/x/tasks/a.output', 'read', true)])], [$officeResp('main', '10:09:42')]), ['main:idle:archive']],
     ['archive forgotten after 20 s', $officeState([$officeEv('main', '10:09:00', '10:09:01', 'Read', touches: [new Viz\Model\Touch('/tmp/claude-1000/x/a', 'read', true)])], [$officeResp('main', '10:09:42')]), ['main:idle']],
-    ['merge: session prefix, empty session skipped, ordered by start', (static function () use ($officeEv): array {
-        $agents = ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)];
-        $resp = static fn (string $ts): array => ['ts' => "2026-01-01T$ts" . 'Z', 'agent' => 'main', 'model' => 'm', 'cost' => null];
-        $now = (int) strtotime('2026-01-01T10:10:00Z');
-        $build = static fn (string $id, array $usage) => Viz\Office\OfficeState::build(new Viz\Model\Session($id, '', $id, '/w/' . $id, $agents, [], 0, [], $usage), $now);
-        $m = Viz\Office\OfficeState::merge([$build('s2', [$resp('10:09:00')]), $build('s0', [$resp('09:00:00')]), $build('s1', [$resp('10:05:00')])], $now);
+    ['feed for the office: who is gone by office thresholds, head, start', (static function () use ($officeEv, $officeResp, $officeLimits): array {
+        $agents = ['main' => new Viz\Model\Agent('main', 'main', 'main session', null), 'a1' => new Viz\Model\Agent('a1', 'Explore', 'szukaj', 'tu_1')];
+        $session = new Viz\Model\Session('s', '', 't', '/w', $agents, [$officeEv('a1', '10:09:50', null)], 1, [], [$officeResp('main', '09:50:00'), $officeResp('a1', '10:09:49', 'claude-haiku-5-5')]);
+        $live = Viz\Office\LiveState::session($session, (int) strtotime('2026-01-01T10:10:00Z'), $officeLimits);
 
-        return [implode(',', array_column($m['agents'], 'id')), implode(',', array_column($m['sessions'], 'project'))];
-    })(), ['s1:main,s2:main', 's1,s2']],
+        return array_map(static fn (array $a): string => $a['id'] . ':' . $a['state'] . ':' . ($a['gone'] ? 'gone' : 'here') . ':' . $a['persona'] . ':' . $a['start'], $live['agents']);
+    })(), ['main:delegated:gone:opus:2026-01-01T09:50:00Z', 'a1:working:here:haiku:2026-01-01T10:09:49Z']],
     ['spent = all responses, burn = last 5 min', (static function () use ($officeResp): array {
         $agents = ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)];
         $session = new Viz\Model\Session('s', '', 't', '/w', $agents, [], 0, [], [$officeResp('main', '09:00:00', usd: 2.0), $officeResp('main', '10:09:00', usd: 0.25)]);
@@ -428,7 +426,7 @@ $officeCases = [
 
         return [(string) $a['spent'], (string) $a['burn']];
     })(), ['2.25', '0.25']],
-    ['messages: fresh only, known agents, peer from outside, session prefix', (static function () use ($officeResp): array {
+    ['messages: fresh only, known agents, peer from outside', (static function () use ($officeResp): array {
         $agents = ['main' => new Viz\Model\Agent('main', 'main', 'main session', null), 'a1' => new Viz\Model\Agent('a1', 'Explore', 'szukaj', 'tu_1')];
         $msg = static fn (string $ts, string $kind, string $from, string $to): array => ['ts' => "2026-01-01T$ts" . 'Z', 'from' => $from, 'to' => $to, 'kind' => $kind, 'text' => "szukaj\n  plików", 'cut' => false];
         $session = new Viz\Model\Session('s', '', 't', '/w', $agents, [], 0, [], [$officeResp('main', '10:09:59')], [
@@ -439,11 +437,10 @@ $officeCases = [
             $msg('10:09:55', 'result', 'a1', 'main'),
             $msg('10:09:58', 'peer', 'peer', 'main'),
         ]);
-        $now = (int) strtotime('2026-01-01T10:10:00Z');
-        $m = Viz\Office\OfficeState::merge([Viz\Office\OfficeState::build($session, $now)], $now)['messages'];
+        $m = Viz\Office\OfficeState::messages($session, (int) strtotime('2026-01-01T10:10:00Z'));
 
         return array_map(static fn (array $x): string => $x['kind'] . ':' . ($x['from'] ?? 'outside') . '→' . $x['to'] . ':' . $x['text'], $m);
-    })(), ['task:s:main→s:a1:szukaj plików', 'result:s:a1→s:main:szukaj plików', 'peer:outside→s:main:szukaj plików']],
+    })(), ['task:main→a1:szukaj plików', 'result:a1→main:szukaj plików', 'peer:outside→main:szukaj plików']],
     ['persona and model name', [Viz\Office\OfficeState::persona('claude-haiku-4-5-20251001'), Viz\Office\OfficeState::modelName('claude-opus-5-5'),
         Viz\Office\OfficeState::modelName('claude-3-5-haiku-20241022'), Viz\Office\OfficeState::persona('gpt-x')], ['haiku', 'Opus 5.5', 'Haiku 3.5', 'default']],
     // głowa = klasa modelu: każdy model tej samej klasy to ta sama persona; fable i nieznane modele → głowa domyślna
@@ -471,12 +468,84 @@ $officeCases = [
         preg_match('/const POLL_MS = (\d+);/', (string) file_get_contents(__DIR__ . '/../public/assets/' . $file), $m);
 
         return $m[1] ?? '?';
-    }, ['app.js', 'office.js']), ['1000', '1000']],
+    }, ['app.js', 'office.js', 'feed.js']), ['1000', '1000', '1000']],
 ];
 foreach ($officeCases as [$name, $got, $expected]) {
     if ($got !== $expected) {
         $failures++;
         echo "FAIL: office $name\n  oczekiwane: " . implode(', ', $expected) . "\n  otrzymane:  " . implode(', ', $got) . "\n";
+    }
+}
+
+// Live (LiveState): okno 30 min, subagent zakończony = done, kontekst i okno modelu, zablokowany raport, granica; `now` = 10:10:00
+$liveNow = (int) strtotime('2026-01-01T10:10:00Z');
+$liveResp = static fn (string $agent, string $ts, int $tokens = 0, string $model = 'claude-opus-5-5'): array
+    => ['ts' => "2026-01-01T$ts" . 'Z', 'agent' => $agent, 'model' => $model, 'tokens' => $tokens, 'cost' => null];
+$liveSession = static function (array $events, array $usage, array $subs = [], ?Viz\Boundary $limits = null) use ($officeLimits, $liveNow): ?array {
+    $agents = ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)];
+    foreach ($subs as $id) {
+        $agents[$id] = new Viz\Model\Agent($id, 'Explore', 'szukaj', 'tu_' . $id);
+    }
+
+    return Viz\Office\LiveState::session(new Viz\Model\Session('s', '', 't', '/w', $agents, $events, count($events), [], $usage, [], []), $liveNow, $limits ?? $officeLimits);
+};
+$liveStates = static fn (?array $s): array => $s === null ? ['none'] : array_map(static fn (array $a): string => $a['id'] . ':' . $a['state'], $s['agents']);
+$liveCtx = $liveSession([], [$liveResp('main', '10:09:00', 452_000)]);
+$liveBound = $liveSession([
+    $officeEv('main', '09:30:00', '09:30:01', 'Read', null, [$touch('/etc/old')]),
+    $officeEv('main', '10:01:00', '10:01:01', 'Read', null, [$touch('/etc/a')]),
+    $officeEv('main', '10:02:00', '10:02:01', 'Read', ['by' => 'user', 'detail' => null], [$touch('/etc/c')]),
+    new Viz\Model\Event('2026-01-01T10:03:00Z', 's', 'main', 'Bash', 'tu_py', 'python3 - <<EOF', '/w', false, [], unresolved: ['heredoc'], endTs: '2026-01-01T10:03:01Z'),
+    $officeEv('main', '10:04:00', '10:04:01', 'Read', null, [$touch('/w/ok.txt')]),
+    $officeEv('main', '10:09:30', null, 'Read', null, [$touch('/etc/b')]),
+], [$liveResp('main', '10:09:29')]);
+$liveCases = [
+    ['idle 20 min stays (the office lets it go after 10 min)', $liveStates($liveSession([], [$liveResp('main', '09:50:00')])), ['main:idle']],
+    ['idle 40 min → outside the window', $liveStates($liveSession([], [$liveResp('main', '09:30:00')])), ['none']],
+    ['finished subagent in the window = done', $liveStates($liveSession([$officeEv('aaa', '10:00:00', '10:00:10')], [$liveResp('main', '09:59:00'), $liveResp('aaa', '10:01:00')], ['aaa'])), ['main:idle', 'aaa:done']],
+    ['context = last response, window 1M by default', [$liveCtx['agents'][0]['context'], $liveCtx['agents'][0]['contextMax']], [452_000, 1_000_000]],
+    ['context window per model, never below the context', [Viz\Office\LiveState::contextWindow('claude-haiku-4-5'), Viz\Office\LiveState::contextWindow('claude-haiku-5-5'),
+        $liveSession([], [$liveResp('main', '10:09:00', 250_000, 'claude-haiku-4-5')])['agents'][0]['contextMax']], [200_000, 1_000_000, 250_000]],
+    ['blocked report of a subagent', $liveSession([$officeEv('aaa', '10:05:00', '10:05:01', 'SubagentHandback', ['by' => 'hook', 'detail' => null])], [$liveResp('main', '10:00:00'), $liveResp('aaa', '10:05:02')], ['aaa'])['agents'][1]['reportBlocked']['by'] ?? null, 'hook'],
+    ['report delivered after a block = no warning', $liveSession([$officeEv('aaa', '10:05:00', '10:05:01', 'SubagentHandback', ['by' => 'hook', 'detail' => null]), $officeEv('aaa', '10:06:00', '10:06:01', 'SubagentHandback')],
+        [$liveResp('main', '10:00:00'), $liveResp('aaa', '10:06:02')], ['aaa'])['agents'][1]['reportBlocked'], null],
+    ['boundary: kinds in the window, in call order', array_map(static fn (array $b): string => $b['kind'] . '=' . $b['text'] . ($b['by'] !== null ? ' by ' . $b['by'] : ''), $liveBound['boundary']),
+        ['outside=/etc/a', 'stopped=/etc/c by user', 'unknown=python3 - <<EOF', 'trying=/etc/b']],
+    ['calls: status per call in the window (blocked before boundary, open call = trying)', array_column($liveBound['agents'][0]['calls'], 'status'), ['outside', 'blocked', 'unknown', 'ok', 'trying']],
+    ['map: directories by zone, newest first (outside: read, stopped; inside: zone root)', array_map(static fn (array $m): string => $m['zone'] . ':' . ($m['root'] ?? '—') . ':' . $m['dir'] . ':r' . $m['read'] . ':s' . $m['stopped'] . ':' . implode(',', $m['agents']), $liveBound['map']),
+        ['out:—:/etc:r3:s1:main', 'rw:/w:.:r1:s0:main']],
+    ['zone of a path: rw, r, write in r = out with its root, system program, outside', (static function (): array {
+        $b = new Viz\Boundary(['/w/'], ['/ro']);
+        $z = static fn (string $path, string $op) => implode('@', array_filter($b->zoneOf(new Viz\Model\Touch($path, $op, true)), static fn ($v): bool => $v !== null));
+
+        return [$z('/w/a/b.php', 'edit'), $z('/ro/x.md', 'read'), $z('/ro/x.md', 'write'), $z('/usr/bin/git', 'exec'), $z('/home/x', 'read'), json_encode($b->zones(), JSON_UNESCAPED_SLASHES)];
+    })(), ['rw@/w', 'r@/ro', 'out@/ro', 'system', 'out', '{"rw":["/w"],"r":["/ro"]}']],
+    ['boundary off without configuration', $liveSession([], [$liveResp('main', '10:09:00')], [], new Viz\Boundary([], []))['boundary'], null],
+    ['merge: threshold from Signals, newest session first', (static function () use ($liveNow, $officeLimits): array {
+        $m = Viz\Office\LiveState::merge([['id' => 'a', 'last' => '2026-01-01T10:00:00Z'], ['id' => 'b', 'last' => '2026-01-01T10:05:00Z']], $liveNow, $officeLimits);
+
+        return [$m['contextHigh'], implode(',', array_column($m['sessions'], 'id')), $m['window']];
+    })(), [Viz\Signals::CONTEXT_TOKENS, 'b,a', 1800]],
+    // zakres projektów: biała lista kluczy, parametr wygrywa z ciasteczkiem (pusty = wszystkie), dopasowanie po katalogu sesji
+    ['scope: only 12-hex keys, no duplicates', Viz\Web\Scope::parse('abcdefabcdef, zzz,ABCDEF123456,abcdefabcdef,../x')->keys, ['abcdefabcdef']],
+    ['scope: empty parameter = all, wins over the cookie', Viz\Web\Scope::fromRequest(['projects' => ''], ['viz-scope' => 'abcdefabcdef'])->all(), true],
+    ['scope: cookie without parameter', Viz\Web\Scope::fromRequest([], ['viz-scope' => 'abcdefabcdef'])->keys, ['abcdefabcdef']],
+    ['scope: matches the session directory', (static function (): array {
+        $s = Viz\Web\Scope::parse(Viz\Web\App::fileHash('/w'));
+
+        return [$s->includes('/w'), $s->includes('/x'), $s->includes(null), Viz\Web\Scope::parse('')->includes(null)];
+    })(), [true, false, false, true]],
+    // rejestr widoków przeglądowych: trasy, dane, lewy panel, przełącznik; każdy szablon istnieje
+    ['scope views: routes and data', [Viz\Web\ScopeViews::page('/live')['template'] ?? null, [Viz\Web\ScopeViews::isData('/feed.json'), Viz\Web\ScopeViews::isData('/office.json'), Viz\Web\ScopeViews::isData('/live.json')], Viz\Web\ScopeViews::page('/nope'),
+        array_column(Viz\Web\ScopeViews::menu(), 'path'), array_column(Viz\Web\ScopeViews::group('live'), 'path')], ['live.php', [true, false, false], null, ['/live'], ['/live', '/office', '/boundary-graph', '/boundary-flow']]],
+    ['scope views: templates exist', array_values(array_filter(array_column(Viz\Web\ScopeViews::VIEWS, 'template'), static fn (string $t): bool => !is_file(__DIR__ . '/../templates/' . $t))), []],
+    ['scope views: label and title translated', array_values(array_filter(array_merge(array_column(Viz\Web\ScopeViews::VIEWS, 'label'), array_column(Viz\Web\ScopeViews::VIEWS, 'title')),
+        static fn (string $k): bool => !isset((require __DIR__ . '/../lang/pl.php')[$k]))), []],
+];
+foreach ($liveCases as [$name, $got, $expected]) {
+    if ($got !== $expected) {
+        $failures++;
+        echo "FAIL: live $name\n  oczekiwane: " . json_encode($expected, JSON_UNESCAPED_UNICODE) . "\n  otrzymane:  " . json_encode($got, JSON_UNESCAPED_UNICODE) . "\n";
     }
 }
 
@@ -517,7 +586,9 @@ $source = static fn (string $file): string => (string) file_get_contents(__DIR__
 $missing = static fn (string $file, array $tokens): array => array_values(array_filter($tokens, static fn (string $t): bool => !str_contains($source($file), $t)));
 $guardCases = [
     ['app.js: refresh guards', $missing('public/assets/app.js', ['section._busy = true', 'section._busy = false', '_fragmentUntil', 'new AbortController()', 'FETCH_TIMEOUT_MS = 5000', '.catch(() => refreshFailed(true))', 'refreshFailed(false)', 'viz-refresh-error']), []],
-    ['office.js: refresh guards', $missing('public/assets/office.js', ['root._busy = true', 'root._busy = false', 'new AbortController()', 'FETCH_TIMEOUT_MS = 5000', "'refresh not working'", '.catch(() => { office.failed = true; })']), []],
+    ['office.js: data from the shared feed, refresh error shown', $missing('public/assets/office.js', ['VizFeed.Start(', 'fromFeed(feed.data)', "'refresh not working'", 'office.failed = feed.failed']), []],
+    ['feed.js: refresh guards', $missing('public/assets/feed.js', ['root._busy = true', 'root._busy = false', 'new AbortController()', 'FETCH_TIMEOUT_MS = 5000', '.catch(() => { feed.failed = true; })', "addEventListener('viz-scope'"]), []],
+    ['live.js: data from the shared feed, refresh error shown', $missing('public/assets/live.js', ['VizFeed.Start(', "'refresh not working'"]), []],
     ['layout.php: refresh error element', $missing('templates/layout.php', ['viz-refresh-error']), []],
 ];
 foreach ($guardCases as [$name, $got, $expected]) {
@@ -535,6 +606,13 @@ if ($nodeCode === 127) {
 } elseif ($nodeCode !== 0) {
     $failures++;
     echo "FAIL: tests/refresh.test.js\n  " . implode("\n  ", $nodeOut) . "\n";
+}
+
+// program o nazwie liczbowej (np. „2026”): PHP zamienia taki klucz tablicy na int, ranking nie może się wywrócić
+$numericRank = \Viz\Summary\CommandRanking::build([['session_id' => 's1', 'last' => '2026-10-01T00:00:00', 'commands' => ['2026' => ['count' => 1, 'failed' => 0, 'blocked' => 0, 'agents' => 1, 'last' => '2026-10-01T00:00:00', 'from' => [], 'subs' => [], 'contexts' => []]]]], 0, '', 'count');
+if (($numericRank[0]['program'] ?? null) !== '2026' || ($numericRank[0]['role'] ?? null) !== 'unknown') {
+    $failures++;
+    echo "FAIL: CommandRanking: numeric program name\n";
 }
 
 // słownik PL: każdy literał z t() / th() (PHP) i T() (JS) ma wpis w lang/pl.php, a {placeholdery} klucza i tłumaczenia są te same
@@ -572,7 +650,7 @@ foreach ($langCases as [$name, $got, $expected]) {
 }
 
 exec('rm -rf ' . escapeshellarg($root));
-$total = count($langCases) +count($cases) + count($toolCases) + count($commandCases) + count($roles) + count($denialCases) + count($boundaryCases) + count($officeCases) + count($csvCases) + count($guardCases) + $nodeRan + 4;
+$total = count($langCases) + 1 + count($cases) + count($toolCases) + count($commandCases) + count($roles) + count($denialCases) + count($boundaryCases) + count($officeCases) + count($liveCases) + count($csvCases) + count($guardCases) + $nodeRan + 4;
 echo $failures === 0 ? "OK ($total przypadków)\n" : "$failures/$total nieudanych\n";
 exit($failures === 0 ? 0 : 1);
 

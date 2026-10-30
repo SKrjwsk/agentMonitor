@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live — makieta</title>
+<style>
+/* Makieta widoku Live (agentMonitor): tablica decyzji — wiersz = sesja, kolumna = pytanie, na które user może zareagować.
+   Dane przykładowe z symulacji w przeglądarce (pętla 60 s). Tokeny z public/assets/app.css (ciemny domyślnie, jasny pod [data-theme="light"]). */
+:root {
+    --bg: #16181c; --panel: #1d2025; --panel-2: #23272d; --line: #2e3238; --text: #e6e6e3; --muted: #8d939c; --accent: #fb923c;
+    --high: #f87171; --act: #facc15; --warn: #fb923c; --info: #a78bfa; --ok: #4ade80;
+    --tank: #3a4049; --tank-fill: #8d939c;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: dark;
+}
+:root[data-theme="light"] {
+    --bg: #f7f7f5; --panel: #ffffff; --panel-2: #f3f3f0; --line: #e3e2de; --text: #1f2328; --muted: #6b7078; --accent: #c2410c;
+    --high: #dc2626; --act: #a16207; --warn: #c2410c; --info: #6d28d9; --ok: #15803d;
+    --tank: #d9dbe0; --tank-fill: #8a919c;
+    color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.45 var(--sans); padding: 16px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--mono); font-size: 12px; }
+.num { font-variant-numeric: tabular-nums; }
+
+.app { max-width: 1280px; margin: 0 auto; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+
+/* pasek górny */
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.brand { font-weight: 600; }
+.brand .muted { font-weight: 400; }
+.verdict { flex: 1; font-size: 13.5px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.seg button { border: 0; background: var(--panel-2); padding: 3px 10px; cursor: pointer; font-size: 12px; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--panel); color: var(--accent); }
+.btn { border: 1px solid var(--line); background: var(--panel-2); padding: 3px 9px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+.sample { font: 500 10.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--accent); border: 1px dashed var(--accent); border-radius: 3px; padding: 1px 6px; }
+
+/* podsumowanie: dwa pytania, na które user chce odpowiedzi od razu */
+.sum { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); border-bottom: 1px solid var(--line); }
+.sum > section { padding: 10px 14px 12px; min-width: 0; }
+.sum > section + section { border-left: 1px solid var(--line); }
+.sum h2 { margin: 0 0 8px; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.counts { display: flex; flex-wrap: wrap; gap: 6px; }
+.count { display: inline-flex; align-items: baseline; gap: 6px; border: 1px solid var(--line); border-radius: 4px; padding: 4px 9px; background: var(--panel-2); cursor: pointer; }
+.count b { font: 600 16px var(--mono); color: var(--c); }
+.count span { font-size: 12px; }
+.count[data-zero="true"] { opacity: .45; }
+.count[aria-pressed="true"] { border-color: var(--c); box-shadow: inset 0 0 0 1px var(--c); }
+
+/* tablica */
+.table { width: 100%; }
+.thead, .tr { display: grid; grid-template-columns: minmax(220px, 1.5fr) minmax(170px, 1.1fr) minmax(220px, 1.5fr) 128px 112px; }
+.thead { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; border-bottom: 1px solid var(--line); }
+.thead > div { padding: 7px 12px; }
+.tr { border-bottom: 1px solid var(--line); }
+.tr > * { padding: 9px 12px; min-width: 0; }
+.cell { border: 0; background: none; text-align: left; cursor: pointer; display: grid; gap: 2px; align-content: start; border-left: 3px solid transparent; }
+.cell:hover { background: var(--panel-2); }
+.cell[aria-expanded="true"] { background: var(--panel-2); }
+.cell[data-sev="high"] { border-left-color: var(--high); }
+.cell[data-sev="act"] { border-left-color: var(--act); }
+.cell[data-sev="warn"] { border-left-color: var(--warn); }
+.cell .main { font-weight: 600; color: var(--c, var(--text)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cell .sub { font-size: 11.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cell[data-sev="ok"] .main, .cell[data-sev="info"] .main { font-weight: 500; }
+.sess .main { color: var(--text); }
+.sess .proj { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); }
+.sess .proj i { width: 8px; height: 8px; border-radius: 2px; flex: none; }
+.tank { display: flex; align-items: center; gap: 7px; }
+.tank .bar { position: relative; width: 56px; height: 10px; border: 1px solid var(--tank); border-radius: 2px; flex: none; }
+.tank .bar b { position: absolute; inset: 0 auto 0 0; background: var(--tank-fill); }
+.tank .bar s { position: absolute; top: -3px; bottom: -3px; width: 1px; background: var(--muted); }
+.tank[data-sev="warn"] .bar b { background: var(--warn); }
+.tank[data-sev="high"] .bar b { background: var(--high); }
+
+/* szczegóły pod wierszem */
+.detail { grid-column: 1 / -1; background: var(--panel-2); border-top: 1px dashed var(--line); padding: 10px 14px 12px 15px !important; display: grid; gap: 8px; }
+.detail p { margin: 0; color: var(--muted); max-width: 90ch; }
+.detail p b { color: var(--text); font-weight: 500; }
+.ev { display: grid; grid-template-columns: 64px 92px 110px minmax(0, 1fr) auto; gap: 10px; align-items: baseline; font-size: 12px; }
+.ev .k { font: 600 10.5px var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--c); }
+.ev code { font: 12px var(--mono); overflow-wrap: anywhere; }
+.ev[data-ack="true"] { opacity: .5; }
+.agents { display: grid; gap: 3px; font-size: 12px; }
+.agents div { display: grid; grid-template-columns: 10px 170px 120px minmax(0, 1fr); gap: 10px; align-items: baseline; }
+.agents i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); align-self: center; }
+.agents code { font: 12px var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.calm { width: 100%; border: 0; border-bottom: 1px solid var(--line); background: none; text-align: left; padding: 9px 14px; cursor: pointer; color: var(--muted); }
+.calm:hover { background: var(--panel-2); }
+.calm b { color: var(--ok); font-weight: 600; }
+.empty { padding: 18px 14px; color: var(--muted); }
+
+.notes { max-width: 1280px; margin: 22px auto 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px 32px; }
+.notes h3 { margin: 0 0 8px; font-size: 13px; }
+.notes ul { margin: 0; padding-left: 18px; display: grid; gap: 5px; }
+.notes li, .notes p { color: var(--muted); }
+.notes b { color: var(--text); font-weight: 500; }
+.notes .dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+@media (max-width: 900px) {
+    .sum { grid-template-columns: minmax(0, 1fr); }
+    .sum > section + section { border-left: 0; border-top: 1px solid var(--line); }
+    .thead { display: none; }
+    .tr { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .tr > .sess { grid-column: 1 / -1; }
+    .ev { grid-template-columns: 56px minmax(0, 1fr); }
+    .ev .who { display: none; }
+    .ev code, .ev > span:last-child { grid-column: 1 / -1; }
+    .agents div { grid-template-columns: 10px minmax(0, 1fr); }
+    .agents div > :nth-child(n+3) { grid-column: 2; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+    <header class="top">
+        <div class="brand">agentMonitor <span class="muted">/ Live</span></div>
+        <div class="verdict" id="verdict"></div>
+        <div class="seg" role="group" aria-label="Widok">
+            <button type="button" aria-pressed="true">Live</button>
+            <button type="button" aria-pressed="false" title="W aplikacji: biuro 3D (/office)">Biuro 3D</button>
+        </div>
+        <span class="sample" title="Stan generuje symulacja w przeglądarce (pętla 60 s)">dane przykładowe</span>
+        <button type="button" class="btn" id="theme" title="Motyw">◐</button>
+    </header>
+
+    <div class="sum">
+        <section>
+            <h2>Ty — gdzie trzeba wejść</h2>
+            <div class="counts" id="c-you"></div>
+        </section>
+        <section>
+            <h2>Granica — ostatnie 30 min, wszystkie sesje</h2>
+            <div class="counts" id="c-bound"></div>
+        </section>
+    </div>
+
+    <div class="table">
+        <div class="thead"><div>Sesja</div><div>Ty</div><div>Granica</div><div>Kontekst</div><div>Tempo</div></div>
+        <div id="rows"></div>
+    </div>
+</div>
+
+<section class="notes">
+    <div>
+        <h3>Czego nie widać w Claude Code</h3>
+        <ul>
+            <li>Która z wielu sesji <b>czeka na ciebie</b> i od kiedy — terminal pokazuje tylko siebie.</li>
+            <li>Wywołanie, które <b>trwa podejrzanie długo</b> — zwykle prośba o zgodę w terminalu, którego nie patrzysz.</li>
+            <li>Czy agent <b>wyszedł poza granicę</b>, czy tylko próbował i coś go zatrzymało — zbiorczo dla wszystkich sesji.</li>
+            <li>Komendy, których <b>ścieżek nie da się ustalić</b> — tu są „nie wiadomo”, a nie „w porządku”.</li>
+            <li><b>Raport subagenta zablokowany</b> przez hook — sesja główna czeka na wynik, który nie przyjdzie.</li>
+        </ul>
+    </div>
+    <div>
+        <h3>Granica — stany od najgorszego</h3>
+        <ul>
+            <li><span class="dot" style="background:var(--high)"></span><b>Wykonane poza</b> — komenda zadziałała poza dozwolonymi katalogami. Przejrzyj, rozważ regułę deny.</li>
+            <li><span class="dot" style="background:var(--act)"></span><b>Próba trwa</b> — wywołanie poza granicą jeszcze się nie skończyło; najczęściej czeka na twoją zgodę.</li>
+            <li><span class="dot" style="background:var(--warn)"></span><b>Nie wiadomo</b> — wykonany Bash bez rozpoznanych ścieżek (np. <code>python3 - &lt;&lt;EOF</code>).</li>
+            <li><span class="dot" style="background:var(--info)"></span><b>Zatrzymane</b> — hook, sandbox, reguła albo ty; zabezpieczenia zadziałały.</li>
+            <li><span class="dot" style="background:var(--ok)"></span><b>W granicy</b> — wszystkie ścieżki rozpoznane i dozwolone.</li>
+        </ul>
+        <p>„Przejrzane” zapamiętuje przeglądarka (tylko u ciebie); aplikacja nic nie zapisuje.</p>
+    </div>
+</section>
+
+<script>
+'use strict';
+// ======================= dane przykładowe (kształt jak /office.json?window=1800 po agregacji per sesja) =======================
+const LOOP = 60, WINDOW = 1800, PERMISSION_GUESS = 90, CONTEXT_HIGH = 400000;
+let now = Math.floor(Date.now() / 1000), t = 0;
+let S;
+let filter = null, open = null, calmOpen = false;
+const acked = (() => { try { return new Set(JSON.parse(localStorage.getItem('viz-live-ack') || '[]')); } catch { return new Set(); } })();
+const saveAck = () => { try { localStorage.setItem('viz-live-ack', JSON.stringify([...acked])); } catch {} };
+
+const ag = (id, label, model, state, call, ctx, burn, extra = {}) => ({ id, label, model, state, call, ctx, ctxMax: /Haiku/.test(model) ? 200000 : 1000000, burn, ...extra });
+
+function initial() {
+    S = [
+        { id: 's1', title: 'Kopia zapasowa dokumentów', project: 'workbox9_priv', color: '#f58231', spent: 3.4,
+            agents: [ag('main', 'main', 'Opus 5.5', 'working', { tool: 'Bash', text: 'rsync -a ~/Documents/ /Volumes/Backup/docs', since: now - 372 }, 64000, 0.14)],
+            bound: [
+                { id: 'b1', ts: now - 940, agent: 'main', tool: 'Bash', path: '~/Documents/projekty', kind: 'outside', by: null },
+                { id: 'b2', ts: now - 372, agent: 'main', tool: 'Bash', path: '/Volumes/Backup/docs', kind: 'trying', by: null },
+            ] },
+        { id: 's2', title: 'Kategorie — migracja konfiguracji', project: 'REPO_PRISMA_DH_2', color: '#4363d8', spent: 15.0,
+            agents: [ag('main', 'main', 'Opus 5.5', 'delegated', null, 452000, 0.4),
+                ag('b1', 'general-purpose: przenieś mapowania', 'Sonnet 5.5', 'working', { tool: 'Edit', text: 'src/Category/Config/CategoryConfig.php', since: now - 6 }, 121000, 0.44),
+                ag('b2', 'Explore: użycia CategoryConfig', 'Haiku 5.5', 'done', null, 52000, 0.02, { reportBlocked: { ts: now - 210, by: 'hook' } }),
+                ag('b3', 'general-purpose: testy kategorii', 'Sonnet 5.5', 'working', { tool: 'Bash', text: 'vendor/bin/phpunit tests/Category', since: now - 21 }, 88000, 0.25)],
+            bound: [{ id: 'b3', ts: now - 640, agent: 'b1', tool: 'Bash', path: '~/.composer/cache', kind: 'stopped', by: 'sandbox' }] },
+        { id: 's3', title: 'Notatki z tygodnia', project: 'workbox9_priv', color: '#f58231', spent: 3.0,
+            agents: [ag('main', 'main', 'Sonnet 5.5', 'stuck', null, 233000, 0, { stuckSince: now - 417 })],
+            bound: [
+                { id: 'b4', ts: now - 1300, agent: 'main', tool: 'Bash', path: 'python3 - <<EOF … (bez ścieżek)', kind: 'unknown', by: null },
+                { id: 'b5', ts: now - 820, agent: 'main', tool: 'Bash', path: 'eval "$CMD" (bez ścieżek)', kind: 'unknown', by: null },
+            ] },
+        { id: 's4', title: 'Test dymny tras biura', project: 'REPO_agent_vizualization', color: '#42d4f4', spent: 2.1,
+            agents: [ag('main', 'main', 'Sonnet 5.5', 'idle', null, 178000, 0, { idleSince: now - 257, last: 'Bash php tests/smoke.php' })], bound: [] },
+        { id: 's5', title: 'Live — plan i makieta', project: 'REPO_agent_vizualization', color: '#42d4f4', spent: 7.7,
+            agents: [ag('main', 'main', 'Opus 5.5', 'working', { tool: 'Edit', text: 'plans/live.mockup.html', since: now - 4 }, 289000, 0.92),
+                ag('a1', 'Explore: układ office.js', 'Haiku 5.5', 'working', { tool: 'Grep', text: '"aisles" public/assets', since: now - 2 }, 49000, 0.02)], bound: [] },
+        { id: 's6', title: 'Import faktur z CSV', project: 'workbox9_netzi', color: '#3cb44b', spent: 4.6,
+            agents: [ag('main', 'main', 'Sonnet 5.5', 'working', { tool: 'Read', text: 'src/Invoice/CsvImporter.php', since: now - 3 }, 396000, 0.61)], bound: [] },
+        { id: 's7', title: 'Parser Bash — heredoc', project: 'REPO_agent_vizualization', color: '#42d4f4', spent: 1.2,
+            agents: [ag('main', 'main', 'Opus 5.5', 'working', { tool: 'Bash', text: 'php tests/run.php', since: now - 8 }, 141000, 0.33)], bound: [] },
+    ];
+}
+
+const sess = id => S.find(s => s.id === id);
+function scripted() {
+    switch (t) {
+        case 8: { const a = sess('s4').agents[0]; Object.assign(a, { state: 'working', call: { tool: 'Read', text: 'tests/smoke.php', since: now } }); break; }
+        case 14: { const s = sess('s7'); s.agents[0].call = { tool: 'Read', text: '~/Desktop/raport.pdf', since: now }; s.bound.push({ id: 'b6', ts: now, agent: 'main', tool: 'Read', path: '~/Desktop/raport.pdf', kind: 'trying', by: null }); break; }
+        case 22: { const s = sess('s7'); s.bound.find(b => b.id === 'b6').kind = 'stopped'; s.bound.find(b => b.id === 'b6').by = 'ty (odmowa)'; s.agents[0].call = { tool: 'Bash', text: 'php tests/run.php', since: now }; break; }
+        case 30: sess('s6').agents[0].ctx = 404000; break;
+        case 44: { const a = sess('s4').agents[0]; Object.assign(a, { state: 'idle', call: null, idleSince: now, last: 'Read tests/smoke.php' }); break; }
+    }
+    for (const s of S) for (const a of s.agents) if (a.state === 'working') { a.ctx += 200 + Math.round(Math.random() * 1200); s.spent += a.burn / 300; }
+}
+function tick() { now++; t++; if (t >= LOOP) { t = 0; initial(); } else scripted(); render(); }
+
+// ======================= reguły: co wymaga reakcji =======================
+const SEV = { high: 4, act: 3, warn: 2, info: 1, ok: 0 };
+const SEV_VAR = { high: '--high', act: '--act', warn: '--warn', info: '--info', ok: '--ok' };
+const dur = s => { s = Math.max(0, Math.round(s)); return s < 60 ? s + ' s' : s < 3600 ? Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0') : Math.floor(s / 3600) + ' h ' + Math.floor(s % 3600 / 60) + ' min'; };
+const fmtK = n => n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : Math.round(n / 1000) + 'k';
+const usd = v => '$' + v.toFixed(2);
+const clock = ts => new Date(ts * 1000).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+const agentName = (s, id) => { const a = s.agents.find(x => x.id === id); return !a || a.id === 'main' ? 'sesja główna' : a.label; };
+
+/** Ty: najpilniejsza rzecz, na którą czeka sesja. Długie wywołanie = „zgoda?” — z transkryptu nie da się odróżnić zgody od długiej komendy. */
+function youCell(s) {
+    const main = s.agents[0];
+    const rb = s.agents.find(a => a.reportBlocked);
+    if (main.state === 'stuck') return { sev: 'high', key: 'stuck', main: 'limit API · ' + dur(now - main.stuckSince), sub: 'agent stoi, nie wznowi się sam' };
+    if (rb) return { sev: 'high', key: 'report', main: 'raport nie dotarł', sub: `${rb.label.split(':')[0]} — zablokował ${rb.reportBlocked.by}` };
+    const long = s.agents.filter(a => a.state === 'working' && a.call && now - a.call.since >= PERMISSION_GUESS).sort((x, y) => x.call.since - y.call.since)[0];
+    if (long) return { sev: 'act', key: 'perm', main: 'zgoda? · ' + dur(now - long.call.since), sub: `${long.call.tool} trwa — ${long.call.text}` };
+    if (main.state === 'idle') return { sev: 'act', key: 'idle', main: 'czeka na ciebie · ' + dur(now - main.idleSince), sub: 'ostatnio ' + main.last };
+    if (main.state === 'delegated') { const n = s.agents.filter(a => a.id !== 'main' && a.state === 'working').length; return { sev: 'ok', key: 'ok', main: `czeka na ${n} subagentów`, sub: 'nic do zrobienia' }; }
+    return { sev: 'ok', key: 'ok', main: 'pracuje', sub: main.call ? `${main.call.tool} ${main.call.text}` : 'model pisze' };
+}
+
+const B_ORDER = ['outside', 'trying', 'unknown', 'stopped'];
+const B = {
+    outside: { sev: 'high', label: 'wykonane poza', plural: 'wykonane poza' },
+    trying: { sev: 'act', label: 'próba trwa', plural: 'próby trwają' },
+    unknown: { sev: 'warn', label: 'nie wiadomo', plural: 'nie wiadomo' },
+    stopped: { sev: 'info', label: 'zatrzymane', plural: 'zatrzymane' },
+};
+const live = b => now - b.ts <= WINDOW && !(b.kind === 'outside' && acked.has(b.id));
+function boundCell(s) {
+    const evs = s.bound.filter(live);
+    if (!evs.length) {
+        const ack = s.bound.filter(b => acked.has(b.id)).length;
+        return { sev: 'ok', key: 'ok', main: '✓ w granicy', sub: ack ? `${ack} przejrzane` : 'wszystkie ścieżki rozpoznane' };
+    }
+    const worst = B_ORDER.find(k => evs.some(b => b.kind === k));
+    const top = evs.filter(b => b.kind === worst).sort((x, y) => y.ts - x.ts)[0];
+    const rest = evs.length - 1;
+    const n = evs.filter(b => b.kind === worst).length;
+    return { sev: B[worst].sev, key: worst, main: `${B[worst].label}${n > 1 ? ' ×' + n : ''}`, sub: top.path + (top.by ? ` · ${top.by}` : '') + (rest > 0 ? ` · +${rest}` : '') };
+}
+
+function ctxCell(s) {
+    const a = s.agents.filter(x => x.state !== 'done').sort((x, y) => y.ctx / y.ctxMax - x.ctx / x.ctxMax)[0] || s.agents[0];
+    const pct = Math.min(100, a.ctx / a.ctxMax * 100);
+    const sev = pct >= 85 ? 'high' : a.ctx > CONTEXT_HIGH ? 'warn' : 'ok';
+    return { sev, key: sev, pct, a, main: Math.round(pct) + '%', sub: fmtK(a.ctx) + (a.id === 'main' ? '' : ' · subagent') };
+}
+
+function burnCell(s) {
+    const b = s.agents.reduce((x, a) => x + (a.state === 'working' || a.state === 'delegated' ? a.burn : 0), 0);
+    const sev = b >= 4 ? 'high' : b >= 1.5 ? 'warn' : 'ok';
+    return { sev, key: sev, main: usd(b) + ' / 5 min', sub: 'razem ' + usd(s.spent) };
+}
+
+function rowsOf() {
+    return S.map(s => {
+        const cells = { you: youCell(s), bound: boundCell(s), ctx: ctxCell(s), burn: burnCell(s) };
+        const sev = Math.max(...Object.values(cells).map(c => SEV[c.sev]));
+        return { s, cells, sev };
+    }).sort((x, y) => y.sev - x.sev);
+}
+
+// ======================= widok =======================
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+function counter(label, n, cssVar, key, group) {
+    const b = el('button', 'count'); b.type = 'button';
+    b.style.setProperty('--c', `var(${cssVar})`);
+    b.dataset.zero = String(n === 0);
+    b.setAttribute('aria-pressed', String(filter?.group === group && filter?.key === key));
+    b.append(el('b', null, String(n)), el('span', null, label));
+    b.addEventListener('click', () => { filter = filter?.group === group && filter?.key === key ? null : { group, key }; render(); });
+    return b;
+}
+
+function renderSummary(rows) {
+    const you = k => rows.filter(r => r.cells.you.key === k).length;
+    document.getElementById('c-you').replaceChildren(
+        counter('czeka na ciebie', you('idle'), '--act', 'idle', 'you'),
+        counter('zgoda?', you('perm'), '--act', 'perm', 'you'),
+        counter('stoi (limit)', you('stuck'), '--high', 'stuck', 'you'),
+        counter('raport nie dotarł', you('report'), '--high', 'report', 'you'),
+    );
+    const all = S.flatMap(s => s.bound.filter(live));
+    const ok = rows.filter(r => r.cells.bound.key === 'ok').length;
+    document.getElementById('c-bound').replaceChildren(
+        ...B_ORDER.map(k => counter(B[k].plural, all.filter(b => b.kind === k).length, SEV_VAR[B[k].sev], k, 'bound')),
+        counter(ok === 1 ? 'sesja w granicy' : 'sesje w granicy', ok, '--ok', 'ok', 'bound'),
+    );
+    const need = rows.filter(r => r.sev >= SEV.act).length;
+    const v = document.getElementById('verdict');
+    v.replaceChildren(need
+        ? Object.assign(el('span', null, `Wymaga reakcji: ${need} z ${rows.length} sesji`), { style: 'color:var(--act);font-weight:600' })
+        : Object.assign(el('span', null, `Wszystkie ${rows.length} sesji pracuje bez uwag`), { style: 'color:var(--ok);font-weight:600' }));
+}
+
+function cellBtn(row, name, c, extra) {
+    const b = el('button', 'cell'); b.type = 'button';
+    b.dataset.sev = c.sev;
+    if (c.sev !== 'ok') b.style.setProperty('--c', `var(${SEV_VAR[c.sev]})`);
+    b.setAttribute('aria-expanded', String(open?.s === row.s.id && open?.cell === name));
+    if (extra) b.append(extra); else b.append(el('span', 'main', c.main));
+    b.append(el('span', 'sub', c.sub));
+    b.title = c.sub;
+    b.addEventListener('click', () => { open = open?.s === row.s.id && open?.cell === name ? null : { s: row.s.id, cell: name }; render(); });
+    return b;
+}
+
+function detail(row, name) {
+    const s = row.s, d = el('div', 'detail');
+    const p = (html) => { const e = el('p'); for (const part of html) e.append(typeof part === 'string' ? document.createTextNode(part) : part); return e; };
+    const actions = el('div', 'actions');
+    const link = (l, tip) => { const b = el('button', 'btn', l); b.type = 'button'; b.title = 'W aplikacji: ' + tip; return b; };
+    if (name === 'sess' || name === 'you') {
+        const c = row.cells.you;
+        if (name === 'you') d.append(p({
+            perm: ['Wywołanie trwa ', el('b', null, dur(now - (s.agents.find(a => a.call && now - a.call.since >= PERMISSION_GUESS)?.call.since ?? now))), '. Najczęściej to prośba o zgodę w terminalu tej sesji; może to też być długa komenda — z transkryptu nie da się tego odróżnić.'],
+            idle: ['Agent skończył turę i czeka na twoją wiadomość.'],
+            stuck: ['Ostatnia odpowiedź to komunikat o limicie API. Sesja nie wznowi się sama — wróć do niej po odnowieniu limitu.'],
+            report: ['Hook zablokował wywołanie, którym subagent oddaje raport. ', el('b', null, 'Sesja główna nie dostanie wyniku'), ' — sprawdź regułę hooka albo przekaż wynik ręcznie.'],
+            ok: ['Nic do zrobienia.'],
+        }[c.key]));
+        const list = el('div', 'agents');
+        for (const a of s.agents) {
+            const r = el('div'); const i = el('i');
+            const st = { working: ['pracuje', '--ok'], delegated: ['czeka na subagentów', '--muted'], idle: ['czeka na ciebie', '--act'], stuck: ['limit API', '--high'], done: ['zakończony', '--muted'] }[a.state];
+            i.style.setProperty('--c', `var(${st[1]})`);
+            r.append(i, el('span', null, a.id === 'main' ? 'sesja główna · ' + a.model.split(' ')[0] : a.label), el('span', 'muted', st[0] + (a.reportBlocked ? ' · raport zablokowany' : '')),
+                el('code', null, a.call ? `${a.call.tool} ${a.call.text} · ${dur(now - a.call.since)}` : ''));
+            list.append(r);
+        }
+        d.append(list);
+        actions.append(link('Otwórz sesję ↗', '/?s=<sesja>'), link('Wiadomości ↗', '/?s=<sesja>&view=messages'));
+    } else if (name === 'bound') {
+        const evs = s.bound.filter(b => now - b.ts <= WINDOW).sort((x, y) => B_ORDER.indexOf(x.kind) - B_ORDER.indexOf(y.kind) || y.ts - x.ts);
+        if (!evs.length) d.append(p(['Wszystkie ścieżki z ostatnich 30 min rozpoznane i w dozwolonych katalogach (', el('code', null, 'AGENT_ALLOWED_RW'), ', ', el('code', null, 'AGENT_ALLOWED_R'), ').']));
+        for (const b of evs) {
+            const r = el('div', 'ev'); r.style.setProperty('--c', `var(${SEV_VAR[B[b.kind].sev]})`);
+            r.dataset.ack = String(acked.has(b.id));
+            const tail = el('span');
+            if (b.kind === 'outside') {
+                const btn = el('button', 'btn', acked.has(b.id) ? 'cofnij' : 'przejrzane'); btn.type = 'button';
+                btn.addEventListener('click', ev => { ev.stopPropagation(); acked.has(b.id) ? acked.delete(b.id) : acked.add(b.id); saveAck(); render(); });
+                tail.append(btn);
+            }
+            r.append(el('span', 'muted num', clock(b.ts)), el('span', 'k', B[b.kind].label), el('span', 'muted who', agentName(s, b.agent)),
+                Object.assign(el('code'), { textContent: `${b.tool} ${b.path}` }), tail);
+            if (b.by) r.querySelector('.who').textContent += ' · ' + b.by;
+            d.append(r);
+        }
+        actions.append(link('Zakładka Granica ↗', '/?s=<sesja>&view=boundary'));
+    } else if (name === 'ctx') {
+        const c = row.cells.ctx;
+        d.append(p(c.sev === 'ok' ? ['Kontekst w normie.'] : ['Ponad ', el('b', null, fmtK(CONTEXT_HIGH)), ' każda odpowiedź czyta cały kontekst z cache — najdroższa część sesji. Przy następnym zadaniu zacznij od ', el('code', null, '/compact'), ' albo ', el('code', null, '/clear'), '.']));
+        const list = el('div', 'agents');
+        for (const a of s.agents) {
+            const r = el('div'); const i = el('i'); i.style.setProperty('--c', a.ctx > CONTEXT_HIGH ? 'var(--warn)' : 'var(--tank-fill)');
+            r.append(i, el('span', null, a.id === 'main' ? 'sesja główna' : a.label), el('span', 'muted num', Math.round(a.ctx / a.ctxMax * 100) + '%'), el('code', null, `${fmtK(a.ctx)} z ${fmtK(a.ctxMax)}`));
+            list.append(r);
+        }
+        d.append(list);
+    } else {
+        d.append(p(['Koszt według cennika API z ostatnich 5 min; ', el('b', null, 'razem'), ' = od początku sesji.']));
+        const list = el('div', 'agents');
+        for (const a of s.agents) {
+            const r = el('div'); const i = el('i'); i.style.setProperty('--c', 'var(--accent)');
+            r.append(i, el('span', null, a.id === 'main' ? 'sesja główna' : a.label), el('span', 'muted num', usd(a.state === 'done' ? 0 : a.burn) + ' / 5 min'), el('span'));
+            list.append(r);
+        }
+        d.append(list);
+    }
+    if (actions.childElementCount) d.append(actions);
+    return d;
+}
+
+function renderRow(row) {
+    const s = row.s, tr = el('div', 'tr');
+    const head = el('div');
+    const pj = el('span', 'proj'); const sw = el('i'); sw.style.background = s.color; pj.append(sw, document.createTextNode(s.project + ' · ' + s.agents.length + (s.agents.length === 1 ? ' agent' : ' agentów')));
+    head.append(el('span', 'main', s.title), pj);
+    const sessBtn = cellBtn(row, 'sess', { sev: 'ok', sub: '' }, head); sessBtn.classList.add('sess'); sessBtn.querySelector('.sub').remove();
+    const c = row.cells;
+    const tank = el('span', 'tank'); tank.dataset.sev = c.ctx.sev;
+    const bar = el('span', 'bar'); const fill = el('b'); fill.style.width = c.ctx.pct + '%'; bar.append(fill);
+    if (CONTEXT_HIGH < c.ctx.a.ctxMax) { const m = el('s'); m.style.left = (CONTEXT_HIGH / c.ctx.a.ctxMax * 100) + '%'; bar.append(m); }
+    tank.append(bar, el('span', 'main num', c.ctx.main));
+    tr.append(sessBtn, cellBtn(row, 'you', c.you), cellBtn(row, 'bound', c.bound), cellBtn(row, 'ctx', c.ctx, tank), cellBtn(row, 'burn', c.burn));
+    if (open?.s === s.id) tr.append(detail(row, open.cell));
+    return tr;
+}
+
+function matches(row) {
+    if (!filter) return true;
+    if (filter.group === 'you') return row.cells.you.key === filter.key;
+    if (filter.key === 'ok') return row.cells.bound.key === 'ok';
+    return row.s.bound.some(b => live(b) && b.kind === filter.key);
+}
+
+function render() {
+    const rows = rowsOf();
+    renderSummary(rows);
+    const box = document.getElementById('rows');
+    const shown = rows.filter(matches);
+    const loud = filter ? shown : shown.filter(r => r.sev >= SEV.warn);
+    const calm = filter ? [] : shown.filter(r => r.sev < SEV.warn);
+    const nodes = loud.map(renderRow);
+    if (calm.length) {
+        const b = el('button', 'calm'); b.type = 'button';
+        const strong = el('b', null, `${calm.length} ${calm.length === 1 ? 'sesja pracuje' : 'sesje pracują'} bez uwag`);
+        b.append(calmOpen ? '▾ ' : '▸ ', strong, document.createTextNode(' — ' + calm.map(r => r.s.title).join(', ')));
+        b.addEventListener('click', () => { calmOpen = !calmOpen; render(); });
+        nodes.push(b);
+        if (calmOpen) nodes.push(...calm.map(renderRow));
+    }
+    if (!nodes.length) nodes.push(el('div', 'empty', 'Brak sesji pasujących do filtra.'));
+    box.replaceChildren(...nodes);
+}
+
+document.getElementById('theme').addEventListener('click', () => {
+    const r = document.documentElement;
+    if (r.dataset.theme === 'light') delete r.dataset.theme; else r.dataset.theme = 'light';
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { open = null; filter = null; render(); } });
+
+initial();
+render();
+setInterval(() => { if (!document.hidden) tick(); }, 1000);
+</script>
+</body>
+</html>

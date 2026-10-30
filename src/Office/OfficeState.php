@@ -59,41 +59,39 @@ final class OfficeState
 
     private const TARGET_LIMIT = 80;
 
-    /**
-     * Wiele sesji w jednym biurze: identyfikator agenta poprzedzony sesją (`<session>:<agent>`), sesje bez aktywnych agentów pominięte.
-     * Kolejność sesji = kolejność startu (przeglądarka sadza sesje rzędami per projekt w tej kolejności).
-     *
-     * @param list<array{session: array<string, string>, agents: list<array<string, mixed>>}> $builds wyniki `build`
-     * @return array{now: string, burnFrom: float, coinUsd: float, sessions: list<array<string, string>>, agents: list<array<string, mixed>>, messages: list<array<string, mixed>>}
-     */
-    public static function merge(array $builds, int $now): array
+    /** @return array{now: string, session: array{id: string, title: string, project: string, cwd: string, projectColor: string}, agents: list<array<string, mixed>>, messages: list<array<string, mixed>>} */
+    public static function build(Session $session, int $now, ?Boundary $limits = null): array
     {
-        $builds = array_values(array_filter($builds, static fn (array $b): bool => $b['agents'] !== []));
-        usort($builds, static fn (array $a, array $b): int => strcmp($a['agents'][0]['start'], $b['agents'][0]['start']));
-        $agents = [];
-        $messages = [];
-        foreach ($builds as $b) {
-            $sid = $b['session']['id'];
-            foreach ($b['agents'] as $a) {
-                $agents[] = ['id' => $sid . ':' . $a['id'], 'session' => $sid] + $a;
-            }
-            foreach ($b['messages'] ?? [] as $m) {
-                $messages[] = ['id' => $sid . ':' . $m['id'], 'from' => $m['from'] !== null ? $sid . ':' . $m['from'] : null, 'to' => $sid . ':' . $m['to']] + $m;
-            }
+        ['main' => $main, 'subs' => $subs] = self::rows($session, $now, $limits);
+        $agents = array_values(array_filter($subs, static fn (array $a): bool => !$a['gone']));
+        if ($main !== null && (!$main['gone'] || $agents !== [])) {
+            array_unshift($agents, $main);
         }
+        usort($agents, static fn (array $a, array $b): int => [$a['kind'] !== 'main', $a['start']] <=> [$b['kind'] !== 'main', $b['start']]);
+        $agents = array_map(static function (array $a): array {
+            unset($a['gone']);
+
+            return $a;
+        }, $agents);
 
         return [
             'now' => gmdate('Y-m-d\TH:i:s\Z', $now),
             'burnFrom' => self::BURN_FROM,
-            'coinUsd' => self::COIN_USD,
-            'sessions' => array_column($builds, 'session'),
+            'session' => ['id' => $session->id, 'title' => $session->title, 'project' => basename((string) $session->cwd), 'cwd' => App::shortPath((string) $session->cwd, null),
+                'projectColor' => self::projectColor(basename((string) $session->cwd))],
             'agents' => $agents,
-            'messages' => $messages,
+            'messages' => self::messages($session, $now),
         ];
     }
 
-    /** @return array{now: string, session: array{id: string, title: string, project: string, cwd: string, projectColor: string}, agents: list<array<string, mixed>>, messages: list<array<string, mixed>>} */
-    public static function build(Session $session, int $now, ?Boundary $limits = null): array
+    /**
+     * Wiersze wszystkich agentów sesji, zanim biuro zdecyduje, kto w nim jest (`gone` = nieaktywny według progów biura).
+     * Wspólne dla biura i widoku Live (`LiveState`, które ma dłuższe okno). Sesja główna czekająca na usera,
+     * gdy pracują jej subagenci (nie `gone`), ma stan `delegated`.
+     *
+     * @return array{main: ?array<string, mixed>, subs: list<array<string, mixed>>}
+     */
+    public static function rows(Session $session, int $now, ?Boundary $limits = null): array
     {
         $byAgent = [];
         foreach ($session->events as $e) {
@@ -133,47 +131,32 @@ final class OfficeState
             ];
             if ($agent->id === Agent::MAIN) {
                 $main = $row;
-            } elseif (!$row['gone']) {
+            } else {
                 $agents[] = $row;
             }
         }
         // sesja główna czeka na usera albo na subagentów w tle — zostaje, dopóki któryś z nich pracuje
-        if ($main !== null && $main['state'] === 'idle' && $agents !== []) {
+        $active = count(array_filter($agents, static fn (array $a): bool => !$a['gone']));
+        if ($main !== null && $main['state'] === 'idle' && $active > 0) {
             $main['state'] = 'delegated';
-            $main['waitingFor'] = count($agents);
+            $main['waitingFor'] = $active;
             $main['interrupted'] = false;
         }
-        if ($main !== null && (!$main['gone'] || $agents !== [])) {
-            array_unshift($agents, $main);
-        }
-        usort($agents, static fn (array $a, array $b): int => [$a['kind'] !== 'main', $a['start']] <=> [$b['kind'] !== 'main', $b['start']]);
-        $agents = array_map(static function (array $a): array {
-            unset($a['gone']);
 
-            return $a;
-        }, $agents);
-
-        return [
-            'now' => gmdate('Y-m-d\TH:i:s\Z', $now),
-            'burnFrom' => self::BURN_FROM,
-            'session' => ['id' => $session->id, 'title' => $session->title, 'project' => basename((string) $session->cwd), 'cwd' => App::shortPath((string) $session->cwd, null),
-                'projectColor' => self::projectColor(basename((string) $session->cwd))],
-            'agents' => $agents,
-            'messages' => self::messages($session, $now),
-        ];
+        return ['main' => $main, 'subs' => $agents];
     }
 
     /**
-     * Świeże wiadomości między agentami sesji; adresat i nadawca to identyfikatory agentów (`from` = null: z innej sesji).
+     * Świeże wiadomości między agentami sesji (z ostatnich `$window` s); adresat i nadawca to identyfikatory agentów (`from` = null: z innej sesji).
      *
      * @return list<array{id: string, ts: string, kind: string, from: ?string, to: string, text: string}>
      */
-    private static function messages(Session $session, int $now): array
+    public static function messages(Session $session, int $now, int $window = self::MESSAGE_SHOW): array
     {
         $ids = array_flip(array_map(static fn (Agent $a): string => $a->id, $session->agents));
         $out = [];
         foreach ($session->messages as $m) {
-            if (!in_array($m['kind'], ['task', 'result', 'send', 'peer'], true) || $now - self::time($m['ts']) > self::MESSAGE_SHOW) {
+            if (!in_array($m['kind'], ['task', 'result', 'send', 'peer'], true) || $now - self::time($m['ts']) > $window) {
                 continue;
             }
             $from = $m['kind'] === 'peer' ? null : $m['from'];
@@ -394,7 +377,7 @@ final class OfficeState
     }
 
     /** Cel do dymka: ścieżka przycięta od początku, opis od końca. */
-    private static function target(?string $path, string $summary): array
+    public static function target(?string $path, string $summary): array
     {
         $text = trim((string) preg_replace('/\s+/', ' ', $path ?? $summary));
         if (mb_strlen($text) > self::TARGET_LIMIT) {

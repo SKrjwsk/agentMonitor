@@ -31,6 +31,8 @@ final class Boundary
     private array $rw;
     /** @var list<string> */
     private array $r;
+    /** @var array{rw: list<string>, r: list<string>} ścieżki z konfiguracji, do wyświetlenia */
+    private array $roots;
 
     /**
      * @param list<string> $rw ścieżki absolutne: odczyt i zapis
@@ -40,6 +42,40 @@ final class Boundary
     {
         $this->rw = array_map(self::canon(...), $rw);
         $this->r = array_map(self::canon(...), $r);
+        $trim = static fn (string $p): string => rtrim($p, '/');
+        $this->roots = ['rw' => array_values(array_map($trim, $rw)), 'r' => array_values(array_map($trim, $r))];
+    }
+
+    /** @return array{rw: list<string>, r: list<string>} strefy z konfiguracji (ścieżki jak zapisane, bez końcowego `/`) */
+    public function zones(): array
+    {
+        return $this->roots;
+    }
+
+    /**
+     * Strefa dotknięcia: `rw` / `r` (z korzeniem strefy), `system` (plik wykonywalny programu systemowego) albo `out`
+     * (poza granicą; także zapis w strefie tylko do odczytu — wtedy `root` = ta strefa). Ta sama reguła co `classify`.
+     *
+     * @return array{zone: string, root: ?string}
+     */
+    public function zoneOf(Touch $t): array
+    {
+        $path = self::canon($t->path);
+        if ($t->op === Touch::EXEC && array_filter(self::SYSTEM_PROGRAMS, static fn (string $dir): bool => str_starts_with($path, $dir)) !== []) {
+            return ['zone' => 'system', 'root' => null];
+        }
+        foreach ($this->rw as $i => $root) {
+            if (self::under($path, $root)) {
+                return ['zone' => 'rw', 'root' => $this->roots['rw'][$i]];
+            }
+        }
+        foreach ($this->r as $i => $root) {
+            if (self::under($path, $root)) {
+                return ['zone' => in_array($t->op, [Touch::EDIT, Touch::WRITE], true) ? 'out' : 'r', 'root' => $this->roots['r'][$i]];
+            }
+        }
+
+        return ['zone' => 'out', 'root' => null];
     }
 
     public static function fromEnv(): self
@@ -94,25 +130,7 @@ final class Boundary
 
     private function allows(Touch $t): bool
     {
-        $path = self::canon($t->path);
-        if ($t->op === Touch::EXEC && array_filter(self::SYSTEM_PROGRAMS, static fn (string $dir): bool => str_starts_with($path, $dir)) !== []) {
-            return true;
-        }
-        foreach ($this->rw as $root) {
-            if (self::under($path, $root)) {
-                return true;
-            }
-        }
-        if (in_array($t->op, [Touch::EDIT, Touch::WRITE], true)) {
-            return false;
-        }
-        foreach ($this->r as $root) {
-            if (self::under($path, $root)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->zoneOf($t)['zone'] !== 'out';
     }
 
     /** Klucz porównań; na macOS `/tmp`, `/var`, `/etc` to dowiązania do `/private/…`. */

@@ -4,14 +4,17 @@
  * @var ?array $view
  * @var array<string, array{usd: ?float, output: int, partial: bool, upTo: ?string}> $sidebarTokens
  * @var ?array $overview strona startowa, gdy nie wybrano sesji
- * @var ?bool $office wirtualne biuro (wszystkie aktywne sesje), trasa /office
+ * @var ?array $scopeView widok przeglądowy (Viz\Web\ScopeViews: /live, /office) — wszystkie sesje w zakresie projektów
+ * @var Viz\Web\Scope $scope zakres projektów (wybór w lewym panelu, ciasteczko viz-scope)
  */
 
 use Viz\Clock;
 use Viz\Web\App;
+use Viz\Web\Projects;
+use Viz\Web\ScopeViews;
 
 $currentId = $view['sid'] ?? '';
-$office ??= false;
+$scopeView ??= null;
 $follow = $view['p']['follow'] ?? false;
 $projects = App::sidebarProjects($sessions);
 ?>
@@ -23,6 +26,8 @@ $projects = App::sidebarProjects($sessions);
     <title>agentMonitor</title>
     <link rel="icon" href="data:,">
     <script>try { if (localStorage.getItem('viz-theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}</script>
+    <?php /* szerokość lewego panelu (Viz.SideDown…) przed pierwszym rysowaniem, żeby układ nie skakał */ ?>
+    <script>try { const w = localStorage.getItem('viz-side-w'); if (w !== null && w !== '') document.documentElement.style.setProperty('--side-w', (+w) + 'px'); } catch (e) {}</script>
     <link rel="stylesheet" href="/assets/app.css">
     <?php /* słownik dla JS (Viz.T): blok danych, nie skrypt; JSON_HEX_* chroni przed </script> i &; pusty obiekt dla EN */ ?>
     <script type="application/json" id="viz-i18n"><?= json_encode((object) Viz\Web\Lang::dict(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) ?></script>
@@ -34,16 +39,26 @@ $projects = App::sidebarProjects($sessions);
     <script src="/assets/vendor/force-graph-1.51.4.min.js"></script>
     <script src="/assets/graph.js"></script>
     <script src="/assets/timeline.js"></script>
+    <script src="/assets/feed.js"></script>
+    <script src="/assets/live.js"></script>
+    <script src="/assets/views.js"></script>
+    <script src="/assets/boundary-graph.js"></script>
+    <script src="/assets/boundary-flow.js"></script>
 </head>
 <body>
 <span class="refresh-error" viz-refresh-error hidden><?= th('refresh not working') ?></span>
 <div class="app">
+    <?php /* uchwyt szerokości lewego panelu: przeciągnij; do lewej krawędzi = schowany; dwuklik = domyślna szerokość */ ?>
+    <div class="side-resize" viz-side-resize title="<?= th('drag to resize the panel · drag to the edge = hide · double-click = default width') ?>"
+         onpointerdown="Viz.SideDown(this, event)" onpointermove="Viz.SideMove(this, event)" onpointerup="Viz.SideUp(this)" onpointercancel="Viz.SideUp(this)" ondblclick="Viz.SideReset()"></div>
     <aside class="sessions">
         <?php /* zakres „wszystkie sesje” to ten sam widok co sesja (s=all), z danymi z archiwum agregatów */ ?>
         <a class="summary-link" href="/" <?= $overview !== null ? 'viz-current' : '' ?>
            title="<?= th('what is fine and what needs attention: cost, security, agents') ?>">◎ <?= th('Overview') ?></a>
-        <a class="summary-link" href="/office" <?= $office ? 'viz-current' : '' ?>
-           title="<?= th('virtual office: what active agents of all sessions are doing right now') ?>">▦ <?= th('Office') ?></a>
+        <?php foreach (ScopeViews::menu() as $menuView): ?>
+            <a class="summary-link" href="<?= h($menuView['path']) ?>" <?= $scopeView !== null && $scopeView['menu'] === $menuView['menu'] ? 'viz-current' : '' ?>
+               title="<?= h(t($menuView['title'])) ?>"><?= h($menuView['icon']) ?> <?= h(t($menuView['label'])) ?></a>
+        <?php endforeach ?>
         <a class="summary-link" href="/?s=all" <?= $currentId === App::ALL ? 'viz-current' : '' ?>
            title="<?= th('files, commands and blocked calls across all sessions — the same tabs as a single session') ?>">Σ <?= th('All sessions') ?></a>
         <div class="sessions-head">
@@ -52,15 +67,16 @@ $projects = App::sidebarProjects($sessions);
             <button type="button" class="theme-toggle" onclick="Viz.Lang()" title="<?= th('language') ?>"><?= h(Viz\Web\Lang::LANGS[Viz\Web\Lang::current() === 'pl' ? 'en' : 'pl']) ?></button>
             <button type="button" class="theme-toggle" onclick="Viz.Theme()" title="<?= th('light / dark theme') ?>">◐</button>
         </div>
-        <?php /* wybór projektu filtruje listę w przeglądarce (Viz.Project), linki sesji zostają bez zmian */ ?>
-        <div class="sessions-project">
-            <select onchange="Viz.Project(this)" title="<?= th('show sessions of one project (working directory of the session)') ?>">
-                <option value=""><?= th('all projects ({n})', ['n' => count($sessions)]) ?></option>
-                <?php foreach ($projects as $key => $pr): ?>
-                    <option value="<?= h($key) ?>" title="<?= h(App::shortPath($pr['cwd'], null)) ?>"><?= h($pr['label'] . ' · ' . $pr['sessions']) ?></option>
-                <?php endforeach ?>
-            </select>
-        </div>
+        <?php /* zakres projektów (Viz\Web\Scope): wspólny dla widoków przeglądowych i listy sesji; Viz.Scope zapisuje ciasteczko viz-scope */ ?>
+        <details class="sessions-project scope-pick" viz-scope>
+            <summary title="<?= th('projects shown in Live, the 3D office and the session list (working directory of the session)') ?>">
+                <?= th('Projects') ?>: <b viz-scope-label><?= h(Projects::scopeLabel($scope, $projects)) ?></b>
+            </summary>
+            <label class="scope-all"><input type="checkbox" value="" onchange="Viz.Scope(this)" <?= $scope->all() ? 'checked' : '' ?>> <?= th('all projects ({n})', ['n' => count($sessions)]) ?></label>
+            <?php foreach ($projects as $key => $pr): ?>
+                <label title="<?= h(App::shortPath($pr['cwd'], null)) ?>"><input type="checkbox" value="<?= h($key) ?>" viz-scope-name="<?= h($pr['label']) ?>" onchange="Viz.Scope(this)" <?= $scope->has($key) ? 'checked' : '' ?>> <?= h($pr['label'] . ' · ' . $pr['sessions']) ?></label>
+            <?php endforeach ?>
+        </details>
         <ol>
             <?php foreach ($sessions as $s): ?>
                 <li viz-project="<?= h(App::fileHash($s['cwd'])) ?>" <?= !$follow && $s['id'] === $currentId ? 'viz-current' : '' ?> <?= $s['empty'] ? 'viz-empty' : '' ?>>
@@ -85,11 +101,11 @@ $projects = App::sidebarProjects($sessions);
                 </li>
             <?php endforeach ?>
         </ol>
-        <s-init run="(el) => Viz.ProjectInit(el)"></s-init>
+        <s-init run="(el) => Viz.ScopeInit(el)"></s-init>
     </aside>
     <main>
-        <?php if ($office): ?>
-            <?php require __DIR__ . '/office.php' ?>
+        <?php if ($scopeView !== null): ?>
+            <?php require __DIR__ . '/' . $scopeView['template'] ?>
         <?php elseif ($view === null): ?>
             <?php require __DIR__ . '/overview.php' ?>
         <?php else: ?>

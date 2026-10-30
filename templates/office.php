@@ -1,14 +1,15 @@
 <?php
 /**
  * Wirtualne biuro (trasa /office): aktywni agenci wszystkich sesji jako postacie w stylu Minecrafta (three.js, public/assets/vendor, wersja przypięta).
- * Dane: GET /office.json (OfficeState::merge), pobierane co 1 s i przyciskiem „↻ refresh”.
+ * Dane: wspólny feed GET /feed.json (Viz\Office\Feed) przez VizFeed co 1 s, w przeglądarce składany w stan biura (fromFeed) (także od razu po zmianie zakresu projektów, zdarzenie viz-scope).
  * Rząd biurek = projekt; kolor projektu (OfficeState::projectColor) = koszulki agentów i dywan rzędu, głowa = klasa modelu (OfficeState::persona);
  * każda sesja ma jeszcze własny kolor (kwadracik nad postaciami) i pozycję w legendzie „Projects” na lewym boku; pod nią statyczna legenda „Status”.
  *
  * Sygnatura:
  * < viz-office viz-office-url>
  *     < .office-top>                           # pasek i pod nim kolumna legend (lewy bok)
- *         < button onclick="VizOffice.Refresh(this)">  < viz-office-status>   # ręczne odświeżenie; status jest pusty, a przy błędzie odświeżania pokazuje „refresh not working”
+ *         < nav.scope-switch>                  # przełącznik Live | Biuro 3D (templates/scope-switch.php)
+ *         < viz-office-status>                 # status jest pusty, a przy błędzie odświeżania pokazuje „refresh not working”
  *         < viz-office-side>                   # kolumna legend; jej szerokość przesuwa scenę w prawo
  *             < viz-office-legend>             # Projects: linia „head = model · shirt = project”, potem < viz-office-project> kolor projektu i nazwa (= rząd biurek), pod nią < a viz-office-session href="/?s=…"> kwadracik, tytuł, liczba agentów
  *             < .office-legend>                # Status: kolory stanów, zachowania przy granicy, monety (wartość z OfficeState::COIN_USD), koperty
@@ -19,13 +20,13 @@
  *     < s-init run="(el) => import(…office.js).then(…)">
  */
 ?>
-<section class="office" viz-office viz-office-url="/office.json">
+<section class="office" viz-office viz-office-url="/feed.json">
     <div class="office-top">
     <div class="office-bar">
         <span class="muted"><?= th('only active agents · drag = rotate · right-drag / shift-drag = move · wheel = zoom') ?></span>
         <span class="office-bar-sep"></span>
+        <?php require __DIR__ . '/scope-switch.php' ?>
         <span class="muted" viz-office-status></span>
-        <button type="button" class="btn" onclick="VizOffice.Refresh(this)">↻ <?= th('refresh') ?></button>
     </div>
     <div class="office-side" viz-office-side>
         <section class="office-legend office-projects">

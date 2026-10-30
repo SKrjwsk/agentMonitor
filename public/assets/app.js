@@ -185,32 +185,95 @@ const Viz = (() => {
         if (document.one('[viz-graph], [viz-office]')) location.reload();
     };
 
-    /** Lewy panel: tylko sesje wybranego projektu; wybór zapamiętany w przeglądarce. */
-    const showProject = (aside, key) => {
-        aside.all('li[viz-project]').forEach(li => li.show(key === '' || li.attr('viz-project') === key));
+    /**
+     * Zakres projektów (Viz\Web\Scope): wybór w lewym panelu = ciasteczko viz-scope (klucze po przecinku, puste = wszystkie).
+     * Czyta je serwer przy stronach i przy odpytywaniu widoków przeglądowych (/feed.json), więc zdarzenie `viz-scope`
+     * wystarczy, żeby widok pobrał dane od razu. Lista sesji filtrowana w przeglądarce; otwarta sesja zawsze widoczna.
+     */
+    const SCOPE_COOKIE = 'viz-scope';
+
+    const scopeKeys = box => [...box.all('input[type="checkbox"]')].filter(i => i.value !== '' && i.checked).map(i => i.value);
+
+    const showScope = (box, keys) => {
+        box.up('aside').all('li[viz-project]').forEach(li => li.show(keys.length === 0 || keys.includes(li.attr('viz-project')) || li.hasAttribute('viz-current')));
+        const names = [...box.all('input[type="checkbox"]')].filter(i => i.value !== '' && i.checked).map(i => i.attr('viz-scope-name'));
+        box.one('[viz-scope-label]').textContent = keys.length === 0 ? T('all') : keys.length === 1 ? names[0] : T('{n} selected', { n: keys.length });
     };
 
-    const Project = select => {
-        try { localStorage.setItem('viz-project', select.value); } catch { /* bez pamięci */ }
-        showProject(select.up('aside'), select.value);
+    const saveScope = keys => {
+        document.cookie = SCOPE_COOKIE + '=' + keys.join(',') + '; path=/; max-age=31536000; SameSite=Lax';
     };
 
-    /** Otwarta sesja zawsze widoczna: gdy zapamiętany projekt ją ukrywa, wybór przechodzi na jej projekt. */
-    const ProjectInit = aside => {
-        const select = aside.one('.sessions-project select');
-        let key = '';
-        try { key = localStorage.getItem('viz-project') || ''; } catch { /* bez pamięci */ }
-        const current = aside.one('li[viz-current]')?.attr('viz-project');
-        if (key && current && current !== key) key = current;
-        if (![...select.options].some(o => o.value === key)) key = '';
-        select.value = key;
-        Project(select);
+    const Scope = input => {
+        const box = input.closest('[viz-scope]');
+        const all = box.one('input[value=""]');
+        const items = [...box.all('input[type="checkbox"]')].filter(i => i.value !== '');
+        if (input === all) items.forEach(i => { i.checked = false; });
+        all.checked = !items.some(i => i.checked);
+        const keys = scopeKeys(box);
+        saveScope(keys);
+        showScope(box, keys);
+        document.dispatchEvent(new CustomEvent('viz-scope'));
+    };
+
+    /** Zakres z adresu (`projects=`) zapamiętany jak wybór w panelu — link z zakresem ustawia go na stałe. */
+    const ScopeInit = aside => {
+        const box = aside.one('[viz-scope]');
+        if (!box) return;
+        if (new URLSearchParams(location.search).has('projects')) saveScope(scopeKeys(box));
+        showScope(box, scopeKeys(box));
     };
 
     /**
      * Ostatnio otwarta zakładka sesji (`viz-view`, zapamiętana przy Init sekcji) — link sesji w lewym panelu otwiera ją od razu,
      * żeby przeglądać kolejne sesje w tym samym widoku (np. Office) bez przeklikiwania.
      */
+    /**
+     * Szerokość lewego panelu: przeciąganie uchwytu na jego krawędzi; węziej niż SIDE_HIDE = panel schowany (0), dwuklik = domyślna.
+     * CSS var --side-w na <html> (ustawiana też w <head> przed rysowaniem), wybór w localStorage (wygoda per przeglądarka).
+     */
+    const SIDE_KEY = 'viz-side-w';
+    const SIDE_DEFAULT = 280;
+    const SIDE_MIN = 180;
+    const SIDE_HIDE = 120;
+
+    const sideSet = width => {
+        const max = Math.round(window.innerWidth * 0.6);
+        const w = width < SIDE_HIDE ? 0 : Math.max(SIDE_MIN, Math.min(max, Math.round(width)));
+        document.documentElement.style.setProperty('--side-w', w + 'px');
+        return w;
+    };
+
+    const sideSave = w => {
+        try { localStorage.setItem(SIDE_KEY, String(w)); } catch { /* bez pamięci */ }
+    };
+
+    const SideDown = (handle, event) => {
+        event.preventDefault();
+        handle.setPointerCapture(event.pointerId);
+        handle._drag = { x: event.clientX, w: document.querySelector('.app > .sessions').getBoundingClientRect().width };
+        handle.flag('viz-side-dragging', true);
+    };
+
+    const SideMove = (handle, event) => {
+        if (!handle._drag) return;
+        handle._w = sideSet(handle._drag.w + event.clientX - handle._drag.x);
+    };
+
+    const SideUp = handle => {
+        if (!handle._drag) return;
+        handle._drag = null;
+        handle.flag('viz-side-dragging', false);
+        if (handle._w !== undefined) sideSave(handle._w);
+        // scena biura i oś czasu liczą rozmiar przy zmianie okna
+        window.dispatchEvent(new Event('resize'));
+    };
+
+    const SideReset = () => {
+        sideSave(sideSet(SIDE_DEFAULT));
+        window.dispatchEvent(new Event('resize'));
+    };
+
     const SessionLink = link => {
         let view = '';
         try { view = localStorage.getItem('viz-view') || ''; } catch { /* bez pamięci */ }
@@ -220,5 +283,5 @@ const Viz = (() => {
         link.href = url.pathname + url.search;
     };
 
-    return { T, Init, Query, LiveToggle, Open, OpenCmd, Close, Go, Theme, Lang, Project, ProjectInit, SessionLink };
+    return { T, Init, Query, LiveToggle, Open, OpenCmd, Close, Go, Theme, Lang, Scope, ScopeInit, SessionLink, SideDown, SideMove, SideUp, SideReset };
 })();
