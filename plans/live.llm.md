@@ -15,7 +15,7 @@ Zlecenie usera 2026-10-26: widok dla programisty obok biura 3D — big picture w
 - Mniej podpisów: tabela + legenda, szczegóły pod wierszem
 - Jeden wspólny zakres projektów (wszystkie albo zaznaczone) dla wszystkich widoków przeglądowych i listy sesji; zapamiętany i w adresie
 - Wspólny szkielet widoków przeglądowych (`ScopeViews`); teraz Live + Office, Overview i „all” później
-- Wygląd z systemu projektowego „Konsola” — przeniesiony do `workbox9/workbox9_prgrm/PROJECT_webapp_starter/design-system` jako domyślny dla innych aplikacji
+- Wygląd z systemu projektowego „Konsola” — przeniesiony do `workbox9/CONTEXT_APP_SYSTEM/PROJECT_webappStarter/design-system` jako domyślny dla innych aplikacji
 
 ## Kolumny
 - **Ty**: limit API → raport subagenta zablokowany → „zgoda?” (wywołanie ≥ 90 s; z transkryptu nie da się odróżnić zgody od długiej komendy) → czeka na Ciebie → deleguje / pracuje

@@ -207,14 +207,14 @@ function initial() {
                 { id: 'b4', ts: now - 1300, agent: 'main', tool: 'Bash', path: 'python3 - <<EOF … (bez ścieżek)', kind: 'unknown', by: null },
                 { id: 'b5', ts: now - 820, agent: 'main', tool: 'Bash', path: 'eval "$CMD" (bez ścieżek)', kind: 'unknown', by: null },
             ] },
-        { id: 's4', title: 'Test dymny tras biura', project: 'REPO_agent_vizualization', color: '#42d4f4', spent: 2.1,
+        { id: 's4', title: 'Test dymny tras biura', project: 'REPO_agentMonitor', color: '#42d4f4', spent: 2.1,
             agents: [ag('main', 'main', 'Sonnet 5.5', 'idle', null, 178000, 0, { idleSince: now - 257, last: 'Bash php tests/smoke.php' })], bound: [] },
-        { id: 's5', title: 'Live — plan i makieta', project: 'REPO_agent_vizualization', color: '#42d4f4', spent: 7.7,
+        { id: 's5', title: 'Live — plan i makieta', project: 'REPO_agentMonitor', color: '#42d4f4', spent: 7.7,
             agents: [ag('main', 'main', 'Opus 5.5', 'working', { tool: 'Edit', text: 'plans/live.mockup.html', since: now - 4 }, 289000, 0.92),
                 ag('a1', 'Explore: układ office.js', 'Haiku 5.5', 'working', { tool: 'Grep', text: '"aisles" public/assets', since: now - 2 }, 49000, 0.02)], bound: [] },
         { id: 's6', title: 'Import faktur z CSV', project: 'workbox9_netzi', color: '#3cb44b', spent: 4.6,
             agents: [ag('main', 'main', 'Sonnet 5.5', 'working', { tool: 'Read', text: 'src/Invoice/CsvImporter.php', since: now - 3 }, 396000, 0.61)], bound: [] },
-        { id: 's7', title: 'Parser Bash — heredoc', project: 'REPO_agent_vizualization', color: '#42d4f4', spent: 1.2,
+        { id: 's7', title: 'Parser Bash — heredoc', project: 'REPO_agentMonitor', color: '#42d4f4', spent: 1.2,
             agents: [ag('main', 'main', 'Opus 5.5', 'working', { tool: 'Bash', text: 'php tests/run.php', since: now - 8 }, 141000, 0.33)], bound: [] },
     ];
 }
