@@ -537,7 +537,7 @@ $liveCases = [
     })(), [true, false, false, true]],
     // rejestr widoków przeglądowych: trasy, dane, lewy panel, przełącznik; każdy szablon istnieje
     ['scope views: routes and data', [Viz\Web\ScopeViews::page('/live')['template'] ?? null, [Viz\Web\ScopeViews::isData('/feed.json'), Viz\Web\ScopeViews::isData('/office.json'), Viz\Web\ScopeViews::isData('/live.json')], Viz\Web\ScopeViews::page('/nope'),
-        array_column(Viz\Web\ScopeViews::menu(), 'path'), array_column(Viz\Web\ScopeViews::group('live'), 'path')], ['live.php', [true, false, false], null, ['/live'], ['/live', '/office', '/boundary-graph', '/boundary-flow']]],
+        array_column(Viz\Web\ScopeViews::menu(), 'path'), array_column(Viz\Web\ScopeViews::group('live'), 'path')], ['live.php', [true, false, false], null, ['/live'], ['/live', '/office', '/flow', '/boundary-graph', '/boundary-flow']]],
     ['scope views: templates exist', array_values(array_filter(array_column(Viz\Web\ScopeViews::VIEWS, 'template'), static fn (string $t): bool => !is_file(__DIR__ . '/../templates/' . $t))), []],
     ['scope views: label and title translated', array_values(array_filter(array_merge(array_column(Viz\Web\ScopeViews::VIEWS, 'label'), array_column(Viz\Web\ScopeViews::VIEWS, 'title')),
         static fn (string $k): bool => !isset((require __DIR__ . '/../lang/pl.php')[$k]))), []],

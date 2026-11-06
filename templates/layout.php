@@ -42,6 +42,7 @@ $projects = App::sidebarProjects($sessions);
     <script src="/assets/feed.js"></script>
     <script src="/assets/live.js"></script>
     <script src="/assets/views.js"></script>
+    <script src="/assets/flow.js"></script>
     <script src="/assets/boundary-graph.js"></script>
     <script src="/assets/boundary-flow.js"></script>
 </head>

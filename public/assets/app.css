@@ -716,3 +716,31 @@ p.explain { margin: 2px 0 6px; }
 .bflow-tip { position: absolute; z-index: 3; pointer-events: none; padding: 5px 8px; font: 11.5px var(--mono); white-space: pre; max-width: 480px; overflow: hidden;
     border: 1px solid var(--line); border-radius: 4px; background: var(--panel); box-shadow: 0 4px 14px rgba(0, 0, 0, .25); }
 @media (prefers-reduced-motion: reduce) { .bflow-band { transition: none; } }
+
+/* Flow (templates/flow.php, flow.js): sesja główna → subagenci → powrót, log; kolor karty = persona modelu (Sonnet pomarańcz, Haiku niebieski, Opus fiolet) */
+.flow-board [data-state="working"] { --s: var(--ok); } .flow-board [data-state="delegated"] { --s: var(--search); } .flow-board [data-state="idle"] { --s: var(--muted); }
+.flow-board [data-state="stuck"] { --s: var(--high); } .flow-board [data-state="done"] { --s: var(--ok); }
+.flow-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px 0; }
+.flow-tab { padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--muted); font: inherit; font-size: 12px; cursor: pointer; }
+.flow-tab[aria-current="true"] { color: var(--text); border-color: var(--muted); }
+.flow-diagram { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 14px; }
+.flow-card { --m: var(--muted); width: 230px; max-width: 100%; display: grid; gap: 4px; padding: 10px 12px; border: 1px solid var(--m); border-radius: 6px; background: var(--panel); }
+.flow-card[data-persona="sonnet"] { --m: var(--warn); } .flow-card[data-persona="haiku"] { --m: var(--search); } .flow-card[data-persona="opus"] { --m: var(--info); }
+.flow-main { width: 320px; }
+.flow-head { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.flow-model { color: var(--m); font-size: 12px; }
+.flow-state { color: var(--s, var(--muted)); font-size: 12px; font-weight: 600; }
+.flow-what { min-height: 1.3em; font-size: 12px; overflow-wrap: anywhere; }
+.flow-bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.flow-bar i { display: block; height: 100%; background: var(--m); }
+.flow-pct, .flow-meta { font-size: 11.5px; font-family: var(--mono); }
+.flow-subs { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; width: 100%; }
+.flow-link { color: var(--muted); font-size: 12px; padding: 2px 0; }
+.flow-link::before { content: "↓ "; } 
+.flow-foot { font-size: 12px; }
+.flow-log { padding: 0 14px 12px; display: grid; gap: 2px; font-size: 12px; font-family: var(--mono); }
+.flow-line { display: flex; flex-wrap: wrap; gap: 4px 10px; padding: 3px 8px; border-left: 2px solid var(--line); overflow-wrap: anywhere; }
+.flow-line[data-status="blocked"], .flow-line[data-status="outside"], .flow-line[data-status="trying"] { border-left-color: var(--high); }
+.flow-line[data-status="failed"], .flow-line[data-status="stopped"] { border-left-color: var(--warn); }
+.flow-line[data-status="msg"] { border-left-color: var(--search); }
+.flow-kind { color: var(--search); }

@@ -237,6 +237,7 @@ try {
     // Live (widok przeglądowy): strona, dane, zakres projektów z parametru i z ciasteczka
     $get('/live', 200, ['viz-live-rows', 'scope-switch', 'viz-scope-label', 'href="/office"']);
     // widoki granicy (graf, przepływ): strony, przełącznik we wszystkich widokach; dane mapy w feedzie (strefy z konfiguracji, katalogi poza granicą z fixture)
+    $get('/flow', 200, ['viz-flow-diagram', 'href="/office"', 'href="/flow" viz-current']);
     $get('/boundary-graph', 200, ['viz-bgraph-canvas', 'href="/live"', 'href="/office"', 'href="/boundary-flow"', 'href="/boundary-graph" viz-current']);
     $get('/boundary-flow', 200, ['viz-bflow-chart', 'href="/boundary-graph"', 'href="/boundary-flow" viz-current']);
     $check('GET /map → 404 (mapa w kartach usunięta)', $request('/map')[0] === 404);

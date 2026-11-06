@@ -24,6 +24,8 @@ final class ScopeViews
             'template' => 'live.php', 'data' => '/feed.json', 'menu' => 'live'],
         '/office' => ['name' => 'office', 'icon' => '▦', 'label' => '3D office', 'title' => 'virtual office: what active agents of all sessions are doing right now',
             'template' => 'office.php', 'data' => '/feed.json', 'menu' => 'live'],
+        '/flow' => ['name' => 'flow', 'icon' => '⇣', 'label' => 'Flow', 'title' => 'work flow of one session: main session, its subagents and what they are doing, with the log of recent calls and messages',
+            'template' => 'flow.php', 'data' => '/feed.json', 'menu' => 'live'],
         '/boundary-graph' => ['name' => 'bgraph', 'icon' => '◈', 'label' => 'Boundary graph', 'title' => 'agents and the directories they touched, grouped by boundary zone; red = outside the boundary',
             'template' => 'boundary-graph.php', 'data' => '/feed.json', 'menu' => 'live'],
         '/boundary-flow' => ['name' => 'bflow', 'icon' => '⇶', 'label' => 'Boundary flow', 'title' => 'how much of the work of each session goes into each zone, outside the boundary and to unknown paths',
