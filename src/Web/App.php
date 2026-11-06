@@ -8,7 +8,9 @@ use Viz\Boundary;
 use Viz\Clock;
 use Viz\Export\Csv;
 use Viz\Export\SessionExport;
+use Viz\Judge\SessionJudge;
 use Viz\Office\Feed;
+use Viz\Office\LiveState;
 use Viz\Model\Agent;
 use Viz\Model\Event;
 use Viz\Model\Session;
@@ -85,7 +87,11 @@ final class App
     public function handle(string $path, array $query, string $method = 'GET'): void
     {
         if ($method === 'POST') {
-            $path === '/export' ? $this->export($query) : $this->notFound();
+            match ($path) {
+                '/export' => $this->export($query),
+                '/judge' => $this->judge($query),
+                default => $this->notFound(),
+            };
             return;
         }
         // widoki przeglądowe (ScopeViews): strona i dane JSON, zakres projektów z Scope
@@ -104,6 +110,7 @@ final class App
             '/graph.json' => $this->graph($query),
             '/summary' => $this->summaryRedirect($query),
             '/export.csv' => $this->csv($query),
+            '/judge.json' => $this->judgeStatus($query),
             default => $this->notFound(),
         };
     }
@@ -169,13 +176,41 @@ final class App
             $this->notFound();
             return;
         }
+        header('Location: /?' . self::query($view, ['dumped' => $this->dump($view)]), true, 303);
+    }
+
+    /** Zrzut sesji z bieżącym źródłem i filtrami do `var/session_dump/<nazwa>/`; zwraca nazwę. */
+    private function dump(array $view): string
+    {
         $name = SessionExport::dumpName($view['session'], $view['agentFilter']);
         (new SessionExport())->writeDir(
             SessionExport::dumpRoot() . '/' . $name,
             $view['session'], $view['agentEvents'], $view['stats'], $view['title'], $view['p']['src'], $view['agentFilter'],
             array_filter(['turn' => $view['turn'] ?: null, 'scope' => $view['p']['scope'] ?: null, 'problems' => $view['p']['problems'] ?: null]),
         );
-        header('Location: /?' . self::query($view, ['dumped' => $name]), true, 303);
+
+        return $name;
+    }
+
+    /** Czy ocena sesji trwa — tani odczyt pliku `.running` bez parsowania transkryptu (zakładka „Ocena” pyta co 5 s). */
+    private function judgeStatus(array $q): void
+    {
+        $sid = is_string($q['s'] ?? null) ? $q['s'] : '';
+        header('Content-Type: application/json');
+        echo json_encode(['running' => HookLog::validSessionId($sid) && SessionJudge::running($sid, time()) !== null]);
+    }
+
+    /** Ocena sesji na żądanie: zrzut całej sesji (bez filtrów widoku) i sędzia w tle (SessionJudge) → zakładka „Ocena”. */
+    private function judge(array $q): void
+    {
+        $sid = is_string($q['s'] ?? null) ? $q['s'] : '';
+        $view = HookLog::validSessionId($sid) ? $this->view(['s' => $sid, 'view' => 'judge']) : null;
+        if ($view === null || $view['missing'] || $view['allSessions']) {
+            $this->notFound();
+            return;
+        }
+        $started = SessionJudge::start($sid, SessionExport::dumpRoot() . '/' . $this->dump($view), time());
+        header('Location: /?' . http_build_query(['s' => $sid, 'view' => 'judge'] + ($started ? [] : ['busy' => '1'])), true, 303);
     }
 
     /** Stary adres podsumowania → zakres „all” z przemapowanymi parametrami (zakładki zastąpiły `kind`). */
@@ -661,6 +696,8 @@ final class App
             'rows' => in_array($str('rows'), ['dirs', 'commands'], true) ? $str('rows') : 'files',
             'sx' => max(0, (int) $str('sx')),
             'dumped' => SessionExport::validDumpName($str('dumped')) ? $str('dumped') : '',
+            // ocena sesji już trwała, nowej nie uruchomiono (POST /judge)
+            'busy' => $str('busy') === '1',
             'sy' => max(0, (int) $str('sy')),
             'origin' => in_array($str('origin'), ['context', 'self'], true) ? $str('origin') : '',
             'all' => $str('all') === '1',
@@ -678,7 +715,7 @@ final class App
     }
 
     /** Widoki-pytania + widoki dodatkowe; stare `logs` (sprzed podziału na pytania) = `log`. */
-    public const VIEWS = ['read', 'changed', 'commands', 'blocked', 'boundary', 'messages', 'timeline', 'graph', 'log'];
+    public const VIEWS = ['read', 'changed', 'commands', 'blocked', 'boundary', 'messages', 'timeline', 'graph', 'flow', 'log', 'judge'];
 
     /** Zakładki dostępne w zakresie „all” — agregaty nie mają pojedynczych wywołań, wiadomości ani czasu. */
     public const ALL_VIEWS = ['read', 'changed', 'commands', 'blocked', 'boundary'];
@@ -863,6 +900,8 @@ final class App
                 'context' => count(array_filter($events, static fn (Event $e): bool => $e->tool === Event::TOOL_CONTEXT)),
                 'self' => count(array_filter($events, static fn (Event $e): bool => $e->tool !== Event::TOOL_CONTEXT)),
             ],
+            // zakładka Flow: cała sesja w kształcie wiersza feedu (flow.js); filtry agenta i tury jej nie dotyczą
+            'flow' => $p['view'] === 'flow' ? LiveState::session($session, time(), Boundary::fromEnv(), true) : null,
             'timeline' => $p['view'] === 'timeline' ? (new Timeline())->build($session, $events, array_flip(array_keys($session->agents)), $p['rows'], $p['origin'], $problems, $turn > 0 ? $turns[$turn - 1]['ts'] : null) : null,
             'turns' => $turns,
             'turn' => $turn,

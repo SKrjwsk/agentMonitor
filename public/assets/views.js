@@ -60,8 +60,46 @@ window.VizViews = (() => {
             : out.stopped ? T('Within the boundary — {n} attempts stopped', { n: out.stopped }) : T('All agents work within the boundary');
     };
 
-    /** Nazwa agenta do podpisu: sesja główna = tytuł sesji, subagent = typ. */
-    const agentName = (s, a) => a.kind === 'main' ? (s.title || s.id.slice(0, 8)) : a.label + (a.description ? ': ' + a.description : '');
+    /** Typ subagenta do podpisu; typ ogólny (domyślny dla wszystkich, nic nie mówi) = pusty. */
+    const GENERIC_AGENTS = ['general-purpose'];
+    const role = a => GENERIC_AGENTS.includes(a.label) ? '' : a.label || '';
 
-    return { T, OPS, el, css, color, tail, total, sessionLink, clock, dirKey, unknownCalls, outside, boundaryVerdict, agentName };
+    /** Nazwa agenta do podpisu: sesja główna = tytuł sesji, subagent = typ (bez ogólnego) i opis zadania. */
+    const agentName = (s, a) => a.kind === 'main' ? (s.title || s.id.slice(0, 8)) : [role(a), a.description].filter(Boolean).join(': ') || T('subagent');
+
+    /** Sesje pogrupowane po projekcie (`projectKey`), w kolejności pierwszego wystąpienia — kolejność ustala widok, sortując sesje. */
+    const byProject = sessions => {
+        const groups = new Map();
+        for (const s of sessions) {
+            const key = s.projectKey || s.project;
+            if (!groups.has(key)) groups.set(key, { key, project: s.project, color: s.projectColor, sessions: [] });
+            groups.get(key).sessions.push(s);
+        }
+
+        return [...groups.values()];
+    };
+
+    /**
+     * Gęstość widoku (`compact` domyślnie / `detailed`) na `root.dataset.density`, przycisk `[viz-density]` przełącza i woła `onChange`.
+     * Wybór w `localStorage` (`viz-density`, wspólny dla widoków); bez dostępu do pamięci — zostaje domyślny.
+     */
+    const density = (root, onChange) => {
+        const KEY = 'viz-density';
+        const btn = root.one('[viz-density]');
+        const set = d => {
+            root.dataset.density = d;
+            btn.setAttribute('aria-pressed', String(d === 'compact'));
+        };
+        let saved = null;
+        try { saved = localStorage.getItem(KEY); } catch { saved = null; }
+        set(saved === 'detailed' ? 'detailed' : 'compact');
+        btn.addEventListener('click', () => {
+            const d = root.dataset.density === 'compact' ? 'detailed' : 'compact';
+            try { localStorage.setItem(KEY, d); } catch { /* bez pamięci: tylko ta karta */ }
+            set(d);
+            onChange();
+        });
+    };
+
+    return { T, OPS, el, css, color, tail, total, sessionLink, clock, dirKey, unknownCalls, outside, boundaryVerdict, role, agentName, byProject, density };
 })();

@@ -23,14 +23,14 @@ if (str_starts_with($path, '/assets/') && !str_contains($path, '..') && is_file(
     return false;
 }
 $method = (string) ($_SERVER['REQUEST_METHOD'] ?? 'GET');
-// jedyny zapis (zrzut sesji) to POST z własnej strony — obca strona nie wywoła go formularzem ani <img>
+// zapis (zrzut sesji, ocena sesji uruchamiająca Claude Code) tylko POST-em z własnej strony — obca strona nie wywoła go formularzem ani <img>
 // przeglądarki wysyłają Sec-Fetch-Site; bez niego wymagany Origin własnego hosta (curl bez nagłówków → 403)
 $fetchSite = (string) ($_SERVER['HTTP_SEC_FETCH_SITE'] ?? '');
 $origin = (string) ($_SERVER['HTTP_ORIGIN'] ?? '');
 $sameOrigin = $fetchSite !== ''
     ? $fetchSite === 'same-origin'
     : in_array($origin, ['http://127.0.0.1:' . $port, 'http://localhost:' . $port], true);
-if ($method !== 'GET' && !($method === 'POST' && $path === '/export' && $sameOrigin)) {
+if ($method !== 'GET' && !($method === 'POST' && in_array($path, ['/export', '/judge'], true) && $sameOrigin)) {
     http_response_code($method === 'POST' ? 403 : 405);
     echo $method === 'POST' ? '403' : '405';
     return true;

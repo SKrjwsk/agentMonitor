@@ -170,6 +170,9 @@ try {
     $get("$s&view=timeline&rows=dirs", 200, ['class="tl-main"']);
     $get("$s&view=timeline&rows=commands", 200, ['class="tl-main"']);
     $get("$s&view=graph", 200, ['class="graph-canvas"']);
+    $get("$s&view=flow", 200, ['viz-flow-data', 'viz-flow-diagram']);
+    $get("$s&view=judge", 200, ['action="/judge?s=', 'No assessments yet.']);
+    $get("/judge.json?s=$sid", 200, ['"running":false']);
     $get("$s&view=log", 200, ['<code class="summary" title="uniqtool run">', '<code class="summary" title="cat beta-notes.txt &amp;&amp; ls">', 'class="ev-head"', 'class="badge err"']);
     $get("/session?s=$sid&view=read", 200, ['alpha-report.txt']);
     $get("/version?s=$sid");
@@ -237,7 +240,8 @@ try {
     // Live (widok przeglądowy): strona, dane, zakres projektów z parametru i z ciasteczka
     $get('/live', 200, ['viz-live-rows', 'scope-switch', 'viz-scope-label', 'href="/office"']);
     // widoki granicy (graf, przepływ): strony, przełącznik we wszystkich widokach; dane mapy w feedzie (strefy z konfiguracji, katalogi poza granicą z fixture)
-    $get('/flow', 200, ['viz-flow-diagram', 'href="/office"', 'href="/flow" viz-current']);
+    $get('/agents', 200, ['viz-agents-list', 'href="/office"', 'href="/agents" viz-current']);
+    $get('/lanes', 200, ['viz-lanes-list', 'href="/agents"', 'href="/lanes" viz-current']);
     $get('/boundary-graph', 200, ['viz-bgraph-canvas', 'href="/live"', 'href="/office"', 'href="/boundary-flow"', 'href="/boundary-graph" viz-current']);
     $get('/boundary-flow', 200, ['viz-bflow-chart', 'href="/boundary-graph"', 'href="/boundary-flow" viz-current']);
     $check('GET /map → 404 (mapa w kartach usunięta)', $request('/map')[0] === 404);
@@ -270,6 +274,7 @@ try {
     $check('obcy Host → 403', $request('/', 'GET', ['Host: obcy.example:1'])[0] === 403);
     $check('POST / → 403', $request('/', 'POST')[0] === 403);
     $check('POST /export bez nagłówków pochodzenia → 403', $request("/export?s=$sid", 'POST')[0] === 403);
+    $check('POST /judge bez nagłówków pochodzenia → 403 (obca strona nie uruchomi Claude Code)', $request("/judge?s=$sid", 'POST')[0] === 403);
     $check('PUT / → 405', $request('/', 'PUT')[0] === 405);
 
     // zrzut sesji: tylko POST z własnej strony, zapis w var/ kopii aplikacji

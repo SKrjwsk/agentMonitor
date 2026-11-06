@@ -362,7 +362,8 @@ foreach ($boundaryCases as [$name, $event, $expected]) {
 $officeEv = static fn (string $agent, string $ts, ?string $end, string $tool = 'Bash', ?array $denial = null, array $touches = [], bool $failed = false): Viz\Model\Event
     => new Viz\Model\Event("2026-01-01T$ts" . 'Z', 's', $agent, $tool, $agent . $ts, 'echo x', '/w', $failed || $denial !== null, $touches, endTs: $end === null ? null : "2026-01-01T$end" . 'Z', denial: $denial);
 $officeResp = static fn (string $agent, string $ts, string $model = 'claude-opus-5-5', ?float $usd = null): array
-    => ['ts' => "2026-01-01T$ts" . 'Z', 'agent' => $agent, 'model' => $model, 'cost' => $usd === null ? null : ['input' => 0.0, 'read' => 0.0, 'write' => $usd, 'output' => 0.0]];
+    => ['ts' => "2026-01-01T$ts" . 'Z', 'agent' => $agent, 'model' => $model, 'final' => true, 'input' => 0, 'output' => 0, 'cacheWrite' => 0, 'cacheRead' => 0,
+        'cost' => $usd === null ? null : ['input' => 0.0, 'read' => 0.0, 'write' => $usd, 'output' => 0.0]];
 $officeLimits = new Viz\Boundary(['/w', '/tmp/claude-1000'], []);
 $officeState = static function (array $events, array $usage, array $prompts = [], array $incidents = [], array $subs = []) use ($officeLimits): array {
     $agents = ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)];
@@ -480,7 +481,7 @@ foreach ($officeCases as [$name, $got, $expected]) {
 // Live (LiveState): okno 30 min, subagent zakończony = done, kontekst i okno modelu, zablokowany raport, granica; `now` = 10:10:00
 $liveNow = (int) strtotime('2026-01-01T10:10:00Z');
 $liveResp = static fn (string $agent, string $ts, int $tokens = 0, string $model = 'claude-opus-5-5'): array
-    => ['ts' => "2026-01-01T$ts" . 'Z', 'agent' => $agent, 'model' => $model, 'tokens' => $tokens, 'cost' => null];
+    => ['ts' => "2026-01-01T$ts" . 'Z', 'agent' => $agent, 'model' => $model, 'tokens' => $tokens, 'cost' => null, 'final' => true, 'input' => 1, 'output' => 10, 'cacheWrite' => 0, 'cacheRead' => $tokens];
 $liveSession = static function (array $events, array $usage, array $subs = [], ?Viz\Boundary $limits = null) use ($officeLimits, $liveNow): ?array {
     $agents = ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)];
     foreach ($subs as $id) {
@@ -500,6 +501,30 @@ $liveBound = $liveSession([
     $officeEv('main', '10:09:30', null, 'Read', null, [$touch('/etc/b')]),
 ], [$liveResp('main', '10:09:29')]);
 $liveCases = [
+    // oś pracy: prompty bez treści, minione oczekiwanie (ostatnia aktywność sesji głównej → prompt), wiadomość do innej sesji
+    ['axis: prompts, past waits and sends to other sessions', (static function () use ($officeEv, $touch, $liveNow, $officeLimits, $liveResp): array {
+        $session = new Viz\Model\Session('s', '', 't', '/w', ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)],
+            [$officeEv('main', '10:01:00', '10:01:05', 'Read', null, [$touch('/w/a')])], 1,
+            [['ts' => '2026-01-01T10:04:00Z', 'text' => 'tajne', 'kind' => 'prompt'], ['ts' => '2026-01-01T10:06:00Z', 'text' => 'message from: x', 'kind' => 'peer']],
+            [$liveResp('main', '10:02:00')],
+            [['ts' => '2026-01-01T10:05:00Z', 'from' => 'main', 'to' => 'app_system_leader', 'kind' => 'send', 'text' => 'hi', 'cut' => false],
+             ['ts' => '2026-01-01T10:05:30Z', 'from' => 'main', 'to' => 'main', 'kind' => 'send', 'text' => 'self', 'cut' => false]]);
+        $row = Viz\Office\LiveState::session($session, $liveNow, $officeLimits);
+
+        return [$row['prompts'], $row['waits'], $row['sends']];
+    })(), [[['ts' => '2026-01-01T10:04:00Z', 'kind' => 'prompt'], ['ts' => '2026-01-01T10:06:00Z', 'kind' => 'peer']],
+        [['from' => '2026-01-01T10:02:00Z', 'to' => '2026-01-01T10:04:00Z']], [['ts' => '2026-01-01T10:05:00Z', 'to' => 'app_system_leader']]]],
+    ['agents: tokens of the whole session per agent', $liveCtx['agents'][0]['tokens'], ['output' => 10, 'cacheWrite' => 0, 'cacheRead' => 452_000, 'input' => 1]],
+    // wywołanie poza granicą przez drugą ścieżkę: tekst = ścieżka poza granicą, nie pierwsza
+    ['calls: outside call shows the outside path', array_column($liveSession([$officeEv('main', '10:05:00', '10:05:01', 'Bash', null, [$touch('/w/ok.txt'), $touch('/etc/x')])], [])['agents'][0]['calls'], 'text'), ['/etc/x']],
+    // zakładka Flow: cała sesja bez okna — stara sesja nie znika, wywołania sprzed okna zostają
+    ['session whole: old session kept with all calls', (static function () use ($officeEv, $touch, $liveNow, $officeLimits): array {
+        $session = new Viz\Model\Session('s', '', 't', '/w', ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)],
+            [$officeEv('main', '09:00:00', '09:00:01', 'Read', null, [$touch('/w/a')])], 1, [], [], [], []);
+        $whole = Viz\Office\LiveState::session($session, $liveNow, $officeLimits, true);
+
+        return [Viz\Office\LiveState::session($session, $liveNow, $officeLimits) === null, count($whole['agents'][0]['calls'] ?? [])];
+    })(), [true, 1]],
     ['idle 20 min stays (the office lets it go after 10 min)', $liveStates($liveSession([], [$liveResp('main', '09:50:00')])), ['main:idle']],
     ['idle 40 min → outside the window', $liveStates($liveSession([], [$liveResp('main', '09:30:00')])), ['none']],
     ['finished subagent in the window = done', $liveStates($liveSession([$officeEv('aaa', '10:00:00', '10:00:10')], [$liveResp('main', '09:59:00'), $liveResp('aaa', '10:01:00')], ['aaa'])), ['main:idle', 'aaa:done']],
@@ -511,6 +536,67 @@ $liveCases = [
         [$liveResp('main', '10:00:00'), $liveResp('aaa', '10:06:02')], ['aaa'])['agents'][1]['reportBlocked'], null],
     ['boundary: kinds in the window, in call order', array_map(static fn (array $b): string => $b['kind'] . '=' . $b['text'] . ($b['by'] !== null ? ' by ' . $b['by'] : ''), $liveBound['boundary']),
         ['outside=/etc/a', 'stopped=/etc/c by user', 'unknown=python3 - <<EOF', 'trying=/etc/b']],
+    ['judge: structured_output, JSON in result, error and non-JSON output', (static function (): array {
+        $j = ['context' => 'c', 'good' => [], 'bad' => [], 'improve' => [], 'caveats' => [], 'reasoning' => 'r', 'verdict' => 'mixed', 'tldr' => ['t']];
+        $p = static fn (array|string $out): array => Viz\Judge\SessionJudge::parse(is_string($out) ? $out : (string) json_encode($out));
+        $a = $p(['is_error' => false, 'result' => '', 'structured_output' => $j, 'total_cost_usd' => 0.123456, 'num_turns' => 7, 'duration_ms' => 61000, 'session_id' => '0b5c2c1e-1111-4222-8333-444455556666']);
+        $b = $p(['is_error' => false, 'result' => json_encode($j)]);
+        $c = $p(['is_error' => true, 'result' => 'Credit balance is too low']);
+        $d = $p('Error: not logged in');
+
+        return [$a['ok'], $a['judgment']['verdict'], $a['costUsd'], $a['turns'], $a['judgeSession'], $b['ok'], $b['judgeSession'], $c['ok'], $c['error'], $d['ok'], str_starts_with((string) $d['error'], 'output is not JSON')];
+    })(), [true, 'mixed', 0.1235, 7, '0b5c2c1e-1111-4222-8333-444455556666', true, null, false, 'Credit balance is too low', false, true]],
+    ['judge: read-only tools, no MCP, no --bare (keeps hooks and OAuth), judge session saved (visible in the monitor); reasoning before verdict', (static function (): array {
+        $cmd = Viz\Judge\SessionJudge::command('0b5c2c1e-1111-4222-8333-444455556666', '/w/var/session_dump/x');
+        $props = array_keys(Viz\Judge\SessionJudge::schema()['properties']);
+        $after = static fn (string $flag): ?string => $cmd[array_search($flag, $cmd, true) + 1] ?? null;
+
+        return [$after('--name'), in_array('/w/var/session_dump/x', $cmd, true), in_array('--bare', $cmd, true), in_array('--no-session-persistence', $cmd, true), $after('--tools'), $after('--permission-mode'), in_array('--strict-mcp-config', $cmd, true),
+            array_search('reasoning', $props, true) < array_search('verdict', $props, true)];
+    })(), ['agentMonitor_judge_0b5c2c1e-1111-4222-8333-444455556666', true, false, false, 'Read,Grep,Glob', 'dontAsk', true, true]],
+    ['judge report: session id and paths for Claude Code on top, sections in order, findings with owner', (static function (): array {
+        $sid = '0b5c2c1e-1111-4222-8333-444455556666';
+        $f = ['severity' => 'high', 'title' => 'Czekanie na zgodę', 'evidence' => 'longest_until_result 34 min', 'fix' => 'allow git commit', 'owner' => 'hooks-permissions',
+            'owner_path' => '~/.claude/settings.json', 'why_missed' => 'brak reguły', 'confidence' => 'high'];
+        $r = ['stamp' => '20261106-140956', 'title' => 'T', 'dump' => '/w/var/session_dump/x', 'transcript' => '/p/t.jsonl', 'started' => 0, 'judgeSession' => null,
+            'judgment' => ['task' => 'a', 'outcome' => 'b', 'termination' => 'completed', 'timeline' => [], 'findings' => [$f], 'strengths' => [], 'prompt_tips' => [],
+                'tools' => [], 'missing_evidence' => [], 'reasoning' => 'r', 'verdict' => 'mixed', 'tldr' => ['x']]];
+        $md = Viz\Judge\SessionJudge::markdown($sid, $r);
+        $pos = static fn (string $needle): int|false => strpos($md, $needle);
+
+        return [str_contains(Viz\Judge\SessionJudge::handoff($sid, $r), 'Sesja Claude Code: ' . $sid), str_contains($md, 'Transkrypt: /p/t.jsonl'),
+            $pos('## TL;DR') < $pos('## Gdzie się gubił') && $pos('## Gdzie się gubił') < $pos('## Problemy') && $pos('## Problemy') < $pos('## Prompty'),
+            str_contains($md, 'właściciel: hooks-permissions (~/.claude/settings.json)')];
+    })(), [true, true, true, true]],
+    ['usdWindow: cost of model responses in the window, older ones skipped', (static function () use ($liveSession): array {
+        $r = static fn (string $ts, ?float $usd): array => ['ts' => "2026-01-01T$ts" . 'Z', 'agent' => 'main', 'model' => 'claude-opus-5-5', 'tokens' => 0, 'final' => true,
+            'input' => 0, 'output' => 0, 'cacheWrite' => 0, 'cacheRead' => 0, 'cost' => $usd === null ? null : ['input' => 0.0, 'read' => $usd, 'write' => 0.0, 'output' => 0.0]];
+
+        return [$liveSession([], [$r('09:00:00', 9.0), $r('09:41:10', 0.1), $r('10:09:30', 0.3), $r('10:09:55', null)])['agents'][0]['usdWindow']];
+    })(), [0.4]],
+    ['counts: unique files read / changed and executed Bash in the window, per agent and per session', (static function () use ($liveSession, $liveResp, $officeEv): array {
+        $op = static fn (string $path, string $o): Viz\Model\Touch => new Viz\Model\Touch($path, $o, true);
+        $s = $liveSession([
+            $officeEv('main', '09:30:00', '09:30:01', 'Read', null, [$op('/w/old', 'read')]),
+            $officeEv('main', '10:01:00', '10:01:01', 'Read', null, [$op('/w/a', 'read')]),
+            $officeEv('main', '10:02:00', '10:02:01', 'Read', null, [$op('/w/a', 'read')]),
+            $officeEv('main', '10:03:00', '10:03:01', 'Edit', null, [$op('/w/a', 'edit')]),
+            $officeEv('main', '10:04:00', '10:04:01', 'Bash'),
+            $officeEv('main', '10:04:10', '10:04:11', 'Bash', ['by' => 'hook', 'detail' => null]),
+            $officeEv('aaa', '10:05:00', '10:05:01', 'Read', null, [$op('/w/a', 'read'), $op('/w/b', 'read')]),
+            $officeEv('aaa', '10:06:00', '10:06:01', 'Write', null, [$op('/w/c', 'write')]),
+        ], [$liveResp('main', '10:07:00'), $liveResp('aaa', '10:06:02')], ['aaa']);
+
+        return [$s['agents'][0]['counts'], $s['agents'][1]['counts'], $s['counts']];
+    })(), [['read' => 1, 'write' => 1, 'bash' => 1], ['read' => 2, 'write' => 1, 'bash' => 0], ['read' => 2, 'write' => 2, 'bash' => 1]]],
+    ['calls: result cost in context from Event::carry (none = null)', (static function () use ($liveNow, $officeLimits): array {
+        $e = new Viz\Model\Event('2026-01-01T10:05:00Z', 's', 'main', 'Read', 'r1', 'a', '/w', false, [], endTs: '2026-01-01T10:05:01Z', carry: ['tokens' => 12_000, 'calls' => 4, 'usd' => 0.123456]);
+        $f = new Viz\Model\Event('2026-01-01T10:06:00Z', 's', 'main', 'Read', 'r2', 'b', '/w', false, [], endTs: '2026-01-01T10:06:01Z');
+        $session = new Viz\Model\Session('s', '', 't', '/w', ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)], [$e, $f], 2, [], [], [], []);
+        $calls = Viz\Office\LiveState::session($session, $liveNow, $officeLimits)['agents'][0]['calls'];
+
+        return array_map(static fn (array $c): array => [$c['tokens'], $c['usd']], $calls);
+    })(), [[12_000, 0.1235], [null, null]]],
     ['calls: status per call in the window (blocked before boundary, open call = trying)', array_column($liveBound['agents'][0]['calls'], 'status'), ['outside', 'blocked', 'unknown', 'ok', 'trying']],
     ['map: directories by zone, newest first (outside: read, stopped; inside: zone root)', array_map(static fn (array $m): string => $m['zone'] . ':' . ($m['root'] ?? '—') . ':' . $m['dir'] . ':r' . $m['read'] . ':s' . $m['stopped'] . ':' . implode(',', $m['agents']), $liveBound['map']),
         ['out:—:/etc:r3:s1:main', 'rw:/w:.:r1:s0:main']],
@@ -537,7 +623,7 @@ $liveCases = [
     })(), [true, false, false, true]],
     // rejestr widoków przeglądowych: trasy, dane, lewy panel, przełącznik; każdy szablon istnieje
     ['scope views: routes and data', [Viz\Web\ScopeViews::page('/live')['template'] ?? null, [Viz\Web\ScopeViews::isData('/feed.json'), Viz\Web\ScopeViews::isData('/office.json'), Viz\Web\ScopeViews::isData('/live.json')], Viz\Web\ScopeViews::page('/nope'),
-        array_column(Viz\Web\ScopeViews::menu(), 'path'), array_column(Viz\Web\ScopeViews::group('live'), 'path')], ['live.php', [true, false, false], null, ['/live'], ['/live', '/office', '/flow', '/boundary-graph', '/boundary-flow']]],
+        array_column(Viz\Web\ScopeViews::menu(), 'path'), array_column(Viz\Web\ScopeViews::group('live'), 'path')], ['live.php', [true, false, false], null, ['/live'], ['/live', '/office', '/agents', '/lanes', '/boundary-graph', '/boundary-flow']]],
     ['scope views: templates exist', array_values(array_filter(array_column(Viz\Web\ScopeViews::VIEWS, 'template'), static fn (string $t): bool => !is_file(__DIR__ . '/../templates/' . $t))), []],
     ['scope views: label and title translated', array_values(array_filter(array_merge(array_column(Viz\Web\ScopeViews::VIEWS, 'label'), array_column(Viz\Web\ScopeViews::VIEWS, 'title')),
         static fn (string $k): bool => !isset((require __DIR__ . '/../lang/pl.php')[$k]))), []],

@@ -7,7 +7,7 @@
 
 use Viz\Web\App;
 
-$labels = ['timeline' => 'Timeline', 'graph' => 'Graph', 'log' => 'Log'];
+$labels = ['timeline' => 'Timeline', 'graph' => 'Graph', 'flow' => 'Flow', 'log' => 'Log', 'judge' => 'Assessment'];
 $off = static fn (string $v): bool => $all && !in_array($v, App::ALL_VIEWS, true);
 ?>
 <nav class="tabs">

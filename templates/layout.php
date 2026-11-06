@@ -17,6 +17,9 @@ $currentId = $view['sid'] ?? '';
 $scopeView ??= null;
 $follow = $view['p']['follow'] ?? false;
 $projects = App::sidebarProjects($sessions);
+// znacznik oceny sędziego przy sesji (zakładka „Ocena”)
+$judged = Viz\Judge\SessionJudge::badges(array_column($sessions, 'id'), time());
+$verdictLabels = ['good' => 'good', 'mixed' => 'mixed', 'poor' => 'poor', 'inconclusive' => 'inconclusive', 'error' => 'error'];
 ?>
 <!doctype html>
 <html lang="<?= h(Viz\Web\Lang::current()) ?>">
@@ -43,6 +46,8 @@ $projects = App::sidebarProjects($sessions);
     <script src="/assets/live.js"></script>
     <script src="/assets/views.js"></script>
     <script src="/assets/flow.js"></script>
+    <script src="/assets/agents.js"></script>
+    <script src="/assets/lanes.js"></script>
     <script src="/assets/boundary-graph.js"></script>
     <script src="/assets/boundary-flow.js"></script>
 </head>
@@ -97,6 +102,12 @@ $projects = App::sidebarProjects($sessions);
                             <?php endif ?>
                             <?php if (time() - $s['mtime'] < 120): ?><span class="badge live"><?= th('active') ?></span><?php endif ?>
                             <?php if ($s['hook']): ?><span class="badge">hook</span><?php endif ?>
+                            <?php if (isset($judged[$s['id']])): ?>
+                                <?php $jb = $judged[$s['id']] ?>
+                                <span class="badge judged" data-verdict="<?= h($jb['running'] ? 'running' : $jb['verdict']) ?>"
+                                      title="<?= $jb['verdict'] !== null ? th('assessment: {v} ({t})', ['v' => t($verdictLabels[$jb['verdict']] ?? 'error'), 't' => Clock::local(date('c', $jb['started']), 'd.m H:i')]) . ' — ' : '' ?><?= th('click = Assessment tab') ?>"
+                                      onclick="event.preventDefault(); event.stopPropagation(); location.href = '/?s=<?= h(rawurlencode($s['id'])) ?>&view=judge'">⚖ <?= $jb['running'] ? th('assessing…') : th('assessed') ?></span>
+                            <?php endif ?>
                         </span>
                     </a>
                 </li>

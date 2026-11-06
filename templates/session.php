@@ -70,6 +70,10 @@ $tabs = ['read' => 'Files read', 'changed' => 'Files changed', 'commands' => 'Co
         <p class="empty"><?= th('This view needs single calls, messages and times — open one session from the list.') ?></p>
     <?php elseif ($p['view'] === 'graph'): ?>
         <?php require __DIR__ . '/graph.php' ?>
+    <?php elseif ($p['view'] === 'flow'): ?>
+        <?php require __DIR__ . '/flow.php' ?>
+    <?php elseif ($p['view'] === 'judge'): ?>
+        <?php require __DIR__ . '/judge.php' ?>
     <?php elseif ($p['view'] === 'timeline'): ?>
         <?php $tl = $view['timeline']; require __DIR__ . '/timeline.php' ?>
     <?php else: ?>

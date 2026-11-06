@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Viz\Office;
 
 use Viz\Boundary;
+use Viz\Model\Agent;
 use Viz\Model\Event;
 use Viz\Model\Session;
 use Viz\Model\Touch;
@@ -39,16 +40,19 @@ final class LiveState
     /** Katalogi sesji na mapie granicy: najświeżej dotknięte. */
     public const MAP_LIMIT = 150;
     private const MESSAGE_TOOLS = ['Agent', 'Task', 'SubagentHandback', 'SendMessage'];
+    /** Wiadomości do innych sesji (`sends`) w wierszu sesji: najnowsze. */
+    private const SEND_LIMIT = 50;
 
     /**
-     * Sesja do tablicy albo null, gdy nikt w niej nie był aktywny w oknie.
+     * Sesja do tablicy albo null, gdy nikt w niej nie był aktywny w oknie. `$whole` = cała sesja bez okna i bez limitu wywołań
+     * (zakładka Flow w szczegółach sesji) — wtedy null tylko bez sesji głównej.
      *
      * @return ?array<string, mixed>
      */
-    public static function session(Session $session, int $now, ?Boundary $limits = null): ?array
+    public static function session(Session $session, int $now, ?Boundary $limits = null, bool $whole = false): ?array
     {
         ['main' => $main, 'subs' => $subs] = OfficeState::rows($session, $now, $limits);
-        $from = $now - self::WINDOW;
+        $from = $whole ? 0 : $now - self::WINDOW;
         $subs = array_values(array_filter($subs, static fn (array $a): bool => self::time($a['last']) >= $from));
         if ($main === null || (self::time($main['last']) < $from && $subs === [])) {
             return null;
@@ -63,6 +67,35 @@ final class LiveState
                 $byAgent[$e->agentId][] = $e;
             }
         }
+        // koszt odpowiedzi modelu w oknie per agent; Flow (`$whole`) go nie ma
+        $inWindow = [];
+        foreach ($whole ? [] : $session->usage as $u) {
+            if ($u['cost'] !== null && self::time($u['ts']) >= $from) {
+                $inWindow[$u['agent']] = ($inWindow[$u['agent']] ?? 0.0) + array_sum($u['cost']);
+            }
+        }
+        // pliki odczytane / zmienione (unikalne ścieżki) i komendy Bash wykonane w oknie — per agent i dla całej sesji
+        $sets = ['' => ['read' => [], 'write' => [], 'bash' => 0]];
+        foreach ($byAgent as $id => $events) {
+            $sets[$id] = ['read' => [], 'write' => [], 'bash' => 0];
+            foreach ($events as $e) {
+                if (self::time($e->endTs ?? $e->ts) < $from || !$e->executed()) {
+                    continue;
+                }
+                foreach ($e->touches as $t) {
+                    $op = match ($t->op) { Touch::READ => 'read', Touch::EDIT, Touch::WRITE => 'write', default => null };
+                    if ($op !== null) {
+                        $sets[$id][$op][$t->path] = $sets[''][$op][$t->path] = true;
+                    }
+                }
+                if ($e->tool === 'Bash') {
+                    $sets[$id]['bash']++;
+                    $sets['']['bash']++;
+                }
+            }
+        }
+        $counts = static fn (string $id): array => isset($sets[$id])
+            ? ['read' => count($sets[$id]['read']), 'write' => count($sets[$id]['write']), 'bash' => $sets[$id]['bash']] : ['read' => 0, 'write' => 0, 'bash' => 0];
         usort($subs, static fn (array $a, array $b): int => strcmp($a['start'], $b['start']));
         $agents = [];
         foreach ([$main, ...$subs] as $row) {
@@ -86,10 +119,14 @@ final class LiveState
                 'blocked' => $row['blocked'],
                 'burn' => $row['burn'],
                 'spent' => $row['spent'],
+                'counts' => $counts($row['id']),
+                'usdWindow' => $whole ? null : round($inWindow[$row['id']] ?? 0.0, 4),
+                // tokeny agenta z całej sesji (nie z okna): wejście, wyjście, zapis i odczyt cache
+                'tokens' => array_intersect_key($session->tokens($row['id']), array_flip(['input', 'output', 'cacheWrite', 'cacheRead'])),
                 'context' => $tokens,
                 'contextMax' => max($tokens, self::contextWindow($row['model'])),
                 'reportBlocked' => $row['kind'] === 'sub' ? self::reportBlocked($byAgent[$row['id']] ?? [], $from) : null,
-                'calls' => self::calls($byAgent[$row['id']] ?? [], $from, $limits, $session->cwd),
+                'calls' => self::calls($byAgent[$row['id']] ?? [], $from, $limits, $session->cwd, $whole ? PHP_INT_MAX : self::CALL_LIMIT),
                 // dla biura 3D: `gone` = poza biurem według jego progów (OfficeState), głowa, archiwum ~/.claude, naruszenie granicy z 2 min
                 'gone' => $row['gone'],
                 'start' => $row['start'],
@@ -108,21 +145,100 @@ final class LiveState
             'cwd' => App::shortPath((string) $session->cwd, null),
             'last' => max(array_column($agents, 'last')),
             'spent' => round(array_sum(array_column($agents, 'spent')), 4),
+            'counts' => $counts(''),
             'agents' => $agents,
             'boundary' => $limits?->enabled() ? self::boundary($limits, $session, $from) : null,
             'map' => $limits?->enabled() ? self::map($limits, $session, $from) : null,
-            'messages' => OfficeState::messages($session, $now, self::WINDOW),
+            'messages' => OfficeState::messages($session, $now, $whole ? PHP_INT_MAX : self::WINDOW),
+            // oś pracy: prompty usera (bez treści), minione oczekiwania na usera i wiadomości do innych sesji
+            'prompts' => self::prompts($session, $from),
+            'waits' => self::waits($session, $from),
+            'sends' => self::sends($session, $from),
         ];
     }
 
     /**
-     * Wywołania narzędzi agenta zakończone albo trwające w oknie, najnowsze `CALL_LIMIT`. `status` (od najważniejszego):
+     * Prompty w oknie: `prompt` (user), `command` (komenda `/…`), `peer` (wiadomość z innej sesji) — sam czas i rodzaj.
+     *
+     * @return list<array{ts: string, kind: string}>
+     */
+    private static function prompts(Session $session, int $from): array
+    {
+        $out = [];
+        foreach ($session->prompts as $p) {
+            if (in_array($p['kind'], ['prompt', 'command', 'peer'], true) && self::time($p['ts']) >= $from) {
+                $out[] = ['ts' => $p['ts'], 'kind' => $p['kind']];
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Minione oczekiwania sesji głównej na usera: od ostatniej aktywności sesji głównej (odpowiedź modelu albo koniec wywołania)
+     * do promptu usera (`prompt`, `command`), kończące się w oknie. Bieżące oczekiwanie to stan `idle` + `since`, nie ta lista.
+     *
+     * @return list<array{from: string, to: string}>
+     */
+    private static function waits(Session $session, int $from): array
+    {
+        $acts = [];
+        foreach ($session->usage as $u) {
+            if ($u['agent'] === Agent::MAIN) {
+                $acts[] = self::time($u['ts']);
+            }
+        }
+        foreach ($session->events as $e) {
+            if ($e->agentId === Agent::MAIN && $e->tool !== Event::TOOL_CONTEXT) {
+                $acts[] = self::time($e->endTs ?? $e->ts);
+            }
+        }
+        sort($acts);
+        $out = [];
+        $i = 0;
+        $prev = null;
+        foreach ($session->prompts as $p) {
+            if (!in_array($p['kind'], ['prompt', 'command'], true)) {
+                continue;
+            }
+            $t = self::time($p['ts']);
+            while ($i < count($acts) && $acts[$i] < $t) {
+                $prev = $acts[$i++];
+            }
+            if ($prev !== null && $t >= $from && $t - $prev >= 1) {
+                $out[] = ['from' => gmdate('Y-m-d\TH:i:s\Z', $prev), 'to' => $p['ts']];
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Wiadomości `SendMessage` do adresata spoza sesji (inna sesja: nazwa albo adres gniazda) w oknie — do strzałek między sesjami.
+     *
+     * @return list<array{ts: string, to: string}>
+     */
+    private static function sends(Session $session, int $from): array
+    {
+        $out = [];
+        foreach ($session->messages as $m) {
+            if ($m['kind'] === 'send' && !isset($session->agents[$m['to']]) && $m['to'] !== '' && self::time($m['ts']) >= $from) {
+                $out[] = ['ts' => $m['ts'], 'to' => $m['to']];
+            }
+        }
+
+        return array_slice($out, -self::SEND_LIMIT);
+    }
+
+    /**
+     * Wywołania narzędzi agenta zakończone albo trwające w oknie, najnowsze `$limit` (zwykle `CALL_LIMIT`). `status` (od najważniejszego):
      * `blocked` (blokada Claude Code), `outside` / `trying` / `stopped` (granica), `failed` (nie wykonało się albo kod ≠ 0), `unknown` (Bash bez ścieżek), `ok`.
+     * `tokens` / `usd` = koszt wyniku w kontekście z `Event::carry` (zapis + dalsze odczyty; null = brak szacunku albo model spoza cennika).
      *
      * @param list<Event> $events
-     * @return list<array{id: string, ts: string, end: ?string, tool: string, text: string, path: bool, status: string}>
+     * @return list<array{id: string, ts: string, end: ?string, tool: string, text: string, path: bool, status: string, tokens: ?int, usd: ?float}>
      */
-    private static function calls(array $events, int $from, ?Boundary $limits, ?string $cwd): array
+    private static function calls(array $events, int $from, ?Boundary $limits, ?string $cwd, int $limit): array
     {
         $out = [];
         foreach ($events as $e) {
@@ -130,8 +246,10 @@ final class LiveState
             if (self::time($e->endTs ?? $e->ts) < $from) {
                 continue;
             }
-            $target = OfficeState::target($e->touches !== [] ? App::shortPath($e->touches[0]->path, $cwd) : null, $e->summary);
             $kind = $limits?->classify($e);
+            // przy naruszeniu granicy cel = pierwsza ścieżka poza granicą (wywołanie bywa poza przez drugą z kilku ścieżek)
+            $touch = in_array($kind, [Boundary::OUTSIDE, Boundary::STOPPED], true) ? ($limits->outside($e)[0] ?? null) : ($e->touches[0] ?? null);
+            $target = OfficeState::target($touch !== null ? App::shortPath($touch->path, $cwd) : null, $e->summary);
             $out[] = [
                 'id' => $e->toolUseId,
                 'ts' => $e->ts,
@@ -147,10 +265,12 @@ final class LiveState
                     $kind === Boundary::SUSPICIOUS => 'unknown',
                     default => 'ok',
                 },
+                'tokens' => $e->carry['tokens'] ?? null,
+                'usd' => isset($e->carry['usd']) ? round($e->carry['usd'], 4) : null,
             ];
         }
 
-        return array_slice($out, -self::CALL_LIMIT);
+        return array_slice($out, -$limit);
     }
 
     /**
