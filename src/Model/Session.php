@@ -19,6 +19,8 @@ final readonly class Session
      *        `send` (SendMessage), `peer` (wiadomość z innej sesji); `from`/`to` = id agenta, `user` albo adres spoza sesji
      * @param list<array{ts: string, agent: string, kind: string, text: string}> $incidents
      *        zakłócenia pracy: `interrupt` (user przerwał), `limit` (limit sesji / rate limit), `api-error` (brak sieci, błąd serwera, uśpienie komputera)
+     * @param list<array{ts: string, mode: string}> $modes tryb uprawnień z wiadomości usera w transkrypcie (`permissionMode`), od najstarszego;
+     *        wpis tylko przy zmianie; hook i transkrypty bez pola = []
      */
     public function __construct(
         public string $id,
@@ -32,6 +34,7 @@ final readonly class Session
         public array $usage = [],
         public array $messages = [],
         public array $incidents = [],
+        public array $modes = [],
     ) {
     }
 

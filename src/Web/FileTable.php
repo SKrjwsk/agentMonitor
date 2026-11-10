@@ -14,7 +14,7 @@ use Viz\Path;
  */
 final class FileTable
 {
-    public const SORTS = ['count', 'path', 'agents', 'first', 'last', 'sessions', 'cost'];
+    public const SORTS = ['count', 'path', 'agents', 'first', 'last', 'sessions', 'cost', 'time'];
 
     /**
      * @param list<Event> $events posortowane po czasie
@@ -62,6 +62,45 @@ final class FileTable
         }
 
         return array_values($rows);
+    }
+
+    /**
+     * Płaska lista dotknięć plików w kolejności wywołań (bez grupowania po pliku): jeden wiersz = jedno dotknięcie.
+     * `usd`/`tokens` = koszt wyniku wywołania w kontekście, podzielony po równo między pliki odczytane przez to wywołanie (zapisy: 0).
+     *
+     * @param list<Event> $events posortowane po czasie
+     * @param list<string> $ops operacje, które wchodzą do listy
+     * @param array<string, list<string>> $problems toolUseId => powody
+     * @return list<array{ts: string, endTs: ?string, id: string, tool: string, agentId: string, path: string, op: string, partial: bool, range: ?string, exists: bool, usd: float, tokens: int, blindEdit: bool}>
+     */
+    public static function calls(array $events, array $ops, array $problems, bool $attempted = false): array
+    {
+        $rows = [];
+        foreach ($events as $e) {
+            if (!$e->executed() && !$attempted) {
+                continue;
+            }
+            $seen = array_filter($e->touches, static fn (Touch $t): bool => !in_array($t->op, [Touch::EDIT, Touch::WRITE], true));
+            $usd = $seen === [] ? 0.0 : ($e->carry['usd'] ?? 0.0) / count($seen);
+            $tokens = $seen === [] ? 0 : intdiv((int) ($e->carry['tokens'] ?? 0), count($seen));
+            foreach ($e->touches as $t) {
+                if (!in_array($t->op, $ops, true)) {
+                    continue;
+                }
+                $mod = in_array($t->op, [Touch::EDIT, Touch::WRITE], true);
+                $blind = false;
+                foreach ($problems[$e->toolUseId] ?? [] as $reason) {
+                    $blind = $blind || (str_starts_with($reason, 'edit without prior read') && str_contains(implode("\n", $problems[$e->toolUseId]), basename($t->path)));
+                }
+                $rows[] = [
+                    'ts' => $e->ts, 'endTs' => $e->endTs, 'id' => $e->toolUseId, 'tool' => $e->tool, 'agentId' => $e->agentId,
+                    'path' => $t->path, 'op' => $t->op, 'partial' => $t->partial, 'range' => $t->range, 'exists' => $t->exists,
+                    'usd' => $mod ? 0.0 : $usd, 'tokens' => $mod ? 0 : $tokens, 'blindEdit' => $mod && $blind,
+                ];
+            }
+        }
+
+        return $rows;
     }
 
     /**

@@ -55,6 +55,7 @@ Wejście: folder zrzutu z przycisku „⇩ zrzut sesji” albo `php bin/export.p
 - `turns`: per prompt usera (tylko `kind: prompt`) — wywołania, dotknięte pliki, zmiany, błędy, minuty, tokeny (subagenci przypisani po czasie)
 - `prompts.json`: `kind` = `prompt` (user), `command`, `notify` (zadanie w tle), `peer` (wiadomość od innej sesji/subagenta — **nie od usera**), `compact`
 - `events.jsonl`: pole `error` = pierwsza linia komunikatu błędu; pełny komunikat tylko w transkrypcie
+- `approvals`: pytania o zgodę (zakładka „Zgody”) — `count`, `how` (`hook` = zapis hooka, `waited` = bez blokady ≥ 90 s — także długa komenda bez pytania, `rejected` = odrzucone przez usera), `top` (kształt komendy ×liczba — przyczyny: `rule:` reguła z ustawień usera, `guess:` wzorzec z treści komendy: `cd-git`, `cd-outside`, `variable`, `redirect`, `no-allow`)
 - `parser.bash_blind`, `parser.indirect` — granice danych: odczyty przez skrypty i ślepe plamki są niewidoczne. Uwzględnij to w zastrzeżeniach
 
 ## Co oceniać
@@ -82,7 +83,7 @@ Wejście: folder zrzutu z przycisku „⇩ zrzut sesji” albo `php bin/export.p
   - komendy ryzykowne (`risky`) i interaktywne (`interactive`)
   - długie łańcuchy potoków zamiast narzędzia `Read`/`Grep`
   - udział roli `shell` (`cd`, `echo`) — szum czy realna praca
-- **Czas:** czekanie na zgodę (długie `longest_until_result`) wskazuje na brakujące uprawnienia (skill `/fewer-permission-prompts`)
+- **Czas:** czekanie na zgodę (długie `longest_until_result`, `approvals`) wskazuje na brakujące uprawnienia (skill `/fewer-permission-prompts`); przy `rule: ask-rule` dopisanie `allow` nie pomoże — reguła `ask` ma pierwszeństwo (właściciel `hooks-permissions`), przy `guess: cd-git` / `variable` poprawka jest w sposobie pisania komendy (właściciel `prompt` / `claude-md`)
 
 ## Wynik
 Zapisz `<zrzut>/analiza.md`, ustaw `chmod 600` (jak reszta zrzutu — zawiera komendy i prompty) i pokaż userowi TL;DR z linkiem do pliku. Format: po polsku, listy zamiast tabel, nagłówki `##`, bez wstępów.

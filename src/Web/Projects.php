@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Viz\Web;
 
 /**
- * Projekty = katalogi robocze sesji, od ostatnio aktywnego (kolejność listy sesji). Klucz = `App::fileHash(cwd)`, jak w `Scope`
- * i filtrze projektu w Overview i „all”. Nazwa = ostatni katalog; przy powtórzeniu (ten sam katalog w różnych miejscach) dwa ostatnie.
+ * Projekty = katalogi robocze sesji, od ostatnio aktywnego (kolejność listy sesji). Klucz = `App::fileHash(cwd)`, jak w `Scope`. Nazwa = ostatni katalog; przy powtórzeniu (ten sam katalog w różnych miejscach) dwa ostatnie.
  */
 final class Projects
 {

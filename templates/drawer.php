@@ -2,7 +2,7 @@
 /**
  * Panel szczegółów po prawej — tylko gdy jest zaznaczony plik (`pick`) albo wywołanie (`pev`); Esc albo × zamyka.
  * Plik: wywołania z bieżącego zakresu filtrów, które go dotknęły. Wywołanie: szukane w całej sesji.
- * Każda sekcja ma zdanie objaśnienia — panel ma mówić, co pokazuje, a nie tylko podawać dane.
+ * Objaśnienia sekcji (`p.explain`, `[viz-help]`) są ukryte; „?” obok × pokazuje wszystkie naraz (sam CSS, `:has`). Fakty zostają widoczne.
  *
  * @var array $view
  * @var array<string, string> $opLabels
@@ -31,6 +31,7 @@ $seconds = static function (string $from, ?string $to): ?float {
 ?>
 <aside class="drawer" viz-pane="drawer">
     <button type="button" class="drawer-close" onclick="Viz.Close(this)" title="<?= th('close (Esc)') ?>">×</button>
+    <label class="drawer-help" title="<?= th('show explanations') ?>"><input type="checkbox">?</label>
     <?php if ($p['pev'] !== ''): ?>
         <?php
         $e = null;
@@ -56,7 +57,7 @@ $seconds = static function (string $from, ?string $to): ?float {
             };
             ?>
             <p class="drawer-kind"><?= th('call from the session log') ?></p>
-            <h2><?= h($context ? t('loaded by Claude Code') : $e->tool) ?></h2>
+            <h2 title="<?= h(t(App::toolHelp($e->tool))) ?>"><?= h($context ? t('loaded by Claude Code') : $e->tool) ?></h2>
             <p class="explain"><?= h(t(App::toolHelp($e->tool))) ?>.</p>
 
             <dl class="facts">
@@ -67,8 +68,8 @@ $seconds = static function (string $from, ?string $to): ?float {
                 <dd><?= $dot($e->agentId) ?><?= h($agentLabel($e->agentId)) ?></dd>
                 <?php if (!$context): ?>
                     <dt><?= th('status') ?></dt>
-                    <dd><span class="<?= $e->failed ? 'cmd-err' : 'ok' ?>"><?= h($statusLabel) ?></span>
-                        <div class="explain"><?= h($statusHelp) ?></div>
+                    <dd><span class="<?= $e->failed ? 'cmd-err' : 'ok' ?>" title="<?= h($statusHelp) ?>"><?= h($statusLabel) ?></span>
+                        <div class="explain" viz-help><?= h($statusHelp) ?></div>
                         <?php if ($e->error !== null): ?><div class="muted"><?= th('message (first line only):') ?> <?= h($e->error) ?></div><?php endif ?></dd>
                 <?php endif ?>
                 <?php if ($e->carry !== null && $e->carry['usd'] !== null): ?>
@@ -78,13 +79,14 @@ $seconds = static function (string $from, ?string $to): ?float {
                         <div class="explain"><?= th("The result added ~{tokens} tokens to the agent's context.", ['tokens' => App::tokenCount($e->carry['tokens'])]) ?>
                             <?= th($e->carry['calls'] === 1 ? 'They were written to the cache once and then read again by {n} later model call of this agent' : 'They were written to the cache once and then read again by {n} later model calls of this agent', ['n' => $e->carry['calls']]) ?><?= $e->carry['calls'] > 0 ? h(t(' (until the context was compacted or the agent finished)')) : '' ?>.
                             <?= $e->carry['tokens'] >= 5000 && $e->carry['calls'] >= 20 ? th('A narrower read (offset/limit, sed -n, grep) or a subagent would keep it out of the main context.') : '' ?></div>
-                        <div class="muted"><?= th('Estimate at API prices: the next cache write split between the tool results by their length.') ?></div></dd>
+                        <div class="muted" viz-help><?= th('Estimate at API prices: the next cache write split between the tool results by their length.') ?></div></dd>
                 <?php endif ?>
             </dl>
 
             <h3><?= th($context ? 'what was loaded' : ($e->tool === 'Bash' ? 'command' : 'input')) ?></h3>
-            <pre class="drawer-cmd"><?= h($e->summary) ?></pre>
-            <?php if (mb_strlen($e->summary) >= 200): ?><p class="explain"><?= th('Shortened to 200 characters.') ?></p><?php endif ?>
+            <?php $shown = $e->command !== null && $e->command !== '' ? $e->command : $e->summary ?>
+            <pre class="drawer-cmd"><?= h($shown) ?></pre>
+            <?php if ($shown === $e->summary && mb_strlen($e->summary) >= 200): ?><p class="muted"><?= th('Shortened to 200 characters.') ?></p><?php endif ?>
 
             <?php if (($view['problems'][$e->toolUseId] ?? []) !== []): ?>
                 <h3><?= th('worth a look') ?></h3>
@@ -106,7 +108,7 @@ $seconds = static function (string $from, ?string $to): ?float {
 
             <h3><?= th('files ({n})', ['n' => count($e->touches)]) ?></h3>
             <?php if ($e->touches === []): ?>
-                <p class="explain"><?= th('No file was resolved from this call.') ?></p>
+                <p class="muted"><?= th('No file was resolved from this call.') ?></p>
             <?php else: ?>
                 <p class="explain"><?= th('Files this call touched and what happened to each. Click a file to see all calls that touched it.') ?></p>
                 <ul class="touches">
@@ -157,19 +159,18 @@ $seconds = static function (string $from, ?string $to): ?float {
             <p class="drawer-kind"><?= th('file') ?></p>
             <h2 title="<?= h($path) ?>"><?= h(basename($path)) ?></h2>
             <p class="muted drawer-path"><?= h(App::shortPath($path, null)) ?><?= $exists ? '' : h(t(' · does not exist now')) ?></p>
-            <p class="explain">
+            <p class="muted">
                 <?= th(count($hits) === 1 ? 'In the current scope {n} call touched this file,' : 'In the current scope {n} calls touched this file,', ['n' => count($hits)]) ?>
                 <?= th(count($agentIds) === 1 ? 'by {n} agent,' : 'by {n} agents,', ['n' => count($agentIds)]) ?>
                 <?= th('between {from} and {to}.', ['from' => Clock::local($hits[0][0]->ts, 'H:i:s'), 'to' => Clock::local($hits[count($hits) - 1][0]->ts, 'H:i:s')]) ?>
             </p>
 
             <h3><?= th('what happened to it') ?></h3>
-            <dl class="facts">
+            <p class="drawer-ops">
                 <?php foreach ($ops as $op => $n): ?>
-                    <dt viz-op="<?= h($op) ?>"><?= h(t($opLabels[$op] ?? $op) . ' ×' . $n) ?></dt>
-                    <dd class="explain"><?= h(t(App::OP_HELP[$op] ?? '')) ?></dd>
+                    <span viz-op="<?= h($op) ?>" title="<?= h(t(App::OP_HELP[$op] ?? '')) ?>"><?= h(t($opLabels[$op] ?? $op) . ' ×' . $n) ?></span>
                 <?php endforeach ?>
-            </dl>
+            </p>
 
             <h3><?= th('agents') ?></h3>
             <p>

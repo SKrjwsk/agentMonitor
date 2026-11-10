@@ -13,7 +13,7 @@ use Viz\Model\Session;
  * co może zmienić user, a co agent (KINDS).
  * Progi skalibrowane na sesjach usera 2026-10-24 (106 sesji, 1583 tury) — milestones.llm.md M17.
  * Ponowne odczyty i korekty usera celowo pominięte: na danych to głównie szum. Ślepe plamki Bash liczą się tylko jako
- * `unknown-paths` na osi granic (Boundary) — przy granicy agent/user lepiej więcej niż mniej.
+ * `unknown-paths` na osi granic (Boundary), z wagą `info`: to diagnostyka parsera, nie alarm, więc nie podnosi statusu osi.
  */
 final class Signals
 {
@@ -63,7 +63,7 @@ final class Signals
         'auto-mode' => ['boundaries', 'agent', 'high'],
         // granica pracy agentów z `.env` (Boundary)
         'outside-executed' => ['boundaries', 'agent', 'high'],
-        'unknown-paths' => ['boundaries', 'agent', 'warn'],
+        'unknown-paths' => ['boundaries', 'agent', 'info'],
         'outside-stopped' => ['boundaries', 'agent', 'info'],
         'limit' => ['env', '', 'warn'],
         'api-error' => ['env', '', 'warn'],

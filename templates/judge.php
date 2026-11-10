@@ -14,6 +14,9 @@ use Viz\Judge\SessionJudge;
 use Viz\Source\HookLog;
 
 $sid = $view['sid'];
+/** @var Viz\Stats $stats */
+$stats = $view['stats'];
+$pct = $stats->bashCalls > 0 ? round(100 * $stats->blind / $stats->bashCalls) : 0;
 $p = $view['p'];
 $running = SessionJudge::running($sid, time());
 $judgments = SessionJudge::list($sid);
@@ -66,20 +69,25 @@ $list = static fn (array $items, callable $f): string => $items === [] ? '<p cla
             <?php if (!is_array($j)): ?>
                 <p class="judge-error"><?= h((string) ($r['error'] ?? '')) ?></p>
             <?php else: ?>
+                <?php /* kolejność: TL;DR zaraz po werdykcie; kopiowanie dla Claude Code jednym przyciskiem (ścieżki zwinięte), uzasadnienie zwinięte */ ?>
+                <?php ob_start() ?>
                 <div class="judge-handoff">
-                    <button type="button" class="btn" onclick="navigator.clipboard.writeText(this.nextElementSibling.textContent).then(() => { this.textContent = '✓ <?= th('copied') ?>'; })">⧉ <?= th('Copy for Claude Code') ?></button>
-                    <pre><?= h(SessionJudge::handoff($sid, $r)) ?></pre>
+                    <button type="button" class="btn" onclick="navigator.clipboard.writeText(this.parentElement.querySelector('pre').textContent).then(() => { this.textContent = '✓ <?= th('copied') ?>'; })">⧉ <?= th('Copy for Claude Code') ?></button>
+                    <details><summary class="muted"><?= th('what gets copied') ?></summary><pre><?= h(SessionJudge::handoff($sid, $r)) ?></pre></details>
+                    <details class="judge-reason"><summary class="muted"><?= th('why this verdict') ?></summary><p><?= h($j['reasoning']) ?></p></details>
                 </div>
-                <p class="judge-reason"><?= h($j['reasoning']) ?></p>
+                <?php $handoff = (string) ob_get_clean() ?>
                 <?php if (!$full): ?>
                     <section class="judge-card"><h3>TL;DR</h3><?= $list($j['tldr'] ?? [], static fn (string $t): string => h($t)) ?>
                         <p class="muted"><?= th('older report format — run a new assessment for the full report') ?></p></section>
+                    <?= $handoff ?>
                 <?php else: ?>
                     <?php usort($j['findings'], static fn (array $a, array $b): int => ($rank[$a['severity']] ?? 3) <=> ($rank[$b['severity']] ?? 3)) ?>
                     <div class="judge-grid">
                         <section class="judge-card judge-tldr"><h3>TL;DR</h3><?= $list($j['tldr'], static fn (string $t): string => h($t)) ?></section>
                         <section class="judge-card"><h3><?= th('Task and outcome') ?></h3>
                             <dl><dt><?= th('task') ?></dt><dd><?= h($j['task']) ?></dd><dt><?= th('outcome') ?></dt><dd><?= h($j['outcome']) ?></dd></dl></section>
+                        <div class="judge-wide"><?= $handoff ?></div>
                         <section class="judge-card judge-wide"><h3><?= th('Where the agent got lost — key moments') ?></h3>
                             <?php if ($j['timeline'] === []): ?><p class="muted">—</p><?php endif ?>
                             <ol class="judge-timeline">
@@ -118,4 +126,18 @@ $list = static fn (array $items, callable $f): string => $items === [] ? '<p cla
             <?php endif ?>
         </details>
     <?php endforeach ?>
+    <details class="parser-diag">
+        <summary title="<?= th('how well the parser resolved this session') ?>"><?= th('parser: {pct}% blind', ['pct' => $pct]) ?></summary>
+        <div class="parser-body">
+            <p><strong><?= th('{n} calls', ['n' => $stats->calls]) ?></strong> · <?= h(implode(' · ', array_map(static fn ($t, $n): string => "$t ×$n", array_keys($stats->perTool), $stats->perTool))) ?></p>
+            <p><?= th('files: {n} · injected context {c} · read by agent {r} · re-read from context {rr}', ['n' => count($stats->files), 'c' => $stats->contextFiles, 'r' => $stats->selfReadFiles, 'rr' => $stats->contextReread]) ?></p>
+            <p><?= th('blind spots {b} ({pct}% of Bash) · partial parse {i} · errors {e}', ['b' => $stats->blind, 'pct' => $pct, 'i' => $stats->incomplete, 'e' => $stats->failed]) ?></p>
+            <?php if ($stats->indirect !== []): ?>
+                <p><?= th('indirect (program reads files itself)') ?>: <?= h(implode(', ', array_map(static fn ($k, $n): string => "$k ×$n", array_keys($stats->indirect), $stats->indirect))) ?></p>
+            <?php endif ?>
+            <?php if ($stats->unknown !== []): ?>
+                <p><?= th('unknown commands') ?>: <?= h(implode(', ', array_map(static fn ($k, $n): string => "$k ×$n", array_keys($stats->unknown), $stats->unknown))) ?></p>
+            <?php endif ?>
+        </div>
+    </details>
 </div>

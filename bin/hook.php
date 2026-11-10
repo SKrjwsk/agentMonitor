@@ -3,7 +3,10 @@
 declare(strict_types=1);
 
 /*
- * Hook Claude Code: PostToolUse + PostToolUseFailure.
+ * Hook Claude Code: PostToolUse, PostToolUseFailure, Notification, PermissionRequest, StopFailure, SessionEnd, Stop, SubagentStart, SubagentStop,
+ * InstructionsLoaded, PreCompact, PostCompact (zapis: HookRecorder).
+ * Przy PermissionRequest brak wyjścia = brak decyzji: Claude Code pokazuje zwykłe okno zgody. Przy Stop / SubagentStop / PreCompact brak wyjścia
+ * = nie blokuje zakończenia tury ani kompaktowania i nie dodaje instrukcji do streszczenia.
  * Nigdy nie przerywa pracy agenta: zawsze exit 0, nic nie wypisuje; błędy → var/hook-errors.log.
  */
 

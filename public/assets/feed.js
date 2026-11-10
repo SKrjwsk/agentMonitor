@@ -4,7 +4,7 @@
  *
  *     const feed = VizFeed.Start(root, { url: '/feed.json', onUpdate: feed => render(root, feed), onStop: () => … });
  *     feed.data      // ostatnia poprawna odpowiedź (null do pierwszej)
- *     feed.failed    // ostatnie odświeżenie się nie udało — widok pokazuje „refresh not working”, dane zostają
+ *     feed.failed    // dwa ostatnie odświeżenia z rzędu się nie udały — widok pokazuje „refresh not working”, dane zostają
  *     feed.now()     // czas serwera w sekundach (przesunięcie zegara z `data.now`)
  *
  * Zabezpieczenia jak w office.js: kolejne żądanie dopiero po zakończeniu poprzedniego (`root._busy`), limit czasu żądania,
@@ -18,7 +18,7 @@ window.VizFeed = (() => {
 
     const Start = (root, opts) => {
         const feed = {
-            data: null, offset: 0, failed: false,
+            data: null, offset: 0, failed: false, misses: 0,
             now() { return (Date.now() + this.offset) / 1000; },
         };
         const stop = () => {
@@ -39,12 +39,14 @@ window.VizFeed = (() => {
                 })
                 .then(data => {
                     feed.failed = false;
+                    feed.misses = 0;
                     if (!data || !root.isConnected) return;
                     feed.data = data;
                     feed.offset = data.now ? Date.parse(data.now) - Date.now() : 0;
                 })
-                // serwer wyłączony albo bez odpowiedzi w FETCH_TIMEOUT_MS: widok zostaje z ostatnimi danymi, status to mówi
-                .catch(() => { feed.failed = true; })
+                // serwer wyłączony albo bez odpowiedzi w FETCH_TIMEOUT_MS: widok zostaje z ostatnimi danymi, status to mówi — dopiero po dwóch
+                // błędach z rzędu (przejście do innego widoku przerywa trwające żądanie i nie jest awarią)
+                .catch(() => { feed.misses++; feed.failed = feed.misses >= 2; })
                 .finally(() => {
                     clearTimeout(timer);
                     root._busy = false;

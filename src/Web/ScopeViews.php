@@ -20,19 +20,30 @@ final class ScopeViews
      *      klucz = trasa strony; `menu` = do którego linku lewego panelu należy (link pokazuje pierwszy widok swojej grupy)
      */
     public const VIEWS = [
-        '/live' => ['name' => 'live', 'icon' => '◉', 'label' => 'Live', 'title' => 'where to step in: sessions waiting for you, boundary, context and pace of all sessions in scope',
-            'template' => 'live.php', 'data' => '/feed.json', 'menu' => 'live'],
+        '/lanes' => ['name' => 'lanes', 'icon' => '≡', 'label' => 'Work axis', 'title' => 'agent lanes of all sessions on one axis of the last 30 min: who works, since when, who waits',
+            'template' => 'lanes.php', 'data' => '/feed.json', 'menu' => 'live'],
         '/office' => ['name' => 'office', 'icon' => '▦', 'label' => '3D office', 'title' => 'virtual office: what active agents of all sessions are doing right now',
             'template' => 'office.php', 'data' => '/feed.json', 'menu' => 'live'],
         '/agents' => ['name' => 'agents', 'icon' => '▤', 'label' => 'Agents', 'title' => 'sessions in scope with their agents: model, state, tokens and cost; click = session flow',
             'template' => 'agents.php', 'data' => '/feed.json', 'menu' => 'live'],
-        '/lanes' => ['name' => 'lanes', 'icon' => '≡', 'label' => 'Work axis', 'title' => 'agent lanes of all sessions on one axis of the last 30 min: who works, since when, who waits',
-            'template' => 'lanes.php', 'data' => '/feed.json', 'menu' => 'live'],
-        '/boundary-graph' => ['name' => 'bgraph', 'icon' => '◈', 'label' => 'Boundary graph', 'title' => 'agents and the directories they touched, grouped by boundary zone; red = outside the boundary',
-            'template' => 'boundary-graph.php', 'data' => '/feed.json', 'menu' => 'live'],
-        '/boundary-flow' => ['name' => 'bflow', 'icon' => '⇶', 'label' => 'Boundary flow', 'title' => 'how much of the work of each session goes into each zone, outside the boundary and to unknown paths',
-            'template' => 'boundary-flow.php', 'data' => '/feed.json', 'menu' => 'live'],
     ];
+
+    /** Ciasteczko z ostatnio otwartym widokiem przeglądowym; ustawia je serwer przy każdym wejściu na taki widok. */
+    public const COOKIE = 'viz-live';
+
+    /** Jedna pozycja lewego panelu na grupę (zamiast pierwszego widoku grupy): nazwa i opis grupy. */
+    private const GROUPS = [
+        'live' => ['icon' => '◉', 'label' => 'Live preview', 'title' => 'what agents are doing now — opens the view you used last: work axis, 3D office or agents'],
+    ];
+
+    /** Trasa ostatnio otwartego widoku (z ciasteczek); gdy brak albo nieznana — pierwszy widok grupy `live`. */
+    public static function last(array $cookies): string
+    {
+        $path = is_string($cookies[self::COOKIE] ?? null) ? $cookies[self::COOKIE] : '';
+        $paths = array_column(self::group('live'), 'path');
+
+        return in_array($path, $paths, true) ? $path : $paths[0];
+    }
 
     /** @return ?array{name: string, icon: string, label: string, title: string, template: string, data: string, menu: string, path: string} */
     public static function page(string $path): ?array
@@ -47,11 +58,16 @@ final class ScopeViews
     }
 
     /** @return list<array{name: string, icon: string, label: string, title: string, template: string, data: string, menu: string, path: string}> widoki z linkiem w lewym panelu (pierwszy z każdej grupy) */
-    public static function menu(): array
+    public static function menu(?string $last = null): array
     {
         $out = [];
         foreach (self::VIEWS as $path => $view) {
             $out[$view['menu']] ??= $view + ['path' => $path];
+        }
+        foreach (self::GROUPS as $menu => $group) {
+            if (isset($out[$menu])) {
+                $out[$menu] = $group + ['path' => $last !== null && ($sv = self::page($last)) !== null && $sv['menu'] === $menu ? $last : $out[$menu]['path']] + $out[$menu];
+            }
         }
 
         return array_values($out);

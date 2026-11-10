@@ -80,26 +80,16 @@ window.VizViews = (() => {
     };
 
     /**
-     * Gęstość widoku (`compact` domyślnie / `detailed`) na `root.dataset.density`, przycisk `[viz-density]` przełącza i woła `onChange`.
-     * Wybór w `localStorage` (`viz-density`, wspólny dla widoków); bez dostępu do pamięci — zostaje domyślny.
+     * Sekcja drugorzędna (`<details>`, w szablonie bez `open` — domyślnie zwinięta): stan otwarcia w `localStorage` pod `key`.
+     * Bez dostępu do pamięci — zostaje zwinięta, przełączanie działa tylko w tej karcie.
      */
-    const density = (root, onChange) => {
-        const KEY = 'viz-density';
-        const btn = root.one('[viz-density]');
-        const set = d => {
-            root.dataset.density = d;
-            btn.setAttribute('aria-pressed', String(d === 'compact'));
-        };
-        let saved = null;
-        try { saved = localStorage.getItem(KEY); } catch { saved = null; }
-        set(saved === 'detailed' ? 'detailed' : 'compact');
-        btn.addEventListener('click', () => {
-            const d = root.dataset.density === 'compact' ? 'detailed' : 'compact';
-            try { localStorage.setItem(KEY, d); } catch { /* bez pamięci: tylko ta karta */ }
-            set(d);
-            onChange();
+    const remember = (details, key) => {
+        if (!details) return;
+        try { details.open = localStorage.getItem(key) === 'open'; } catch { /* bez pamięci: zwinięta */ }
+        details.addEventListener('toggle', () => {
+            try { localStorage.setItem(key, details.open ? 'open' : 'closed'); } catch { /* bez pamięci: tylko ta karta */ }
         });
     };
 
-    return { T, OPS, el, css, color, tail, total, sessionLink, clock, dirKey, unknownCalls, outside, boundaryVerdict, role, agentName, byProject, density };
+    return { T, OPS, el, css, color, tail, total, sessionLink, clock, dirKey, unknownCalls, outside, boundaryVerdict, role, agentName, byProject, remember };
 })();

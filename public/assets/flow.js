@@ -5,7 +5,7 @@
  * Sygnatura: templates/flow.php. Dane: cała sesja osadzona w `[viz-flow-data]` (kształt wiersza feedu: `agents[].calls`, `messages`,
  * `now`); rysowane raz przy montowaniu — odświeżenie robi podmiana fragmentu sesji. Wszystkie teksty przez textContent.
  * Pasek na karcie = zajęte okno kontekstu (`context` / `contextMax`) — transkrypt nie zna postępu zadania. Doradcy (advisor)
- * nie ma: nie wiadomo, jak transkrypt zapisuje jego wywołanie.
+ * nie ma: nie wiadomo, jak transkrypt zapisuje jego wywołanie. Sekcja „Kontekst wczytany” rysuje serwer (flow.php); tu tylko pamięć jej zwinięcia.
  */
 window.VizFlow = (() => {
 
@@ -191,6 +191,8 @@ window.VizFlow = (() => {
     };
 
     const Init = root => {
+        // sekcja „Kontekst wczytany” (serwer, flow.php): zwinięta, stan otwarcia przeżywa podmianę fragmentu sesji
+        VizViews.remember(root.querySelector('[viz-flow-context]'), 'viz-flow-context');
         let s = null;
         try { s = JSON.parse(root.one('[viz-flow-data]').textContent); } catch { s = null; }
         if (!s || !s.agents?.length) {

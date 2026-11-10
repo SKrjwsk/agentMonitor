@@ -51,6 +51,11 @@ final readonly class Event
         public ?array $carry = null,
         /** Sandbox systemu odmówił dostępu do pliku („Operation not permitted” w wyniku z błędem). */
         public bool $osDenied = false,
+        /**
+         * Pełna komenda Bash (tylko Bash; inne narzędzia = null). Wyłącznie do dopasowania reguł uprawnień (`Permissions\RuleMatcher`) —
+         * UI i eksport pokazują `summary` (200 znaków), bo dalsza część bywa treścią pliku (heredoc).
+         */
+        public ?string $command = null,
     ) {
     }
 

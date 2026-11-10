@@ -9,6 +9,9 @@ use Viz\Model\Event;
 use Viz\Model\Session;
 use Viz\Model\Touch;
 use Viz\Path;
+use Viz\Permissions\Approvals;
+use Viz\Permissions\Settings;
+use Viz\Source\HookLog;
 use Viz\Extract\ToolRoles;
 use Viz\Problems;
 use Viz\Web\App;
@@ -209,7 +212,33 @@ final class Metrics
             'problems' => self::problemSummary(Problems::tag($events)),
             'commands' => self::commands($calls),
             'compactions' => count(array_filter($session->prompts, static fn (array $p): bool => $p['kind'] === 'compact')),
+            'approvals' => self::approvals($session, $events),
         ];
+    }
+
+    /**
+     * Pytania o zgodę (zakładka „Zgody”, `Permissions\Approvals`): liczba, skąd wiadomo (`hook` / `waited` ≥ 90 s / `rejected` przez usera)
+     * i najczęstsze kształty komend z przyczyną — `rule:` = reguła z ustawień usera, `guess:` = wzorzec z treści komendy.
+     *
+     * @param list<Event> $events
+     * @return array{count: int, how: array<string, int>, top: list<string>}
+     */
+    private static function approvals(Session $session, array $events): array
+    {
+        $rows = Approvals::rows($events, HookLog::state($session->id), Settings::forSession($session->cwd), $session->cwd, time());
+        $how = [Approvals::HOOK => 0, Approvals::WAITED => 0, Approvals::REJECTED => 0];
+        foreach ($rows as $r) {
+            foreach ($r['how'] as $h) {
+                $how[$h]++;
+            }
+        }
+
+        return ['count' => count($rows), 'how' => $how, 'top' => array_map(static fn (array $g): string => $g['shape'] . ' ×' . $g['count'] . ' — '
+            . implode('; ', array_map(static fn (array $c): string => match ($c['level']) {
+                'rule' => 'rule: ' . $c['kind'] . ' ' . ($c['rule'] ?? '') . ' (' . ($c['file'] ?? '') . ')',
+                'heuristic' => 'guess: ' . $c['kind'] . ($c['detail'] !== null ? ' ' . $c['detail'] : ''),
+                default => 'unknown',
+            }, $g['causes'])), Approvals::top($rows))];
     }
 
     /**

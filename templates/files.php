@@ -11,6 +11,11 @@ use Viz\Model\Touch;
 use Viz\Web\App;
 
 $p = $view['p'];
+if (!$view['allSessions']) {
+    require __DIR__ . '/files-calls.php';
+
+    return;
+}
 // ten sam szablon dla jednej sesji i dla wszystkich (agregaty: zamiast agentów i pierwszego dotknięcia — liczba sesji)
 $all = $view['allSessions'];
 $changed = $p['view'] === 'changed';

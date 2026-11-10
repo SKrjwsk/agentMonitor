@@ -1244,6 +1244,9 @@ window.VizOffice = (() => {
             holeMat: new THREE.MeshLambertMaterial({ map: tex.dirt }),
         };
         root._office = office;
+        // legendy zwinięte domyślnie (stan w localStorage); zwinięta kolumna jest węższa, więc scena przesuwa się mniej (`shift` w pętli)
+        VizViews.remember(root.one('[viz-office-projects]'), 'viz-office-projects');
+        VizViews.remember(root.one('[viz-office-status-legend]'), 'viz-office-status');
         loadCamera(office);
         ensureRoom(office, 2, 3);
         loop(root);

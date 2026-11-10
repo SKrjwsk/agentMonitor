@@ -7,6 +7,7 @@ namespace Viz\Summary;
 use Viz\Model\Touch;
 use Viz\Path;
 use Viz\Web\App;
+use Viz\Web\Scope;
 
 /**
  * Ranking plików ze wszystkich sesji. Domyślny wynik = odczyty + kontekst + zmiany;
@@ -20,25 +21,18 @@ final class Ranking
 
     /**
      * @param list<array<string, mixed>> $sessions agregaty z SummaryStore
-     * @return array{files: list<array<string, mixed>>, sessions: list<array<string, mixed>>, projects: array<string, array{cwd: string, sessions: int}>}
+     * @param Scope $scope zakres projektów (katalog roboczy sesji)
+     * @param bool $onlyProject tylko pliki w katalogu roboczym swojej sesji
+     * @return array{files: list<array<string, mixed>>, sessions: list<array<string, mixed>>}
      */
-    public static function build(array $sessions, int $days, string $project, string $sort, bool $onlyProject): array
+    public static function build(array $sessions, int $days, Scope $scope, string $sort, bool $onlyProject): array
     {
         $cutoff = $days > 0 ? gmdate('Y-m-d\TH:i:s', time() - $days * 86400) : '';
-        $projects = [];
-        foreach ($sessions as $s) {
-            $cwd = (string) ($s['cwd'] ?? '');
-            $key = App::fileHash($cwd);
-            $projects[$key] ??= ['cwd' => $cwd, 'sessions' => 0];
-            $projects[$key]['sessions']++;
-        }
-        uasort($projects, static fn (array $a, array $b): int => $b['sessions'] <=> $a['sessions']);
-
         $files = [];
         $inScope = [];
         foreach ($sessions as $s) {
             $cwd = (string) ($s['cwd'] ?? '');
-            if ($project !== '' && App::fileHash($cwd) !== $project) {
+            if (!$scope->includes($cwd)) {
                 continue;
             }
             if ($cutoff !== '' && (string) ($s['last'] ?? '') < $cutoff) {
@@ -83,6 +77,6 @@ final class Ranking
             : uasort($files, static fn (array $a, array $b): int => [$b['score'], $b['main']] <=> [$a['score'], $a['main']]);
         usort($inScope, static fn (array $a, array $b): int => strcmp((string) $b['last'], (string) $a['last']));
 
-        return ['files' => array_values($files), 'sessions' => $inScope, 'projects' => $projects];
+        return ['files' => array_values($files), 'sessions' => $inScope];
     }
 }

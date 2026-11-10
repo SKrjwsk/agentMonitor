@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Viz\Web;
 
 /**
- * Zakres projektów widoków przeglądowych (`ScopeViews`): wszystkie projekty albo wybrane. Projekt = katalog roboczy sesji,
- * klucz = `App::fileHash(cwd)` (12 hex, jak filtr projektu w Overview i „all”).
+ * Zakres projektów: wszystkie projekty albo wybrane — jedyny filtr projektu aplikacji (widoki przeglądowe `ScopeViews`, Overview,
+ * „wszystkie sesje” `s=all` ze wszystkimi zakładkami i CSV). Projekt = katalog roboczy sesji, klucz = `App::fileHash(cwd)` (12 hex).
  *
  * Jeden wybór dla całej aplikacji: parametr `projects` (lista po przecinku; pusty = wszystkie) ma pierwszeństwo przed ciasteczkiem
  * `viz-scope`, które ustawia wybór w lewym panelu (`Viz.Scope`). Ciasteczko idzie też z odpytywaniem `/feed.json` (wszystkie widoki przeglądowe),
- * więc zmiana wyboru działa bez przeładowania strony.
+ * więc tam zmiana wyboru działa bez przeładowania strony; Overview i `s=all` przeładowują się (`viz-scope-reload`).
  */
 final class Scope
 {

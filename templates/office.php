@@ -11,8 +11,9 @@
  *         < nav.scope-switch>                  # przełącznik Live | Biuro 3D (templates/scope-switch.php)
  *         < viz-office-status>                 # status jest pusty, a przy błędzie odświeżania pokazuje „refresh not working”
  *         < viz-office-side>                   # kolumna legend; jej szerokość przesuwa scenę w prawo
+ *             < details viz-office-projects>   # zwinięta domyślnie (localStorage `viz-office-projects`)
  *             < viz-office-legend>             # Projects: linia „head = model · shirt = project”, potem < viz-office-project> kolor projektu i nazwa (= rząd biurek), pod nią < a viz-office-session href="/?s=…"> kwadracik, tytuł, liczba agentów
- *             < .office-legend>                # Status: kolory stanów, zachowania przy granicy, monety (wartość z OfficeState::COIN_USD), koperty
+ *             < details viz-office-status-legend>   # Status, zwinięta domyślnie (localStorage `viz-office-status`): kolory stanów, zachowania przy granicy, monety (wartość z OfficeState::COIN_USD), koperty
  *     < viz-office-canvas onpointer…="VizOffice.Down|Move|Up(this, event)" onwheel="VizOffice.Wheel(this, event)">   # renderer three.js;
  *                                              # lewy przycisk = obrót, prawy / Shift = przesuwanie; kamera w localStorage (`viz-office-camera`)
  *     < viz-office-labels>                     # podpisy nad postaciami < a viz-office-label> (href="/?s=…", textContent)
@@ -29,13 +30,13 @@
         <span class="muted" viz-office-status></span>
     </div>
     <div class="office-side" viz-office-side>
-        <section class="office-legend office-projects">
-            <h3><?= th('Projects') ?></h3>
+        <details class="office-legend office-projects" viz-office-projects>
+            <summary><h3><?= th('Projects') ?></h3></summary>
             <p class="muted" viz-office-legend-note><?= th('head = model · shirt = project') ?></p>
             <nav viz-office-legend></nav>
-        </section>
-        <section class="office-legend">
-            <h3><?= th('Status') ?></h3>
+        </details>
+        <details class="office-legend" viz-office-status-legend>
+            <summary><h3><?= th('Status') ?></h3></summary>
             <span class="office-legend-item"><i class="office-dot" viz-office-state="working"></i><span><?= th('working') ?></span><span class="muted"><?= th('also waiting for your permission') ?></span></span>
             <span class="office-legend-item"><i class="office-dot" viz-office-state="delegated"></i><span><?= th('waiting for subagents') ?></span></span>
             <span class="office-legend-item"><i class="office-dot" viz-office-state="idle"></i><span><?= th('waiting for you') ?></span><span class="muted"><?= th('hand up') ?></span></span>
@@ -43,7 +44,7 @@
             <span class="office-legend-item"><i></i><span><?= th('digging on the grass') ?></span><span class="muted"><?= th('worked outside the boundary') ?></span></span>
             <span class="office-legend-item"><i class="office-dot" style="background: #f5c542"></i><span><?= th('coins') ?></span><span class="muted"><?= th('1 coin = ${usd} spent', ['usd' => rtrim(rtrim(number_format(\Viz\Office\OfficeState::COIN_USD, 4, '.', ''), '0'), '.')]) ?></span></span>
             <span class="office-legend-item"><i class="office-dot" style="background: #f4f1e6"></i><span><?= th('envelope') ?></span><span class="muted"><?= th('task, result or message between agents') ?></span></span>
-        </section>
+        </details>
     </div>
     </div>
     <div class="office-canvas" viz-office-canvas

@@ -568,6 +568,17 @@ $liveCases = [
             $pos('## TL;DR') < $pos('## Gdzie się gubił') && $pos('## Gdzie się gubił') < $pos('## Problemy') && $pos('## Problemy') < $pos('## Prompty'),
             str_contains($md, 'właściciel: hooks-permissions (~/.claude/settings.json)')];
     })(), [true, true, true, true]],
+    ['judge patterns: one place to fix = one group across sessions (path spellings merged), ranked by sessions; old format counted apart', (static function (): array {
+        $f = static fn (string $path, string $sev): array => ['severity' => $sev, 'title' => 't ' . $path, 'owner' => 'hooks-permissions', 'owner_path' => $path, 'fix' => 'x'];
+        $rep = static fn (string $sid, array $findings, array $timeline = []): array => ['sid' => $sid, 'title' => '', 'stamp' => 's', 'judgment' => ['findings' => $findings, 'timeline' => $timeline]];
+        $r = Viz\Judge\Patterns::build([
+            $rep('a', [$f('~/.claude/settings.json', 'low'), $f('/Users/Sebastian/.claude/settings.json', 'high')], [['kind' => 'blocked'], ['kind' => 'good']]),
+            $rep('b', [$f('~/.claude/settings.json', 'medium'), $f('/x/only.md', 'high')], [['kind' => 'blocked']]),
+            ['sid' => 'c', 'title' => '', 'stamp' => 's', 'judgment' => ['good' => []]],
+        ]);
+
+        return [$r['sessions'], $r['legacy'], count($r['groups']), $r['groups'][0]['path'], $r['groups'][0]['sessions'], count($r['groups'][0]['items']), $r['groups'][0]['severity'], $r['turns']];
+    })(), [2, 1, 2, '.claude/settings.json', 2, 3, 3, [['kind' => 'blocked', 'count' => 2, 'sessions' => 2]]]],
     ['usdWindow: cost of model responses in the window, older ones skipped', (static function () use ($liveSession): array {
         $r = static fn (string $ts, ?float $usd): array => ['ts' => "2026-01-01T$ts" . 'Z', 'agent' => 'main', 'model' => 'claude-opus-5-5', 'tokens' => 0, 'final' => true,
             'input' => 0, 'output' => 0, 'cacheWrite' => 0, 'cacheRead' => 0, 'cost' => $usd === null ? null : ['input' => 0.0, 'read' => $usd, 'write' => 0.0, 'output' => 0.0]];
@@ -622,11 +633,179 @@ $liveCases = [
         return [$s->includes('/w'), $s->includes('/x'), $s->includes(null), Viz\Web\Scope::parse('')->includes(null)];
     })(), [true, false, false, true]],
     // rejestr widoków przeglądowych: trasy, dane, lewy panel, przełącznik; każdy szablon istnieje
-    ['scope views: routes and data', [Viz\Web\ScopeViews::page('/live')['template'] ?? null, [Viz\Web\ScopeViews::isData('/feed.json'), Viz\Web\ScopeViews::isData('/office.json'), Viz\Web\ScopeViews::isData('/live.json')], Viz\Web\ScopeViews::page('/nope'),
-        array_column(Viz\Web\ScopeViews::menu(), 'path'), array_column(Viz\Web\ScopeViews::group('live'), 'path')], ['live.php', [true, false, false], null, ['/live'], ['/live', '/office', '/agents', '/lanes', '/boundary-graph', '/boundary-flow']]],
+    ['scope views: routes and data', [Viz\Web\ScopeViews::page('/lanes')['template'] ?? null, [Viz\Web\ScopeViews::isData('/feed.json'), Viz\Web\ScopeViews::isData('/office.json'), Viz\Web\ScopeViews::isData('/live.json')], Viz\Web\ScopeViews::page('/live'),
+        array_column(Viz\Web\ScopeViews::menu(), 'path'), Viz\Web\ScopeViews::last(['viz-live' => '/agents']), Viz\Web\ScopeViews::last(['viz-live' => '/nope']), array_column(Viz\Web\ScopeViews::menu('/office'), 'path'), Viz\Web\ScopeViews::menu()[0]['label'], array_column(Viz\Web\ScopeViews::group('live'), 'path')], ['lanes.php', [true, false, false], null, ['/lanes'], '/agents', '/lanes', ['/office'], 'Live preview', ['/lanes', '/office', '/agents']]],
     ['scope views: templates exist', array_values(array_filter(array_column(Viz\Web\ScopeViews::VIEWS, 'template'), static fn (string $t): bool => !is_file(__DIR__ . '/../templates/' . $t))), []],
     ['scope views: label and title translated', array_values(array_filter(array_merge(array_column(Viz\Web\ScopeViews::VIEWS, 'label'), array_column(Viz\Web\ScopeViews::VIEWS, 'title')),
         static fn (string $k): bool => !isset((require __DIR__ . '/../lang/pl.php')[$k]))), []],
+    // hook — zdarzenia stanu: tylko biała lista pól, treść (message, title, tool_input, error_details, last_assistant_message, pola obce) odrzucona;
+    // z PermissionRequest tylko kształt komendy (`git commit`) i reguła z propozycji (bez `destination` i treści komendy)
+    ['hook: state events — whitelist only, content dropped, unknown types and events skipped', (static function () use ($root): array {
+        $dir = "$root/hook-state";
+        $sid = '0b5c2c1e-1111-4222-8333-444455556666';
+        $rec = new Viz\Source\HookRecorder($dir);
+        $base = ['session_id' => $sid, 'transcript_path' => '/x/t.jsonl', 'cwd' => '/w', 'permission_mode' => 'default', 'effort' => ['level' => 'high']];
+        $rec->record($base + ['hook_event_name' => 'Notification', 'notification_type' => 'permission_prompt', 'message' => 'TRESC-1 Claude needs your permission', 'title' => 'TRESC-2']);
+        $rec->record($base + ['hook_event_name' => 'Notification', 'notification_type' => 'auth_success', 'message' => 'TRESC-0']);
+        $rec->record($base + ['hook_event_name' => 'PermissionRequest', 'agent_id' => 'abc123', 'agent_type' => 'Explore', 'tool_name' => 'Bash', 'tool_input' => ['command' => 'git commit -m "TRESC-3"'],
+            'permission_suggestions' => [['type' => 'addRules', 'rules' => [['toolName' => 'Bash', 'ruleContent' => 'git commit *']], 'behavior' => 'allow', 'destination' => 'TRESC-4']]]);
+        $rec->record($base + ['hook_event_name' => 'StopFailure', 'error' => 'rate_limit', 'error_details' => 'TRESC-5', 'last_assistant_message' => 'TRESC-6']);
+        $rec->record($base + ['hook_event_name' => 'StopFailure', 'error' => 'TRESC-made-up']);
+        $rec->record(['hook_event_name' => 'SessionEnd', 'reason' => 'prompt_input_exit', 'session_id' => $sid, 'cwd' => "/w\nTRESC-8", 'extra' => 'TRESC-7', 'permission_mode' => 'TRESC-mode']);
+        $rec->record($base + ['hook_event_name' => 'PreToolUse', 'tool_name' => 'Bash', 'tool_input' => ['command' => 'TRESC-9']]);
+        $rec->record(['hook_event_name' => 'SessionEnd', 'session_id' => '../x', 'reason' => 'other']);
+        $raw = (string) @file_get_contents("$dir/$sid.state.jsonl");
+        $lines = array_map(static fn (string $l): array => (array) json_decode($l, true), array_values(array_filter(explode("\n", $raw))));
+        $keys = array_values(array_unique(array_merge(...array_map(array_keys(...), $lines))));
+        sort($keys);
+
+        return [str_contains($raw, 'TRESC'), is_file("$dir/$sid.jsonl"), count($lines), $keys,
+            array_map(static fn (array $h): string => $h['event'] . ':' . $h['agent'] . ':' . $h['detail'], Viz\Source\HookLog::readState("$dir/$sid.state.jsonl")),
+            [$lines[0]['permission_mode'], $lines[0]['effort'], $lines[4]['permission_mode'], $lines[4]['cwd'], $lines[1]['agent_type']]];
+    })(), [false, false, 5, ['agent_id', 'agent_type', 'commands', 'cwd', 'effort', 'error', 'event', 'notification_type', 'permission_mode', 'reason', 'rules', 'session_id', 'tool_name', 'ts'],
+        ['Notification:main:permission_prompt', 'PermissionRequest:abc123:Bash', 'StopFailure:main:rate_limit', 'StopFailure:main:unknown', 'SessionEnd:main:prompt_input_exit'],
+        ['default', 'high', null, null, 'Explore']]],
+    // zgodność wsteczna: payload bez `hook_event_name` (stary) i PostToolUseFailure trafiają do logu narzędzi, nie do pliku stanu
+    ['hook: tool events stay in the tool log, old payload without event name too; common fields added', (static function () use ($root): array {
+        $dir = "$root/hook-tools";
+        $sid = '0b5c2c1e-1111-4222-8333-444455556667';
+        $rec = new Viz\Source\HookRecorder($dir);
+        $rec->record(['session_id' => $sid, 'tool_name' => 'Read', 'tool_input' => ['file_path' => '/w/a.txt', 'content' => 'TRESC'], 'tool_use_id' => 'tu1', 'cwd' => '/w']);
+        $rec->record(['session_id' => $sid, 'hook_event_name' => 'PostToolUseFailure', 'tool_name' => 'Bash', 'tool_input' => ['command' => 'false'], 'tool_use_id' => 'tu2', 'cwd' => '/w',
+            'error' => "Exit code 1\nTRESC", 'permission_mode' => 'plan', 'effort' => ['level' => 'max']]);
+        $lines = array_map(static fn (string $l): array => (array) json_decode($l, true), array_values(array_filter(explode("\n", (string) @file_get_contents("$dir/$sid.jsonl")))));
+
+        return [count($lines), $lines[0]['tool'] ?? null, $lines[0]['input'] ?? null, $lines[0]['failed'] ?? null, $lines[1]['failed'] ?? null, $lines[1]['error'] ?? null,
+            $lines[1]['permission_mode'] ?? null, $lines[1]['effort'] ?? null, is_file("$dir/$sid.state.jsonl"), Viz\Source\HookLog::readState("$dir/$sid.jsonl")];
+    })(), [2, 'Read', ['file_path' => '/w/a.txt'], false, true, 'Exit code 1', 'plan', 'max', false, []]],
+    // stany z hooka: prośba o zgodę po starcie trwającego wywołania = waiting-permission; koniec sesji; błąd API z typem; bez zdarzenia — stan z transkryptu
+    ['hook states: waiting-permission, ended, stuck with type; without events the transcript state stays', (static function () use ($officeEv, $liveResp, $liveNow, $officeLimits): array {
+        $h = static fn (string $ts, string $event, ?string $detail, string $agent = 'main'): array => ['ts' => "2026-01-01T$ts" . 'Z', 'event' => $event, 'agent' => $agent, 'detail' => $detail];
+        $s = static function (array $events, array $usage, array $hooks, array $subs = []) use ($liveNow, $officeLimits): ?array {
+            $agents = ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)];
+            foreach ($subs as $id) {
+                $agents[$id] = new Viz\Model\Agent($id, 'Explore', 'szukaj', 'tu_' . $id);
+            }
+
+            return Viz\Office\LiveState::session(new Viz\Model\Session('s', '', 't', '/w', $agents, $events, count($events), [], $usage, [], []), $liveNow, $officeLimits, false, $hooks);
+        };
+        $st = static fn (?array $x): string => implode(' ', array_map(static fn (array $a): string => $a['id'] . ':' . $a['state'], $x['agents'] ?? []));
+        $open = [$officeEv('main', '10:08:00', null)];
+        $resp = [$liveResp('main', '10:07:59')];
+        $ask = $s($open, $resp, [$h('10:08:05', 'PermissionRequest', 'Bash')]);
+        $note = $s($open, $resp, [$h('10:08:06', 'Notification', 'permission_prompt')]);
+        $before = $s($open, $resp, [$h('10:07:00', 'PermissionRequest', 'Bash')]);
+        $idleNote = $s($open, $resp, [$h('10:08:06', 'Notification', 'idle_prompt')]);
+        $none = $s($open, $resp, []);
+        $past = $s([$officeEv('main', '10:05:00', '10:06:00')], [$liveResp('main', '10:06:01')], [$h('10:05:10', 'PermissionRequest', 'Bash')]);
+        $sub = $s([$officeEv('aaa', '10:08:00', null)], [$liveResp('main', '10:07:00'), $liveResp('aaa', '10:07:59')], [$h('10:08:05', 'PermissionRequest', 'Read', 'aaa')], ['aaa']);
+        $ended = $s([], [$liveResp('main', '10:05:00')], [$h('10:06:00', 'SessionEnd', 'prompt_input_exit')]);
+        $resumed = $s([], [$liveResp('main', '10:07:00')], [$h('10:06:00', 'SessionEnd', 'resume')]);
+        $failed = $s([], [$liveResp('main', '10:05:00')], [$h('10:05:02', 'StopFailure', 'overloaded')]);
+
+        return [$st($ask), $ask['agents'][0]['since'], $ask['agents'][0]['permission'], $ask['agents'][0]['calls'][0]['permission'], $ask['permissionHook'],
+            $st($note), $st($before), $st($idleNote), $idleNote['permissionHook'], $st($none), $none['permissionHook'], $none['agents'][0]['calls'][0]['permission'],
+            $st($past), $past['agents'][0]['calls'][0]['permission'], $st($sub),
+            $st($ended), $ended['agents'][0]['ended'], $ended['agents'][0]['gone'], $st($resumed),
+            $st($failed), $failed['agents'][0]['stuck'], $failed['agents'][0]['stuckType']];
+    })(), ['main:waiting-permission', '2026-01-01T10:08:05Z', ['ts' => '2026-01-01T10:08:05Z', 'tool' => 'Bash'], '2026-01-01T10:08:05Z', true,
+        'main:waiting-permission', 'main:working', 'main:working', false, 'main:working', false, null,
+        'main:idle', '2026-01-01T10:05:10Z', 'main:delegated aaa:waiting-permission',
+        'main:ended', 'prompt_input_exit', true, 'main:idle',
+        'main:stuck', 'api-error', 'overloaded']],
+    // hook — Stop, subagenci, instrukcje, kompaktowanie: tylko biała lista; `last_assistant_message`, opisy zadań w tle, prompty cronów,
+    // `custom_instructions`, `compact_summary`, pola obce odrzucone; agent wewnętrzny (pusty `agent_type`) i Subagent* bez `agent_id` pominięte
+    ['hook: Stop, subagent, instructions and compaction events — whitelist only, content dropped', (static function () use ($root): array {
+        $dir = "$root/hook-life";
+        $sid = '0b5c2c1e-1111-4222-8333-444455556668';
+        $rec = new Viz\Source\HookRecorder($dir);
+        $base = ['session_id' => $sid, 'transcript_path' => '/x/t.jsonl', 'cwd' => '/w', 'permission_mode' => 'default', 'prompt_id' => 'TRESC-0'];
+        $rec->record($base + ['hook_event_name' => 'Stop', 'stop_hook_active' => false, 'last_assistant_message' => 'TRESC-1',
+            'background_tasks' => [['id' => 't1', 'type' => 'shell', 'status' => 'running', 'description' => 'TRESC-2', 'command' => 'TRESC-3']],
+            'session_crons' => [['id' => 'c1', 'schedule' => '* * * * *', 'recurring' => true, 'prompt' => 'TRESC-4']]]);
+        $rec->record($base + ['hook_event_name' => 'SubagentStart', 'agent_id' => 'abc123', 'agent_type' => 'Explore']);
+        $rec->record($base + ['hook_event_name' => 'SubagentStop', 'agent_id' => 'abc123', 'agent_type' => 'Explore', 'stop_hook_active' => 'TRESC-5',
+            'agent_transcript_path' => '/x/t/subagents/agent-abc123.jsonl', 'last_assistant_message' => 'TRESC-6']);
+        $rec->record($base + ['hook_event_name' => 'SubagentStop', 'agent_id' => 'def456', 'agent_type' => '', 'last_assistant_message' => 'TRESC-7']);
+        $rec->record($base + ['hook_event_name' => 'SubagentStart', 'agent_type' => 'Explore']);
+        $rec->record($base + ['hook_event_name' => 'SubagentStop', 'agent_id' => 'abc124', 'agent_type' => 'Plan', 'agent_transcript_path' => 'relative/TRESC-8']);
+        $rec->record($base + ['hook_event_name' => 'InstructionsLoaded', 'file_path' => '/w/CLAUDE.md', 'memory_type' => 'Project', 'load_reason' => 'session_start', 'content' => 'TRESC-9']);
+        $rec->record($base + ['hook_event_name' => 'InstructionsLoaded', 'file_path' => '/w/.claude/rules/a.md', 'memory_type' => 'TRESC-10', 'load_reason' => 'path_glob_match',
+            'globs' => ['src/**/*.php', "TRESC\n11", 5], 'trigger_file_path' => '/w/src/A.php', 'parent_file_path' => "/w/\x01TRESC-12"]);
+        $rec->record($base + ['hook_event_name' => 'InstructionsLoaded', 'file_path' => 'TRESC-13/CLAUDE.md', 'load_reason' => 'include']);
+        $rec->record($base + ['hook_event_name' => 'PreCompact', 'trigger' => 'manual', 'custom_instructions' => 'TRESC-14']);
+        $rec->record($base + ['hook_event_name' => 'PostCompact', 'trigger' => 'TRESC-15', 'compact_summary' => 'TRESC-16']);
+        $read = static fn (string $f): array => array_map(static fn (string $l): array => (array) json_decode($l, true), array_values(array_filter(explode("\n", (string) @file_get_contents($f)))));
+        $keys = static function (array $lines): array {
+            $k = array_values(array_unique(array_merge(...array_map(array_keys(...), $lines))));
+            sort($k);
+
+            return $k;
+        };
+        [$state, $context] = [$read("$dir/$sid.state.jsonl"), $read("$dir/$sid.context.jsonl")];
+        $raw = (string) @file_get_contents("$dir/$sid.state.jsonl") . @file_get_contents("$dir/$sid.context.jsonl");
+
+        return [str_contains($raw, 'TRESC'), str_contains($raw, 'last_assistant_message'), is_file("$dir/$sid.jsonl"), count($state), count($context), $keys($state), $keys($context),
+            array_map(static fn (array $h): string => $h['event'] . ':' . $h['agent'] . ':' . $h['detail'], Viz\Source\HookLog::readState("$dir/$sid.state.jsonl")),
+            [$state[0]['stop_hook_active'], $state[0]['background_tasks'], $state[2]['stop_hook_active'], $state[2]['agent_transcript_path'], $state[3]['agent_transcript_path']],
+            array_map(static fn (array $i): array => array_diff_key($i, ['ts' => 0]), Viz\Source\HookLog::readInstructions("$dir/$sid.context.jsonl")),
+            array_map(static fn (array $c): string => $c['agent'] . ':' . $c['phase'] . ':' . $c['trigger'], Viz\Source\HookLog::readCompactions("$dir/$sid.context.jsonl")),
+            Viz\Source\HookLog::readState("$dir/$sid.context.jsonl"), Viz\Source\HookLog::instructions('../x'), Viz\Source\HookLog::compactions('../x')];
+    })(), [false, false, false, 4, 4,
+        ['agent_id', 'agent_transcript_path', 'agent_type', 'background_tasks', 'cwd', 'effort', 'event', 'permission_mode', 'session_id', 'stop_hook_active', 'ts'],
+        ['agent_id', 'event', 'file_path', 'globs', 'load_reason', 'memory_type', 'parent_file_path', 'session_id', 'trigger', 'trigger_file_path', 'ts'],
+        ['Stop:main:', 'SubagentStart:abc123:Explore', 'SubagentStop:abc123:Explore', 'SubagentStop:abc124:Plan'],
+        [false, 1, null, '/x/t/subagents/agent-abc123.jsonl', null],
+        [['agent' => 'main', 'file' => '/w/CLAUDE.md', 'memoryType' => 'Project', 'reason' => 'session_start', 'globs' => [], 'trigger' => null, 'parent' => null],
+            ['agent' => 'main', 'file' => '/w/.claude/rules/a.md', 'memoryType' => null, 'reason' => 'path_glob_match', 'globs' => ['src/**/*.php'], 'trigger' => '/w/src/A.php', 'parent' => null]],
+        ['main:pre:manual', 'main:post:'], [], [], []]],
+    // stany z hooka: Stop = dokładne „czeka na Ciebie” (także przy wywołaniu bez wyniku), Stop sprzed aktywności i brak Stop — heurystyka;
+    // SubagentStart = start i praca przed pierwszą odpowiedzią, SubagentStop = dokładny koniec; hook nie tworzy agenta spoza transkryptu
+    ['hook states: Stop and subagent start / stop exact, transcript heuristic as fallback', (static function () use ($officeEv, $liveResp, $liveNow, $officeLimits): array {
+        $h = static fn (string $ts, string $event, ?string $detail = null, string $agent = 'main'): array => ['ts' => "2026-01-01T$ts" . 'Z', 'event' => $event, 'agent' => $agent, 'detail' => $detail];
+        $s = static function (array $events, array $usage, array $hooks, array $subs = []) use ($liveNow, $officeLimits): ?array {
+            $agents = ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)];
+            foreach ($subs as $id) {
+                $agents[$id] = new Viz\Model\Agent($id, 'Explore', 'szukaj', 'tu_' . $id);
+            }
+
+            return Viz\Office\LiveState::session(new Viz\Model\Session('s', '', 't', '/w', $agents, $events, count($events), [], $usage, [], []), $liveNow, $officeLimits, false, $hooks);
+        };
+        $st = static fn (?array $x): string => implode(' ', array_map(static fn (array $a): string => $a['id'] . ':' . $a['state'], $x['agents'] ?? []));
+        $done = [$officeEv('main', '10:05:00', '10:05:01')];
+        $stopped = $s($done, [$liveResp('main', '10:05:02')], [$h('10:05:03', 'Stop')]);
+        $plain = $s($done, [$liveResp('main', '10:05:02')], []);
+        $ghost = $s([$officeEv('main', '10:06:00', null)], [$liveResp('main', '10:05:59')], [$h('10:06:30', 'Stop')]);
+        $again = $s([...$done, $officeEv('main', '10:07:00', null)], [$liveResp('main', '10:05:02'), $liveResp('main', '10:06:59')], [$h('10:05:03', 'Stop')]);
+        $early = $s([], [$liveResp('main', '10:07:00')], [$h('10:08:00', 'SubagentStart', 'Explore', 'aaa')], ['aaa']);
+        $end = $s([$officeEv('aaa', '10:08:00', '10:08:05')], [$liveResp('main', '10:07:00'), $liveResp('aaa', '10:08:04')],
+            [$h('10:07:50', 'SubagentStart', 'Explore', 'aaa'), $h('10:08:09', 'SubagentStop', 'Explore', 'aaa')], ['aaa']);
+        $endless = $s([$officeEv('aaa', '10:08:00', '10:08:05')], [$liveResp('main', '10:07:00'), $liveResp('aaa', '10:08:04')], [], ['aaa']);
+        $stale = $s([$officeEv('aaa', '10:08:00', null)], [$liveResp('main', '10:07:00'), $liveResp('aaa', '10:07:59')], [$h('10:07:00', 'SubagentStop', 'Explore', 'aaa')], ['aaa']);
+        $foreign = $s([], [$liveResp('main', '10:07:00')], [$h('10:08:00', 'SubagentStart', 'Explore', 'zzz')]);
+
+        return [$st($stopped), $stopped['agents'][0]['since'], $st($plain), $plain['agents'][0]['since'], $st($ghost), $ghost['agents'][0]['since'], $ghost['agents'][0]['tool'], $st($again),
+            $st($early), $early['agents'][1]['since'], $early['agents'][1]['start'],
+            $st($end), $end['agents'][1]['since'], $end['agents'][1]['last'], $end['agents'][1]['start'], $st($endless), $st($stale), $st($foreign)];
+    })(), ['main:idle', '2026-01-01T10:05:03Z', 'main:idle', '2026-01-01T10:05:02Z', 'main:idle', '2026-01-01T10:06:30Z', null, 'main:working',
+        'main:delegated aaa:working', '2026-01-01T10:08:00Z', '2026-01-01T10:08:00Z',
+        'main:idle aaa:done', '2026-01-01T10:08:09Z', '2026-01-01T10:08:09Z', '2026-01-01T10:07:50Z', 'main:delegated aaa:working', 'main:delegated aaa:working', 'main:idle']],
+    // przeglądarka: zgadywanie po `permissionGuess` zostaje jako fallback, dane z hooka mają pierwszeństwo
+    ['lanes.js: guess kept as a fallback, hook permission and session end used', array_values(array_filter(['data.permissionGuess', 's.permissionHook', 'c.permission', "'waiting-permission'", "'ended'"],
+        static fn (string $t): bool => !str_contains((string) file_get_contents(__DIR__ . '/../public/assets/lanes.js'), $t))), []],
+    // kompaktowanie z hooka na osi pracy: para Pre → Post = jedno (chwila Pre, trigger z Pre), samo Post = w swojej chwili,
+    // subagent i zdarzenia sprzed okna pominięte; bez zdarzeń — pusta lista (nic się nie rysuje). Fixture, nie prawdziwe zdarzenia
+    ['compactions in the feed row: one per Pre/Post pair, main only, window', (static function () use ($liveResp, $liveNow, $officeLimits): array {
+        $c = static fn (string $ts, string $phase, ?string $trigger, string $agent = 'main'): array => ['ts' => "2026-01-01T$ts" . 'Z', 'agent' => $agent, 'phase' => $phase, 'trigger' => $trigger];
+        $row = static fn (array $compactions): ?array => Viz\Office\LiveState::session(new Viz\Model\Session('s', '', 't', '/w', ['main' => new Viz\Model\Agent('main', 'main', 'main session', null)], [], 0, [],
+            [$liveResp('main', '10:09:00')], [], []), $liveNow, $officeLimits, false, [], $compactions);
+        $events = [$c('09:30:00', 'pre', 'auto'), $c('09:30:20', 'post', 'auto'), $c('09:50:00', 'pre', 'manual'), $c('09:50:30', 'post', 'manual'),
+            $c('10:00:00', 'pre', 'auto', 'abc123'), $c('10:05:00', 'post', 'auto'), $c('10:08:00', 'pre', null)];
+
+        return [$row($events)['compactions'], $row([])['compactions']];
+    })(), [[['ts' => '2026-01-01T09:50:00Z', 'trigger' => 'manual'], ['ts' => '2026-01-01T10:05:00Z', 'trigger' => 'auto'], ['ts' => '2026-01-01T10:08:00Z', 'trigger' => null]], []]],
+    ['lanes.js draws compactions, legend and verdict without zeros', array_values(array_filter(['s.compactions', "'viz-lanes-legend'", '.filter(([, v]) => v > 0)'],
+        static fn (string $t): bool => !str_contains((string) file_get_contents(__DIR__ . '/../public/assets/lanes.js'), $t))), []],
 ];
 foreach ($liveCases as [$name, $got, $expected]) {
     if ($got !== $expected) {
@@ -673,8 +852,7 @@ $missing = static fn (string $file, array $tokens): array => array_values(array_
 $guardCases = [
     ['app.js: refresh guards', $missing('public/assets/app.js', ['section._busy = true', 'section._busy = false', '_fragmentUntil', 'new AbortController()', 'FETCH_TIMEOUT_MS = 5000', '.catch(() => refreshFailed(true))', 'refreshFailed(false)', 'viz-refresh-error']), []],
     ['office.js: data from the shared feed, refresh error shown', $missing('public/assets/office.js', ['VizFeed.Start(', 'fromFeed(feed.data)', "'refresh not working'", 'office.failed = feed.failed']), []],
-    ['feed.js: refresh guards', $missing('public/assets/feed.js', ['root._busy = true', 'root._busy = false', 'new AbortController()', 'FETCH_TIMEOUT_MS = 5000', '.catch(() => { feed.failed = true; })', "addEventListener('viz-scope'"]), []],
-    ['live.js: data from the shared feed, refresh error shown', $missing('public/assets/live.js', ['VizFeed.Start(', "'refresh not working'"]), []],
+    ['feed.js: refresh guards', $missing('public/assets/feed.js', ['root._busy = true', 'root._busy = false', 'new AbortController()', 'FETCH_TIMEOUT_MS = 5000', '.catch(() => { feed.misses++; feed.failed = feed.misses >= 2; })', "addEventListener('viz-scope'"]), []],
     ['layout.php: refresh error element', $missing('templates/layout.php', ['viz-refresh-error']), []],
 ];
 foreach ($guardCases as [$name, $got, $expected]) {
@@ -695,10 +873,99 @@ if ($nodeCode === 127) {
 }
 
 // program o nazwie liczbowej (np. „2026”): PHP zamienia taki klucz tablicy na int, ranking nie może się wywrócić
-$numericRank = \Viz\Summary\CommandRanking::build([['session_id' => 's1', 'last' => '2026-10-01T00:00:00', 'commands' => ['2026' => ['count' => 1, 'failed' => 0, 'blocked' => 0, 'agents' => 1, 'last' => '2026-10-01T00:00:00', 'from' => [], 'subs' => [], 'contexts' => []]]]], 0, '', 'count');
+$numericRank = \Viz\Summary\CommandRanking::build([['session_id' => 's1', 'last' => '2026-10-01T00:00:00', 'commands' => ['2026' => ['count' => 1, 'failed' => 0, 'blocked' => 0, 'agents' => 1, 'last' => '2026-10-01T00:00:00', 'from' => [], 'subs' => [], 'contexts' => []]]]], 0, \Viz\Web\Scope::parse(''), 'count');
 if (($numericRank[0]['program'] ?? null) !== '2026' || ($numericRank[0]['role'] ?? null) !== 'unknown') {
     $failures++;
     echo "FAIL: CommandRanking: numeric program name\n";
+}
+
+// czas narzędzi (endTs − ts), wyposażenie (MCP / skille / subagenci) i rozmiary `tool-results/` (tylko stat) w agregacie sesji;
+// Agent i AskUserQuestion poza rankingiem najwolniejszych (praca subagenta, odpowiedź usera); Bash 2 min = praca (próg Bash 11 min)
+$eqLine = static fn (string $type, string $ts, array $content): string => json_encode(['type' => $type, 'timestamp' => $ts, 'cwd' => $root, 'message' => ['role' => $type, 'content' => $content]]) . "\n";
+$eqCall = static fn (string $ts, string $id, string $tool, array $input): string => $eqLine('assistant', $ts, [['type' => 'tool_use', 'id' => $id, 'name' => $tool, 'input' => $input]]);
+$eqResult = static fn (string $ts, string $id): string => $eqLine('user', $ts, [['type' => 'tool_result', 'tool_use_id' => $id, 'content' => 'ok']]);
+mkdir("$root/eq/s4/tool-results", 0700, true);
+file_put_contents("$root/eq/s4.jsonl",
+    $eqCall('2026-01-01T10:00:00Z', 'tu_fast', 'Bash', ['command' => 'ls'])
+    . $eqResult('2026-01-01T10:00:01.500Z', 'tu_fast')
+    . $eqCall('2026-01-01T10:00:02Z', 'tu_slow', 'Bash', ['command' => 'phpunit && ls'])
+    . $eqResult('2026-01-01T10:02:02Z', 'tu_slow')
+    . $eqCall('2026-01-01T10:02:03Z', 'tu_mcp', 'mcp__zammad__get_ticket', ['id' => 1])
+    . $eqResult('2026-01-01T10:02:05Z', 'tu_mcp')
+    . $eqCall('2026-01-01T10:02:06Z', 'tu_skill', 'Skill', ['skill' => 'sk-herodot'])
+    . $eqResult('2026-01-01T10:02:07Z', 'tu_skill')
+    . $eqCall('2026-01-01T10:02:08Z', 'tu_sub', 'Agent', ['description' => 'x', 'subagent_type' => 'Explore', 'prompt' => 'p'])
+    . $eqResult('2026-01-01T10:12:08Z', 'tu_sub')
+    . $eqCall('2026-01-01T10:12:09Z', 'tu_ask', 'AskUserQuestion', ['questions' => []])
+    . $eqResult('2026-01-01T10:30:09Z', 'tu_ask'));
+file_put_contents("$root/eq/s4/tool-results/tu_slow.txt", str_repeat('r', 5000));
+file_put_contents("$root/eq/s4/tool-results/other.json", str_repeat('o', 100));
+$eqAgg = Viz\Summary\SummaryStore::aggregate((new Viz\Source\TranscriptReader())->read("$root/eq/s4.jsonl"), 'test');
+$eqRank = \Viz\Summary\CommandRanking::build([$eqAgg + ['session_id' => 's4']], 0, \Viz\Web\Scope::parse(''), 'time');
+$gotEq = [
+    implode(',', array_map(static fn (array $c): string => $c['ev'] . ':' . $c['ms'], $eqAgg['slow'])),
+    $eqAgg['waits']['count'] . ':' . $eqAgg['waits']['ms'] . ':' . implode(',', array_column($eqAgg['waits']['top'], 'ev')),
+    json_encode($eqAgg['tool_time']['Bash']),
+    json_encode(array_map(static fn (array $k): array => array_map(static fn (array $r): int => $r['count'], $k), $eqAgg['equipment'])),
+    $eqAgg['commands']['phpunit']['ms'] . '/' . $eqAgg['commands']['ls']['ms'] . '/' . $eqAgg['commands']['ls']['max_ms'],
+    implode(',', array_column($eqRank, 'program')),
+    $eqAgg['results']['files'] . ':' . $eqAgg['results']['bytes'] . ':' . implode(',', array_map(static fn (array $r): string => $r['id'] . '=' . $r['tool'], $eqAgg['results']['top'])),
+    implode(' | ', array_map([Viz\Web\App::class, 'duration'], [850, 4200, 59990, 185000, 4380000])),
+];
+$expectedEq = [
+    'tu_slow:120000,tu_mcp:2000,tu_fast:1500,tu_skill:1000',
+    '0:0:',
+    '{"count":2,"ms":121500,"max":120000}',
+    '{"mcp":{"zammad":1},"skills":{"sk-herodot":1},"subagents":{"Explore":1}}',
+    '120000/121500/120000',
+    'ls,phpunit',
+    '2:5100:tu_slow=Bash,other=',
+    '850 ms | 4.2 s | 1 min 00 s | 3 min 05 s | 1 h 13 min',
+];
+if ($gotEq !== $expectedEq) {
+    $failures++;
+    echo "FAIL: tool time / equipment / tool-results\n  oczekiwane: " . implode("\n              ", $expectedEq) . "\n  otrzymane:  " . implode("\n              ", $gotEq) . "\n";
+}
+
+// grupa „może czekało na zgodę” (`waits`): Bash od maksymalnego timeoutu + 60 s zapasu (11 min), inne narzędzia od 90 s;
+// zakładka Zgody (`SummaryStore::waited`) zostaje przy 90 s także dla Bash
+file_put_contents("$root/eq/s5.jsonl",
+    $eqCall('2026-01-01T10:00:00Z', 'tu_b95', 'Bash', ['command' => 'phpunit'])
+    . $eqResult('2026-01-01T10:01:35Z', 'tu_b95')
+    . $eqCall('2026-01-01T10:02:00Z', 'tu_b11m', 'Bash', ['command' => 'git push'])
+    . $eqResult('2026-01-01T10:13:00Z', 'tu_b11m')
+    . $eqCall('2026-01-01T10:14:00Z', 'tu_e95', 'Edit', ['file_path' => "$root/x.txt", 'old_string' => 'a', 'new_string' => 'b'])
+    . $eqResult('2026-01-01T10:15:35Z', 'tu_e95'));
+$waitSession = (new Viz\Source\TranscriptReader())->read("$root/eq/s5.jsonl");
+$waitAgg = Viz\Summary\SummaryStore::aggregate($waitSession, 'test');
+$gotWait = [
+    implode(',', array_column($waitAgg['slow'], 'ev')),
+    implode(',', array_column($waitAgg['waits']['top'], 'ev')),
+    implode(',', array_keys($waitAgg['tool_time'])),
+    implode(',', array_map(static fn (Viz\Model\Event $e): string => $e->toolUseId . '=' . (Viz\Summary\SummaryStore::waited($e) ? 1 : 0), $waitSession->events)),
+];
+$expectedWait = ['tu_b95', 'tu_b11m,tu_e95', 'Bash', 'tu_b95=1,tu_b11m=1,tu_e95=1'];
+if ($gotWait !== $expectedWait) {
+    $failures++;
+    echo "FAIL: tool time — Bash threshold 11 min, other tools 90 s\n  oczekiwane: " . implode(' | ', $expectedWait) . "\n  otrzymane:  " . implode(' | ', $gotWait) . "\n";
+}
+
+// zakładka Zgody: reguły uprawnień, ustawienia (tylko `permissions`), wiersze i podpowiedzi, hook PermissionRequest (tests/approvals.test.php)
+$approvalCases = require __DIR__ . '/approvals.test.php';
+foreach ($approvalCases as [$name, $got, $expected]) {
+    if ($got !== $expected) {
+        $failures++;
+        echo "FAIL: $name\n  " . json_encode($got, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n  oczekiwano " . json_encode($expected, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . "\n";
+    }
+}
+
+// podgląd procesów: parser i widok na fixture (tests/processes.test.php)
+$procCases = require __DIR__ . '/processes.test.php';
+foreach ($procCases as [$name, $got, $expected]) {
+    if ($got !== $expected) {
+        $failures++;
+        echo "FAIL: $name\n  " . json_encode($got, JSON_UNESCAPED_UNICODE) . "\n  oczekiwano " . json_encode($expected, JSON_UNESCAPED_UNICODE) . "\n";
+    }
 }
 
 // słownik PL: każdy literał z t() / th() (PHP) i T() (JS) ma wpis w lang/pl.php, a {placeholdery} klucza i tłumaczenia są te same
@@ -735,8 +1002,31 @@ foreach ($langCases as [$name, $got, $expected]) {
     }
 }
 
+// G: limit wierszy list, wspólny korzeń ścieżek sesji (App::pathRoot), licznik zakładki Log (App::logCount)
+mkdir("$root/g-root/repo/.git", 0700, true);
+$gr = "$root/g-root";
+$gPaths = ["$gr/repo/src/a.php", "$gr/repo/src/b.php", "$gr/repo/README.md", "$gr/other/x.txt"];
+$gEv = static fn (string $tool): Viz\Model\Event => new Viz\Model\Event('2026-01-01T00:00:00Z', 's', 'main', $tool, 'id', '', null, false, []);
+$gLog = [$gEv('Read'), $gEv('Bash'), $gEv(Viz\Model\Event::TOOL_CONTEXT)];
+$gCases = [
+    ['rowLimit: default', Viz\Web\App::rowLimit(['limit' => false]), 300],
+    ['rowLimit: limit=all', Viz\Web\App::rowLimit(['limit' => true]), PHP_INT_MAX],
+    ['pathRoot: repository root with half of the paths', Viz\Web\App::pathRoot($gPaths, null), "$gr/repo"],
+    ['pathRoot: session directory wins when it has half of the paths', Viz\Web\App::pathRoot($gPaths, "$gr/repo/src"), "$gr/repo/src"],
+    ['pathRoot: no repository — directory common to all paths', Viz\Web\App::pathRoot(["$gr/other/x.txt", "$gr/other/y/z.txt"], null), "$gr/other"],
+    ['pathRoot: no paths = null, duplicates count once', [Viz\Web\App::pathRoot([], null), Viz\Web\App::pathRoot(array_merge(array_fill(0, 9, "$gr/other/x.txt"), ["$gr/repo/a", "$gr/repo/b"]), null)], [null, "$gr/repo"]],
+    ['logCount: tool calls without files loaded by Claude Code', Viz\Web\App::logCount($gLog, ''), ['n' => 2, 'context' => 1]],
+    ['logCount: origin=context counts the loaded files', Viz\Web\App::logCount([$gLog[2]], 'context'), ['n' => 1, 'context' => 1]],
+];
+foreach ($gCases as [$name, $got, $expected]) {
+    if ($got !== $expected) {
+        $failures++;
+        echo "FAIL: $name\n  oczekiwane: " . json_encode($expected) . "\n  otrzymane:  " . json_encode($got) . "\n";
+    }
+}
+
 exec('rm -rf ' . escapeshellarg($root));
-$total = count($langCases) + 1 + count($cases) + count($toolCases) + count($commandCases) + count($roles) + count($denialCases) + count($boundaryCases) + count($officeCases) + count($liveCases) + count($csvCases) + count($guardCases) + $nodeRan + 4;
+$total = count($gCases) + count($langCases) + count($approvalCases) + count($procCases) + 1 + count($cases) + count($toolCases) + count($commandCases) + count($roles) + count($denialCases) + count($boundaryCases) + count($officeCases) + count($liveCases) + count($csvCases) + count($guardCases) + $nodeRan + 4;
 echo $failures === 0 ? "OK ($total przypadków)\n" : "$failures/$total nieudanych\n";
 exit($failures === 0 ? 0 : 1);
 

@@ -9,7 +9,9 @@
 use Viz\Clock;
 use Viz\Extract\ToolRoles;
 use Viz\Model\Event;
+use Viz\Office\LiveState;
 use Viz\Problems;
+use Viz\Summary\SummaryStore;
 use Viz\Web\App;
 
 $p = $view['p'];
@@ -28,7 +30,7 @@ if ($view['allSessions']) {
         <p class="empty"><?= th('No commands in this scope.') ?></p>
     <?php else: ?>
         <table class="files cmds">
-            <thead><tr><?= $th('path', t('program')) ?><?= $th('count', t('uses')) ?><th><?= th('errors') ?></th><th><?= th('role') ?></th><th><?= th('subcommands') ?></th><?= $th('sessions', t('sessions')) ?><th><?= th('last') ?></th></tr></thead>
+            <thead><tr><?= $th('path', t('program')) ?><?= $th('count', t('uses')) ?><th><?= th('errors') ?></th><th><?= th('role') ?></th><th><?= th('subcommands') ?></th><?= $th('time', t('time')) ?><?= $th('sessions', t('sessions')) ?><th><?= th('last') ?></th></tr></thead>
             <tbody>
                 <?php foreach (array_slice($view['commands'], 0, $view['rowLimit']) as $c): ?>
                     <tr viz-cmd="<?= h($c['program']) ?>" onclick="Viz.OpenCmd(this, event)" <?= $p['pcmd'] === $c['program'] ? 'viz-picked' : '' ?>>
@@ -37,6 +39,7 @@ if ($view['allSessions']) {
                         <td class="num cmd-err" title="<?= th('exit code ≠ 0 / not run (blocked, not approved)') ?>"><?= $c['failed'] > 0 ? '✗' . h($c['failed']) : '' ?><?= $c['blocked'] > 0 ? ' ⊘' . h($c['blocked']) : '' ?></td>
                         <td class="muted"><?= h(t($c['role'])) ?></td>
                         <td class="muted"><?= h($top($c['subs'], 3)) ?></td>
+                        <td class="num muted" title="<?= th('total time of Bash calls containing the program · longest {max}', ['max' => App::duration($c['max_ms'])]) ?>"><?= h($c['ms'] > 0 ? App::duration($c['ms']) : '') ?></td>
                         <td class="num muted"><?= h(count($c['sessions'])) ?></td>
                         <td class="time"><?= h(Clock::local($c['last'], 'd.m H:i')) ?></td>
                     </tr>
@@ -56,6 +59,10 @@ $sessionUsd = max($view['sessionTokens']['usd'], 1e-9);
     <?php if (!$p['group'] && $view['session']->usage !== []): ?>
         <a class="chip" href="/?<?= h(App::query($view, ['sort' => $p['sort'] === 'cost' ? '' : 'cost'])) ?>" <?= $p['sort'] === 'cost' ? 'viz-current' : '' ?>
            title="<?= th('most expensive first: the result was written to the context and read again on every later model call (estimate, API prices)') ?>"><?= th('by cost') ?></a>
+    <?php endif ?>
+    <?php if (!$p['group']): ?>
+        <a class="chip" href="/?<?= h(App::query($view, ['sort' => $p['sort'] === 'time' ? '' : 'time'])) ?>" <?= $p['sort'] === 'time' ? 'viz-current' : '' ?>
+           title="<?= th('longest first: time from the call to its result') ?>"><?= th('by time') ?></a>
     <?php endif ?>
     <?php if ($p['pcmd'] !== ''): ?>
         <span class="chip" viz-current><?= th('program:') ?> <?= h($p['pcmd']) ?> <a href="/?<?= h(App::query($view, ['pcmd' => ''])) ?>" title="<?= th('clear') ?>">×</a></span>
@@ -103,12 +110,13 @@ $sessionUsd = max($view['sessionTokens']['usd'], 1e-9);
             $status = match (true) {
                 $e->denial !== null => ['blocked', '⊘', t('blocked by {by}', ['by' => t($e->denial['by'])]) . ($e->denial['detail'] !== null ? ' · ' . $e->denial['detail'] : '')],
                 !$e->failed => ['ok', '✓', t('ran')],
-                $e->executed() => ['exit', '✗', (string) $e->error],
-                default => ['failed', '!', (string) $e->error],
+                $e->executed() => ['exit', '✗', t('exit ≠ 0') . ($e->error !== null ? ' · ' . $e->error : '')],
+                default => ['failed', '!', t('tool error') . ($e->error !== null ? ' · ' . $e->error : '')],
             };
             $problems = $view['problems'][$e->toolUseId] ?? [];
             ?>
-            <li viz-ev="<?= h($e->toolUseId) ?>" onclick="Viz.Open(this, event)" <?= $p['pev'] === $e->toolUseId ? 'viz-picked' : '' ?>>
+            <li viz-ev="<?= h($e->toolUseId) ?>" onclick="Viz.Open(this, event)" <?= $p['pev'] === $e->toolUseId ? 'viz-picked' : '' ?>
+                <?= in_array($view['crossed'][$e->toolUseId] ?? '', ['outside', 'stopped'], true) ? 'viz-outside' : '' ?>>
                 <time><?= h(Clock::local($e->ts)) ?></time>
                 <i class="dot" viz-agent-color="<?= h(($view['agentColors'][$e->agentId] ?? 0) % 8) ?>" title="<?= h(isset($agents[$e->agentId]) ? App::agentLabel($agents[$e->agentId]) : $e->agentId) ?>"></i>
                 <span class="status" viz-status="<?= h($status[0]) ?>" title="<?= h($status[2]) ?>"><?= h($status[1]) ?></span>
@@ -122,6 +130,10 @@ $sessionUsd = max($view['sessionTokens']['usd'], 1e-9);
                 <?php endif ?>
                 <?php if (($e->carry['usd'] ?? 0) >= 0.005): ?>
                     <span class="cost" <?= $e->carry['usd'] >= 0.01 * $sessionUsd ? 'viz-high' : '' ?> title="<?= th('+{tokens} tokens in the context × {calls} later model calls = {pct}% of the session cost', ['tokens' => App::tokenCount($e->carry['tokens']), 'calls' => $e->carry['calls'], 'pct' => round(100 * $e->carry['usd'] / $sessionUsd, 1)]) ?>"><?= h(App::usd($e->carry['usd'])) ?></span>
+                <?php endif ?>
+                <?php if (($ms = SummaryStore::durationMs($e)) !== null && $ms >= 1000): ?>
+                    <?php $wait = $ms >= LiveState::PERMISSION_GUESS * 1000 && $e->denial === null ?>
+                    <span class="muted n" <?= $wait ? 'viz-wait' : '' ?> title="<?= $wait ? th('{t} — maybe waiting for your approval (≥ {s} s, not blocked)', ['t' => t('time from the call to its result'), 's' => LiveState::PERMISSION_GUESS]) : th('time from the call to its result') ?>"><?= $wait ? '● ' : '' ?><?= h(App::duration($ms)) ?></span>
                 <?php endif ?>
                 <?php if ($e->touches !== []): ?><span class="muted n" title="<?= th('files resolved from the command') ?>"><?= h(count($e->touches)) ?> <?= count($e->touches) === 1 ? th('file') : th('files') ?></span><?php endif ?>
                 <?php if ($problems !== []): ?><span class="badge problem" title="<?= h(implode("\n", array_map([Problems::class, 'reasonText'], $problems))) ?>">⚠</span><?php endif ?>

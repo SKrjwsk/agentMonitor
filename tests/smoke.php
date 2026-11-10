@@ -65,7 +65,16 @@ try {
     $projects = "$home/.claude/projects/-viz-smoke";
     mkdir("$projects/$sid/subagents", 0700, true);
     file_put_contents("$projects/$sid.jsonl",
-        $line('user', 120, [['type' => 'text', 'text' => 'Przeczytaj pierwszy plik i uruchom agenta']])
+        // czas narzędzi i wyposażenie: Bash dłuższy niż próg „zgoda?” (90 s), serwer MCP, skill; wynik zapisany w `tool-results/`
+        $line('user', 400, [['type' => 'text', 'text' => 'Zmierz czas']], ['permissionMode' => 'auto'])
+        . $say(395, 'm0a', [$use('tu_slowtool', 'Bash', ['command' => 'slowtool --wait'])])
+        . $line('user', 300, [$result('tu_slowtool', 'ok')])
+        . $say(299, 'm0b', [$use('tu_mcp', 'mcp__smokesrv__lookup', ['q' => 'x'])])
+        . $line('user', 298, [$result('tu_mcp', 'ok')])
+        . $say(297, 'm0c', [$use('tu_skill', 'Skill', ['skill' => 'sk-smoke-skill'])])
+        . $line('user', 296, [$result('tu_skill', 'ok')])
+        . $say(295, 'm0d', [['type' => 'text', 'text' => 'Zmierzone']])
+        . $line('user', 120, [['type' => 'text', 'text' => 'Przeczytaj pierwszy plik i uruchom agenta']])
         . $say(115, 'm1', [$use('tu_read', 'Read', ['file_path' => "$work/alpha-report.txt"])])
         . $line('user', 114, [$result('tu_read', 'a')])
         . $say(110, 'm2', [$use('tu_bash', 'Bash', ['command' => 'cat beta-notes.txt && ls', 'description' => 'czytaj drugi'])])
@@ -89,6 +98,10 @@ try {
         . $say(48, 'm8', [$use('tu_write', 'Write', ['file_path' => "$work/gamma-output.txt", 'content' => 'g'])])
         . $line('user', 47, [$result('tu_write', 'ok')])
         . $say(45, 'm9', [['type' => 'text', 'text' => 'Gotowe']]));
+    // ustawienia Claude Code w sztucznym HOME: zakładka Zgody czyta tylko `permissions` (env nie może trafić do widoku)
+    file_put_contents("$home/.claude/settings.json", json_encode(['env' => ['SMOKE_SECRET' => 'SMOKE-ENV-VALUE'], 'permissions' => ['ask' => ['Bash(slowtool:*)'], 'defaultMode' => 'default']]));
+    mkdir("$projects/$sid/tool-results", 0700, true);
+    file_put_contents("$projects/$sid/tool-results/tu_slowtool.txt", str_repeat('r', 4096));
     file_put_contents("$projects/$sid/subagents/agent-abc123.meta.json", json_encode(['agentType' => 'Explore', 'description' => 'szukaj', 'toolUseId' => 'tu_agent']));
     file_put_contents("$projects/$sid/subagents/agent-abc123.jsonl",
         $say(100, 's1', [$use('tu_grep', 'Grep', ['pattern' => 'foo', 'path' => $work])])
@@ -157,27 +170,36 @@ try {
 
     // widoki sesji z transkryptu: tabela plików, lista wywołań, log, panel, oś czasu i graf mają własne markery
     $s = "/?s=$sid";
-    $get($s, 200, ['alpha-report.txt', 'class="tabs"', '⇩ dump', 'class="files"']);
+    $get($s, 200, ['alpha-report.txt', 'class="tabs"', '⇩ export', 'class="files calls"']);
     // wiersz tabeli plików (`<span class="base">nazwa</span>`) jest tylko w files.php
-    $get("$s&view=read", 200, ['<span class="base">alpha-report.txt</span>', '<span class="base">beta-notes.txt</span>', 'class="files"']);
-    $get("$s&view=changed", 200, ['<span class="base">gamma-output.txt</span>', '<span class="base">beta-notes.txt</span>', 'class="files"']);
+    $get("$s&view=read", 200, ['<span class="base">alpha-report.txt</span>', '<span class="base">beta-notes.txt</span>', 'class="files calls"']);
+    $get("$s&view=changed", 200, ['<span class="base">gamma-output.txt</span>', '<span class="base">beta-notes.txt</span>', 'class="files calls"']);
     // tytuł `<code class="cmd" title="…">` jest tylko w commands.php (nazwy komend są też w panelu kosztów nagłówka)
     $get("$s&view=commands", 200, ['<code class="cmd" title="uniqtool run">', '<code class="cmd" title="cat beta-notes.txt &amp;&amp; ls">']);
     $get("$s&view=blocked", 200, ['rule-x']);
-    $get("$s&view=boundary", 200, ['data.txt', 'class="files boundary-paths"']);
+    // Zgody: tryb z transkryptu nad tabelą; „najczęściej pytane” = czas ostatniego wystąpienia i dlaczego, klik = ostatnie wywołanie
+    $approvalsPage = $get("$s&view=approvals", 200, ['class="files calls approvals approvals-top"', 'Bash(slowtool:*)', 'slowtool --wait', 'viz-ev="tu_slowtool"',
+        'permission mode:', '<span class="tag">auto</span>']);
+    $check('approvals: top row opens the last call', preg_match('/approvals-top.*?<tr viz-ev="tu_slowtool"/su', $approvalsPage) === 1);
+    $check('approvals: env from settings not shown', !str_contains($approvalsPage, 'SMOKE-ENV-VALUE'));
+    $get("$s&view=approvals&pev=tu_slowtool", 200, ['class="drawer"', 'slowtool --wait']);
     $get("$s&view=messages", 200, ['znajdz foo']);
-    $get("$s&view=timeline", 200, ['class="tl-main"']);
-    $get("$s&view=timeline&rows=dirs", 200, ['class="tl-main"']);
-    $get("$s&view=timeline&rows=commands", 200, ['class="tl-main"']);
-    $get("$s&view=graph", 200, ['class="graph-canvas"']);
-    $get("$s&view=flow", 200, ['viz-flow-data', 'viz-flow-diagram']);
+    $check('Flow bez zdarzeń InstructionsLoaded: brak sekcji „Context loaded”', !str_contains($get("$s&view=flow", 200, ['viz-flow-data', 'viz-flow-diagram']), 'viz-flow-context'));
+    // zdarzenia kontekstu z hooka (fixture, format zapisu HookRecorder): Flow — sekcja „Context loaded”, feed — kompaktowanie sesji głównej
+    @mkdir("$app/var/events", 0700, true);
+    file_put_contents("$app/var/events/$sid.context.jsonl", implode("\n", array_map('json_encode', [
+        ['ts' => $at(300), 'event' => 'InstructionsLoaded', 'session_id' => $sid, 'agent_id' => 'main', 'file_path' => "$work/CLAUDE.md", 'memory_type' => 'Project', 'load_reason' => 'session_start', 'globs' => [], 'trigger_file_path' => null, 'parent_file_path' => null],
+        ['ts' => $at(200), 'event' => 'InstructionsLoaded', 'session_id' => $sid, 'agent_id' => 'main', 'file_path' => "$work/.claude/rules/smoke-rule.md", 'memory_type' => 'Project', 'load_reason' => 'path_glob_match', 'globs' => ['*.txt'], 'trigger_file_path' => "$work/alpha-report.txt", 'parent_file_path' => null],
+        ['ts' => $at(100), 'event' => 'PreCompact', 'session_id' => $sid, 'agent_id' => 'main', 'trigger' => 'manual'],
+        ['ts' => $at(90), 'event' => 'PostCompact', 'session_id' => $sid, 'agent_id' => 'main', 'trigger' => 'manual'],
+    ])) . "\n");
+    $flowPage = $get("$s&view=flow", 200, ['viz-flow-context', 'Context loaded (2)', '.claude/rules/smoke-rule.md', 'path_glob_match', "title=\"$work/CLAUDE.md\""]);
+    $check('Flow: plik względem cwd sesji (pełna ścieżka tylko w title)', str_contains($flowPage, '>CLAUDE.md</td>'));
     $get("$s&view=judge", 200, ['action="/judge?s=', 'No assessments yet.']);
     $get("/judge.json?s=$sid", 200, ['"running":false']);
     $get("$s&view=log", 200, ['<code class="summary" title="uniqtool run">', '<code class="summary" title="cat beta-notes.txt &amp;&amp; ls">', 'class="ev-head"', 'class="badge err"']);
     $get("/session?s=$sid&view=read", 200, ['alpha-report.txt']);
     $get("/version?s=$sid");
-    $graph = json_decode($get("/graph.json?s=$sid"), true);
-    $check('graph.json to JSON z węzłami', is_array($graph) && $graph !== []);
 
     // filtry i panele szczegółów
     $get("$s&view=read&agent=main");
@@ -185,8 +207,6 @@ try {
     $get("$s&view=commands&status=blocked");
     $get("$s&view=commands&status=failed");
     $get("$s&view=commands&status=executed");
-    $get("$s&view=boundary&boundary=outside");
-    $get("$s&view=boundary&boundary=stopped");
     $get("$s&view=read&turn=1");
     $get("$s&view=read&turn=2");
     $get("$s&view=read&scope=project&origin=self");
@@ -196,7 +216,7 @@ try {
     $get("$s&view=log&pev=tu_stop", 200, ['class="drawer"', 'data.txt']);
 
     // CSV zakładek sesji
-    foreach (['read', 'changed', 'commands', 'blocked', 'boundary', 'messages', 'log'] as $view) {
+    foreach (['read', 'changed', 'commands', 'blocked', 'messages', 'log'] as $view) {
         $get("/export.csv?s=$sid&view=$view");
     }
 
@@ -205,14 +225,20 @@ try {
     $get('/?s=all&view=changed', 200, ['<span class="base">gamma-output.txt</span>']);
     $get('/?s=all&view=commands', 200, ['<span class="base">uniqtool</span>']);
     $get('/?s=all&view=blocked', 200, ['rule-x']);
-    $get('/?s=all&view=boundary', 200, ['data.txt']);
+    // Zgody z agregatów (wiersz → zakładka Zgody sesji) i Log z transkryptów (strony przez `before`)
+    $get('/?s=all&view=approvals', 200, ['class="files calls approvals approvals-top"', 'Bash(slowtool:*)', 'slowtool --wait', 'pev=tu_slowtool', 'permission mode:', '<span class="tag">auto</span>']);
+    $get('/?s=all&view=log', 200, ['class="ev-head"', '<code class="summary" title="uniqtool run">', 'class="badge err"', "s=$sid&amp;view=log&amp;pev="]);
+    $get('/?s=all&view=log&recent=1h', 200, ['<code class="summary" title="uniqtool run">']);
+    $get('/?s=all&view=log&before=2000-01-01T00:00:00Z', 200, ['No tool calls in this scope.', '← newest']);
+    $get('/export.csv?s=all&view=approvals', 200, ['slowtool']);
+    $get('/export.csv?s=all&view=log', 404);
     $get('/?s=all&recent=1h', 200, ['alpha-report.txt']);
     $get('/?s=all&recent=5m', 200, ['alpha-report.txt']);
     $get('/version?s=all&recent=5m');
-    foreach (['read' => 'alpha-report.txt', 'changed' => 'gamma-output.txt', 'commands' => 'uniqtool', 'blocked' => 'rule-x', 'boundary' => 'data.txt'] as $view => $marker) {
+    foreach (['read' => 'alpha-report.txt', 'changed' => 'gamma-output.txt', 'commands' => 'uniqtool', 'blocked' => 'rule-x'] as $view => $marker) {
         $get("/export.csv?s=all&view=$view", 200, [$marker]);
     }
-    foreach (['read' => 'alpha-report.txt', 'changed' => 'gamma-output.txt', 'commands' => 'uniqtool', 'blocked' => 'rule-x', 'boundary' => 'data.txt'] as $view => $marker) {
+    foreach (['read' => 'alpha-report.txt', 'changed' => 'gamma-output.txt', 'commands' => 'uniqtool', 'blocked' => 'rule-x'] as $view => $marker) {
         $get("/export.csv?s=$sid&view=$view", 200, [$marker]);
     }
     // komórka `tool` w CSV „all” (Blocked) pochodzi z niezaufanego transkryptu: `=EVIL` ma dostać prefiks `'`, nie stać na początku komórki
@@ -223,27 +249,40 @@ try {
     // Overview: rodzaje sygnałów z fixture mają licznik ≠ ✓ (sama oś Boundaries jest stałą etykietą szablonu)
     $signals = ['/Outside the boundary — executed<\/span>(?:<span class="ov-usd">[^<]*<\/span>)?<span class="ov-n">[1-9]\d*<\/span>/u',
         '/Unknown paths — suspicious<\/span>(?:<span class="ov-usd">[^<]*<\/span>)?<span class="ov-n">[1-9]\d*<\/span>/u'];
-    foreach (['/', '/?days=1', '/?days=30', '/?days=all'] as $overviewPath) {
+    foreach (['/?overview=1', '/?overview=1&days=1', '/?overview=1&days=30', '/?overview=1&days=all'] as $overviewPath) {
         $get($overviewPath, 200, ['Boundaries'], $signals);
     }
+    // czas narzędzi i wyposażenie w Przeglądzie; „zgoda?” = bez blokady, Bash ≥ 11 min, inne ≥ 90 s; sortowanie Commands po czasie (sesja i „all”)
+    $overview = $get('/?overview=1&days=30', 200, ['Time in tools', 'slowest calls under 90 s (Bash under 11 min)', 'tool results saved on disk — files: 1', 'MCP servers', 'smokesrv', 'sk-smoke-skill', 'Explore'],
+        ['/href="\/\?s=' . $sid . '&amp;view=log&amp;pev=tu_slowtool"/']);
+    $check('Przegląd: Bash 95 s = praca narzędzia (najwolniejsze), nie grupa „zgoda?”; Agent poza rankingiem',
+        preg_match('/slowest calls under 90 s \(Bash under 11 min\).*?title="slowtool --wait"/su', $overview) === 1
+        && preg_match('/<li data-tip="[^"]*slowtool[^"]*" viz-sev="warn">/u', $overview) === 0 && !str_contains($overview, 'data-tip="Agent ·'));
+    $get("$s&view=commands&sort=time", 200, ['viz-wait'], ['/<code class="cmd"[^>]*>[^<]*slowtool/u']);
+    $check('Commands sort=time: najdłuższe pierwsze', preg_match('/<code class="cmd" title="([^"]*)"/', $get("$s&view=commands&sort=time"), $m) === 1 && $m[1] === 'slowtool --wait', $m[1] ?? '');
+    $check('Commands „all” sort=time: program z najdłuższym czasem pierwszy', preg_match('/<span class="base">([^<]*)<\/span>/', $get('/?s=all&view=commands&sort=time', 200, ['1 min 35 s']), $m) === 1 && $m[1] === 'slowtool', $m[1] ?? '');
     $get('/office', 200, ['viz-office-canvas', 'head = model · shirt = project']);
     // biuro 3D czyta wspólny feed; stara trasa danych biura nie istnieje
     $check('GET /office.json → 404 (dane biura = /feed.json)', $request('/office.json')[0] === 404);
     $office = json_decode($get('/feed.json'), true);
     $officeAgent = $office['sessions'][0]['agents'][0] ?? [];
     $check('feed.json: dane biura (persona, start, gone, archiwum, monety)', isset($officeAgent['persona'], $officeAgent['start'], $officeAgent['gone'], $officeAgent['archive'], $office['coinUsd'], $office['burnFrom']));
+    $check('feed.json: klucz processes (available, groups, orphans; bez argumentów procesów)', is_bool($office['processes']['available'] ?? null) && is_array($office['processes']['groups'] ?? null) && is_array($office['processes']['orphans'] ?? null));
     // koszulka = kolor projektu (z nazwy katalogu sesji), głowa = klasa modelu (persona)
     $check('feed.json: sesja ma kolor projektu ze stałej palety', preg_match('/^#[0-9a-f]{6}$/', (string) ($office['sessions'][0]['projectColor'] ?? '')) === 1);
     $check('feed.json: agent opus ma personę opus', ($officeAgent['persona'] ?? '') === 'opus', (string) ($officeAgent['persona'] ?? ''));
-    $get('/office', 200, ['scope-switch', 'href="/live"', 'viz-office-url="/feed.json"']);
+    $check('feed.json: kompaktowanie sesji głównej z hooka (para Pre/Post = jedno, trigger)', ($office['sessions'][0]['compactions'] ?? null) === [['ts' => $at(100), 'trigger' => 'manual']], json_encode($office['sessions'][0]['compactions'] ?? null));
+    $get('/office', 200, ['scope-switch', 'href="/lanes"', 'viz-office-url="/feed.json"']);
 
-    // Live (widok przeglądowy): strona, dane, zakres projektów z parametru i z ciasteczka
-    $get('/live', 200, ['viz-live-rows', 'scope-switch', 'viz-scope-label', 'href="/office"']);
-    // widoki granicy (graf, przepływ): strony, przełącznik we wszystkich widokach; dane mapy w feedzie (strefy z konfiguracji, katalogi poza granicą z fixture)
+    // strona startowa: goły `/` prowadzi do osi pracy; Przegląd pod `/?overview=1`
+    $check('GET / → 303 do /lanes', ($r = $request('/'))[0] === 303 && str_contains($r[2], 'Location: /lanes'), (string) $r[0]);
+    $check('GET / z ciasteczkiem viz-live → 303 do ostatniego widoku', ($r = $request('/', 'GET', ['Cookie: viz-live=/agents']))[0] === 303 && str_contains($r[2], 'Location: /agents'), (string) $r[0]);
+    $check('wejście na widok przeglądowy ustawia ciasteczko viz-live', str_contains($request('/office')[2], 'viz-live=/office'));
+    // widok przeglądowy: strona, dane, zakres projektów z parametru i z ciasteczka
+    $get('/lanes', 200, ['scope-switch', 'viz-scope-label', 'href="/office"']);
+    // dane mapy w feedzie (strefy z konfiguracji, katalogi poza granicą z fixture)
     $get('/agents', 200, ['viz-agents-list', 'href="/office"', 'href="/agents" viz-current']);
     $get('/lanes', 200, ['viz-lanes-list', 'href="/agents"', 'href="/lanes" viz-current']);
-    $get('/boundary-graph', 200, ['viz-bgraph-canvas', 'href="/live"', 'href="/office"', 'href="/boundary-flow"', 'href="/boundary-graph" viz-current']);
-    $get('/boundary-flow', 200, ['viz-bflow-chart', 'href="/boundary-graph"', 'href="/boundary-flow" viz-current']);
     $check('GET /map → 404 (mapa w kartach usunięta)', $request('/map')[0] === 404);
     $mapFeed = json_decode($get('/feed.json'), true);
     $mapRows = $mapFeed['sessions'][0]['map'] ?? [];
@@ -263,7 +302,20 @@ try {
     $feedCache = glob("$app/var/cache/feed-*.json") ?: [];
     $check('feed: pamięć podręczna w var/cache, plik 0600', $feedCache !== [] && (fileperms($feedCache[0]) & 0777) === 0600, implode(', ', $feedCache));
     $check('GET /live.json → 404 (dane Live = /feed.json)', $request('/live.json')[0] === 404);
-    $get('/live?projects=' . $projectKey, 200, ['value="' . $projectKey . '" viz-scope-name']);
+    $get('/lanes?projects=' . $projectKey, 200, ['value="' . $projectKey . '" viz-scope-name']);
+    // Przegląd i „Wszystkie sesje” liczą po tym samym zakresie (ciasteczko `viz-scope`, parametr `projects` ma pierwszeństwo); bez osobnego filtra projektu
+    $other = ['Cookie: viz-scope=000000000000'];
+    $check('scope: overview and s=all without a project parameter', preg_match('/[?;]project=/', $get('/?overview=1&days=30', 200, ['viz-scope-reload']) . $get('/?s=all', 200, ['viz-scope-reload'])) === 0);
+    $check('scope: overview — cookie of another project → 0 sessions', str_contains($request('/?overview=1&days=30', 'GET', $other)[1], '· 0 sessions ·'));
+    $check('scope: overview — parameter wins over the cookie', !str_contains($request('/?overview=1&days=30&projects=' . $projectKey, 'GET', $other)[1], '· 0 sessions ·'));
+    foreach (['read', 'changed', 'commands', 'blocked', 'approvals', 'log'] as $tab) {
+        [$status, $body] = $request('/?s=all&view=' . $tab, 'GET', $other);
+        $check("scope: s=all&view=$tab — cookie of another project → 200, 0 sessions", $status === 200 && str_contains($body, '0 sessions in scope') && preg_match($phpError, $body) !== 1);
+    }
+    $check('scope: s=all counts follow the cookie', !str_contains($request('/?s=all&view=approvals', 'GET', $other)[1], 'slowtool --wait')
+        && str_contains($request('/?s=all&view=approvals', 'GET', ['Cookie: viz-scope=' . $projectKey])[1], 'slowtool --wait'));
+    $check('scope: CSV follows the cookie', !str_contains($request('/export.csv?s=all&view=approvals', 'GET', $other)[1], 'slowtool'));
+    $check('scope: old project parameter → projects', str_contains($request('/summary?project=' . $projectKey)[2], 'projects=' . $projectKey));
 
     // przekierowanie ze starego adresu i nieznana trasa
     [$status, , $head] = $request('/summary?kind=blocked');

@@ -10,6 +10,7 @@ use Viz\Model\Event;
 use Viz\Model\Session;
 use Viz\Model\Touch;
 use Viz\Path;
+use Viz\Permissions\Settings;
 use Viz\Pricing;
 
 /**
@@ -57,7 +58,7 @@ final class TranscriptReader
     {
         $sessionId = basename($mainPath, '.jsonl');
         $agents = [Agent::MAIN => new Agent(Agent::MAIN, 'main', 'main session', null)];
-        $meta = ['title' => '', 'cwd' => null, 'toolUses' => 0, 'prompts' => [], 'usage' => [], 'messages' => [], 'incidents' => []];
+        $meta = ['title' => '', 'cwd' => null, 'toolUses' => 0, 'prompts' => [], 'usage' => [], 'messages' => [], 'incidents' => [], 'modes' => []];
         $events = $this->readFile($mainPath, $sessionId, Agent::MAIN, $meta);
 
         foreach (glob(substr($mainPath, 0, -6) . '/subagents/agent-*.jsonl') ?: [] as $file) {
@@ -85,6 +86,7 @@ final class TranscriptReader
             $sessionId, $mainPath, ($meta['customTitle'] ?? '') !== '' ? $meta['customTitle'] : $meta['title'], $meta['cwd'], $agents, $events, $meta['toolUses'], $meta['prompts'], $meta['usage'],
             self::messages($meta['prompts'], $meta['messages'], $agents),
             $meta['incidents'],
+            $meta['modes'],
         );
     }
 
@@ -265,6 +267,11 @@ final class TranscriptReader
                 $usage[$id]['final'] = $usage[$id]['final'] || ($d['message']['stop_reason'] ?? null) !== null;
             }
             if ($type === 'user' && $agentId === Agent::MAIN) {
+                // tryb uprawnień zapisany przy wiadomości usera (`permissionMode`); zmiana trybu = nowy wpis
+                if (in_array($d['permissionMode'] ?? null, Settings::MODES, true) && is_string($d['timestamp'] ?? null)
+                    && (end($meta['modes'])['mode'] ?? null) !== $d['permissionMode']) {
+                    $meta['modes'][] = ['ts' => $d['timestamp'], 'mode' => $d['permissionMode']];
+                }
                 $prompt = self::prompt($d);
                 if ($prompt !== null) {
                     $meta['prompts'][] = $prompt;
@@ -329,6 +336,7 @@ final class TranscriptReader
                 denial: $denials[$id] ?? null,
                 carry: $carry[$id] ?? null,
                 osDenied: $osDenied[$id] ?? false,
+                command: $tool === 'Bash' ? (string) ($input['command'] ?? '') : null,
             );
         }
 

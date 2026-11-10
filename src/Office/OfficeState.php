@@ -28,6 +28,16 @@ use Viz\Web\App;
  * - `stuck`     — ostatnie zdarzenie agenta to limit albo błąd API
  *
  * Z transkryptu nie da się odróżnić „czeka na zgodę usera” od „długo trwającej komendy” — oba to `working` z rosnącym czasem.
+ * Zdarzenia hooka (`HookLog::state`, opcjonalne) to rozstrzygają i dokładają stany:
+ * - `waiting-permission` — trwa wywołanie, a po jego starcie przyszło `PermissionRequest` albo `Notification: permission_prompt` agenta;
+ *                 `permission` = `{ts, tool}`, `since` = chwila prośby. Trwa do końca wywołania (hook nie zna chwili udzielenia zgody)
+ * - `ended`     — sesja główna: `SessionEnd` po jej ostatniej aktywności; `ended` = powód, `gone` = true (wychodzi z biura od razu)
+ * - `stuck` także ze `StopFailure` po ostatniej aktywności agenta (bez trwającego wywołania); `stuckType` = typ błędu (`rate_limit`, `overloaded`…)
+ * - `idle` dokładnie: `Stop` (sesja główna) po jej ostatniej aktywności = czeka na usera od chwili `Stop` (`since`), także gdy transkrypt
+ *                 pokazuje wywołanie bez wyniku; bez `Stop` — heurystyka z transkryptu (przerwanie tury `Stop` nie wysyła)
+ * - subagent: `SubagentStart` = `start`; start bez późniejszej aktywności w transkrypcie = `working` od tej chwili (agent musi już być w transkrypcie);
+ *                 `SubagentStop` po ostatniej aktywności = zakończony w tej chwili (`last` = `since` = chwila końca, `gone`); bez nich — heurystyka
+ * Zdarzenie bez `agent_id` należy do sesji głównej.
  *
  * Niezależnie od stanu:
  * - `burn`     — koszt agenta ($ wg `Pricing`) z ostatnich `BURN_WINDOW` s; od `BURN_FROM` podpis pokazuje kwotę
@@ -89,10 +99,15 @@ final class OfficeState
      * Wspólne dla biura i widoku Live (`LiveState`, które ma dłuższe okno). Sesja główna czekająca na usera,
      * gdy pracują jej subagenci (nie `gone`), ma stan `delegated`.
      *
+     * @param list<array{ts: string, event: string, agent: string, detail: ?string}> $hooks zdarzenia stanu z hooka (`HookLog::state`)
      * @return array{main: ?array<string, mixed>, subs: list<array<string, mixed>>}
      */
-    public static function rows(Session $session, int $now, ?Boundary $limits = null): array
+    public static function rows(Session $session, int $now, ?Boundary $limits = null, array $hooks = []): array
     {
+        $hooksByAgent = [];
+        foreach ($hooks as $h) {
+            $hooksByAgent[$h['agent']][] = $h;
+        }
         $byAgent = [];
         foreach ($session->events as $e) {
             if ($e->tool !== Event::TOOL_CONTEXT) {
@@ -120,7 +135,9 @@ final class OfficeState
         foreach ($session->agents as $agent) {
             $events = $byAgent[$agent->id] ?? [];
             $responses = $usage[$agent->id] ?? [];
-            if ($events === [] && $responses === [] && $agent->id !== Agent::MAIN) {
+            // subagent bez wywołań i odpowiedzi jest w biurze tylko po `SubagentStart` z hooka (agent musi być w transkrypcie — hook sam agenta nie tworzy)
+            $started = in_array('SubagentStart', array_column($hooksByAgent[$agent->id] ?? [], 'event'), true);
+            if ($events === [] && $responses === [] && $agent->id !== Agent::MAIN && !$started) {
                 continue;
             }
             $row = self::agent($agent, $events, $responses, $incidents[$agent->id] ?? null, $agent->id === Agent::MAIN ? $lastPrompt : null, $now, $session->cwd) + [
@@ -129,6 +146,7 @@ final class OfficeState
                 'archive' => self::inArchive($events, $now),
                 'boundary' => $limits?->enabled() ? self::boundary($limits, $events, $now, $session->cwd) : null,
             ];
+            $row = self::withHooks($row, $hooksByAgent[$agent->id] ?? [], $now);
             if ($agent->id === Agent::MAIN) {
                 $main = $row;
             } else {
@@ -175,6 +193,77 @@ final class OfficeState
         }
 
         return $out;
+    }
+
+    /** Zdarzenie prośby o zgodę z hooka: `PermissionRequest` (od razu) albo `Notification: permission_prompt` (po ~6 s czekania). */
+    public static function isPermission(array $hook): bool
+    {
+        return $hook['event'] === 'PermissionRequest' || ($hook['event'] === 'Notification' && $hook['detail'] === 'permission_prompt');
+    }
+
+    /**
+     * Stan wiersza agenta poprawiony zdarzeniami hooka (opis stanów w nagłówku klasy). Bez zdarzeń — wiersz bez zmian (+ puste pola).
+     *
+     * @param array<string, mixed> $row
+     * @param list<array{ts: string, event: string, agent: string, detail: ?string}> $hooks zdarzenia tego agenta, od najstarszego
+     * @return array<string, mixed>
+     */
+    private static function withHooks(array $row, array $hooks, int $now): array
+    {
+        $row += ['permission' => null, 'stuckType' => null, 'ended' => null];
+        // subagent: `SubagentStart` = dokładny start; start po ostatniej aktywności (jeszcze bez odpowiedzi modelu) = pracuje od tej chwili
+        $starts = $row['kind'] === 'sub' ? array_values(array_filter($hooks, static fn (array $h): bool => $h['event'] === 'SubagentStart')) : [];
+        $restart = $starts === [] ? null : $starts[count($starts) - 1];
+        if ($starts !== [] && ($row['start'] === '' || self::time($starts[0]['ts']) < self::time($row['start']))) {
+            $row['start'] = $starts[0]['ts'];
+        }
+        if ($restart !== null && self::time($restart['ts']) > self::time($row['last'])) {
+            $row = ['state' => 'working', 'since' => $restart['ts'], 'last' => $restart['ts'], 'tool' => null, 'activity' => null, 'after' => null,
+                'interrupted' => false, 'stuck' => null, 'gone' => $now - self::time($restart['ts']) > self::QUIET_GONE] + $row;
+        }
+        $last = self::time($row['last']);
+        $end = null;
+        $failure = null;
+        $ask = null;
+        $stop = null;
+        foreach ($hooks as $h) {
+            $t = self::time($h['ts']);
+            if ($h['event'] === 'SessionEnd' && $row['kind'] === 'main' && $t >= $last) {
+                $end = $h;
+            } elseif ($h['event'] === 'StopFailure' && $t >= $last) {
+                $failure = $h;
+            } elseif ($h['event'] === ($row['kind'] === 'main' ? 'Stop' : 'SubagentStop') && $t >= $last) {
+                $stop = $h;
+            } elseif ($ask === null && $row['tool'] !== null && self::isPermission($h) && $t >= self::time($row['since'])) {
+                // pierwsza prośba po starcie trwającego wywołania
+                $ask = $h;
+            }
+        }
+        if ($end !== null) {
+            return ['state' => 'ended', 'since' => $end['ts'], 'ended' => $end['detail'] ?? 'other', 'gone' => true,
+                'tool' => null, 'activity' => null, 'interrupted' => false] + $row;
+        }
+        // tura skończona (`Stop` / `SubagentStop`) po ostatniej aktywności: dokładna chwila; wywołanie bez wyniku sprzed niej nie trwa
+        if ($stop !== null && ($failure === null || self::time($stop['ts']) >= self::time($failure['ts']))) {
+            $done = ['state' => 'idle', 'since' => $stop['ts'], 'tool' => null, 'activity' => null, 'after' => null, 'interrupted' => false, 'stuck' => null];
+
+            return $row['kind'] === 'main'
+                ? $done + ['gone' => $now - self::time($stop['ts']) > self::QUIET_GONE] + $row
+                // subagent zakończony: `last` = koniec (widoki rysują jego życie od `start` do `last`)
+                : $done + ['last' => $stop['ts'], 'gone' => true] + $row;
+        }
+        if ($ask !== null) {
+            return ['state' => 'waiting-permission', 'since' => $ask['ts'],
+                'permission' => ['ts' => $ask['ts'], 'tool' => $ask['event'] === 'PermissionRequest' ? $ask['detail'] : null]] + $row;
+        }
+        if ($failure !== null && $row['tool'] === null) {
+            $type = $failure['detail'] ?? 'unknown';
+
+            return ['state' => 'stuck', 'since' => $failure['ts'], 'stuck' => $type === 'rate_limit' ? 'limit' : 'api-error', 'stuckType' => $type,
+                'interrupted' => false] + $row;
+        }
+
+        return $row;
     }
 
     /**

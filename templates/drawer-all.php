@@ -45,21 +45,22 @@ $top = static fn (array $m, int $n): string => implode(' · ', array_map(static 
 ?>
 <aside class="drawer" viz-pane="drawer">
     <button type="button" class="drawer-close" onclick="Viz.Close(this)" title="<?= th('close (Esc)') ?>">×</button>
+    <?php /* objaśnienia (`p.explain`, `[viz-help]`) ukryte; „?” pokazuje wszystkie naraz — jak drawer.php */ ?>
+    <label class="drawer-help" title="<?= th('show explanations') ?>"><input type="checkbox">?</label>
     <?php if ($file !== null): ?>
         <?php uasort($file['sessions'], static fn (array $a, array $b): int => array_sum($b) <=> array_sum($a)) ?>
         <p class="drawer-kind"><?= th('file · all sessions') ?></p>
         <h2 title="<?= h($file['path']) ?>"><?= h(basename($file['path'])) ?></h2>
         <p class="muted drawer-path"><?= h(App::shortPath($file['path'], null)) ?><?= $file['exists'] ? '' : h(t(' · does not exist now')) ?></p>
-        <p class="explain"><?= th(count($file['sessions']) === 1 ? 'Counted over {n} session in the current scope (period, project, search).' : 'Counted over {n} sessions in the current scope (period, project, search).', ['n' => count($file['sessions'])]) ?>
-            <?= th('Only counters are kept across sessions — single calls are visible after opening a session.') ?></p>
+        <p class="muted"><?= th(count($file['sessions']) === 1 ? 'Counted over {n} session in the current scope (period, project, search).' : 'Counted over {n} sessions in the current scope (period, project, search).', ['n' => count($file['sessions'])]) ?></p>
+        <p class="explain"><?= th('Only counters are kept across sessions — single calls are visible after opening a session.') ?></p>
 
         <h3><?= th('what happened to it — totals') ?></h3>
-        <dl class="facts">
+        <p class="drawer-ops">
             <?php foreach ($file['ops'] as $op => $n): ?>
-                <dt viz-op="<?= h($op) ?>"><?= h(t($opLabels[$op] ?? $op) . ' ×' . $n) ?></dt>
-                <dd class="explain"><?= h(t(App::OP_HELP[$op] ?? '')) ?></dd>
+                <span viz-op="<?= h($op) ?>" title="<?= h(t(App::OP_HELP[$op] ?? '')) ?>"><?= h(t($opLabels[$op] ?? $op) . ' ×' . $n) ?></span>
             <?php endforeach ?>
-        </dl>
+        </p>
 
         <h3><?= th('sessions ({n}) — most activity first', ['n' => count($file['sessions'])]) ?></h3>
         <p class="explain"><?= th('Per session: its name, project and last activity, then what happened to this file there. Click a name to open the session with this file selected; „archive” = Claude Code already deleted the transcript, only the counters remain.') ?></p>
@@ -77,10 +78,10 @@ $top = static fn (array $m, int $n): string => implode(' · ', array_map(static 
         <h2><?= h($cmd['program']) ?></h2>
         <p class="explain"><?= th(count($cmd['sessions']) === 1 ? 'A program agents ran inside Bash commands, counted over {n} session in the current scope.' : 'A program agents ran inside Bash commands, counted over {n} sessions in the current scope.', ['n' => count($cmd['sessions'])]) ?></p>
         <dl class="facts">
-            <dt><?= th('role') ?></dt><dd><?= h(t($cmd['role'])) ?> <span class="explain"><?= th('— what this app thinks the program is for') ?></span></dd>
-            <dt><?= th('uses') ?></dt><dd><?= h($cmd['count']) ?> <span class="explain"><?= th('— each appearance in a command, also inside pipes and $(…)') ?></span></dd>
-            <dt><?= th('exit ≠ 0') ?></dt><dd><?= h($cmd['failed']) ?> <span class="explain"><?= th('— the whole command reported an error (one exit code per command, so a program in a chain inherits it)') ?></span></dd>
-            <dt><?= th('not run') ?></dt><dd><?= h($cmd['blocked']) ?> <span class="explain"><?= th('— blocked by a hook, a deny rule, auto mode or you') ?></span></dd>
+            <dt><?= th('role') ?></dt><dd><?= h(t($cmd['role'])) ?> <span class="explain" viz-help><?= th('— what this app thinks the program is for') ?></span></dd>
+            <dt><?= th('uses') ?></dt><dd><?= h($cmd['count']) ?> <span class="explain" viz-help><?= th('— each appearance in a command, also inside pipes and $(…)') ?></span></dd>
+            <dt><?= th('exit ≠ 0') ?></dt><dd><?= h($cmd['failed']) ?> <span class="explain" viz-help><?= th('— the whole command reported an error (one exit code per command, so a program in a chain inherits it)') ?></span></dd>
+            <dt><?= th('not run') ?></dt><dd><?= h($cmd['blocked']) ?> <span class="explain" viz-help><?= th('— blocked by a hook, a deny rule, auto mode or you') ?></span></dd>
         </dl>
         <?php if ($cmd['subs'] !== []): ?>
             <h3><?= th('subcommands') ?></h3>
@@ -94,7 +95,7 @@ $top = static fn (array $m, int $n): string => implode(' · ', array_map(static 
         <?php endif ?>
         <?php if ($cmd['contexts'] !== []): ?>
             <h3><?= th('where it runs') ?></h3>
-            <p class="explain">
+            <p>
                 <?php foreach (array_slice($cmd['contexts'], 0, 10, true) as $ctx => $n): ?>
                     <span class="ctx"><?= h($ctx . ' ×' . $n) ?> <span class="muted">(<?= h(isset(App::CONTEXT_HELP[$ctx]) ? t(App::CONTEXT_HELP[$ctx]) : t('wrapped in {ctx}', ['ctx' => $ctx])) ?>)</span></span>
                 <?php endforeach ?>

@@ -49,7 +49,6 @@ const Viz = (() => {
         pick: section.attr('viz-pick') || '',
         pev: section.attr('viz-pev') || '',
         pcmd: section.attr('viz-pcmd') || '',
-        live: section.flag('viz-live') ? '1' : '0',
         st: Math.round(section.one('[viz-pane="list"]')?.scrollTop || 0),
         se: Math.round(section.one('[viz-pane="drawer"]')?.scrollTop || 0),
         sx: Math.round(section.one('[viz-pane="tl"]')?.scrollLeft || 0),
@@ -109,10 +108,6 @@ const Viz = (() => {
             })
             .catch(() => refreshFailed(true))
             .finally(() => { section._busy = false; });
-    };
-
-    const LiveToggle = input => {
-        space(input).flag('viz-live', input.checked);
     };
 
     /**
@@ -182,22 +177,32 @@ const Viz = (() => {
         const light = document.documentElement.dataset.theme !== 'light';
         if (light) document.documentElement.dataset.theme = 'light'; else delete document.documentElement.dataset.theme;
         try { localStorage.setItem('viz-theme', light ? 'light' : 'dark'); } catch { /* bez pamięci */ }
-        if (document.one('[viz-graph], [viz-office]')) location.reload();
+        if (document.one('[viz-office]')) location.reload();
     };
 
     /**
      * Zakres projektów (Viz\Web\Scope): wybór w lewym panelu = ciasteczko viz-scope (klucze po przecinku, puste = wszystkie).
      * Czyta je serwer przy stronach i przy odpytywaniu widoków przeglądowych (/feed.json), więc zdarzenie `viz-scope`
-     * wystarczy, żeby widok pobrał dane od razu. Lista sesji filtrowana w przeglądarce; otwarta sesja zawsze widoczna.
+     * wystarczy, żeby widok pobrał dane od razu. Strony liczone po zakresie na serwerze (Przegląd, „Wszystkie sesje” — `[viz-scope-reload]`)
+     * przeładowują się po chwili bez zmian wyboru (kilka kliknięć = jedno przeładowanie), bez parametru `projects` (ma pierwszeństwo przed ciasteczkiem).
+     * Lista sesji filtrowana w przeglądarce; otwarta sesja zawsze widoczna.
      */
     const SCOPE_COOKIE = 'viz-scope';
+    const SCOPE_RELOAD_MS = 700;
+    let scopeReload = 0;
 
     const scopeKeys = box => [...box.all('input[type="checkbox"]')].filter(i => i.value !== '' && i.checked).map(i => i.value);
 
     const showScope = (box, keys) => {
         box.up('aside').all('li[viz-project]').forEach(li => li.show(keys.length === 0 || keys.includes(li.attr('viz-project')) || li.hasAttribute('viz-current')));
+        box.up('aside').all('li.s-day').forEach(head => {
+            let next = head.nextElementSibling;
+            let any = false;
+            while (next && !next.classList.contains('s-day')) { if (next.hidden !== true && next.style.display !== 'none') any = true; next = next.nextElementSibling; }
+            head.show(any);
+        });
         const names = [...box.all('input[type="checkbox"]')].filter(i => i.value !== '' && i.checked).map(i => i.attr('viz-scope-name'));
-        box.one('[viz-scope-label]').textContent = keys.length === 0 ? T('all') : keys.length === 1 ? names[0] : T('{n} selected', { n: keys.length });
+        box.one('[viz-scope-label]').textContent = keys.length === 0 ? T('all') : keys.length === 1 && names.length === 1 ? names[0] : T('{n} selected', { n: keys.length });
     };
 
     const saveScope = keys => {
@@ -214,14 +219,28 @@ const Viz = (() => {
         saveScope(keys);
         showScope(box, keys);
         document.dispatchEvent(new CustomEvent('viz-scope'));
+        if (document.one('[viz-scope-reload]')) {
+            clearTimeout(scopeReload);
+            scopeReload = setTimeout(() => {
+                const url = new URL(location.href);
+                url.searchParams.delete('projects');
+                location.replace(url.pathname + url.search);
+            }, SCOPE_RELOAD_MS);
+        }
     };
 
-    /** Zakres z adresu (`projects=`) zapamiętany jak wybór w panelu — link z zakresem ustawia go na stałe. */
+    /**
+     * Zakres z adresu (`projects=`) zapamiętany jak wybór w panelu — link z zakresem ustawia go na stałe. Klucze z adresu albo ciasteczka,
+     * nie z pól panelu: projekt spoza listy panelu (np. z wykresu „koszt wg projektu” Przeglądu) też zostaje w zakresie, jak na serwerze.
+     */
     const ScopeInit = aside => {
         const box = aside.one('[viz-scope]');
         if (!box) return;
-        if (new URLSearchParams(location.search).has('projects')) saveScope(scopeKeys(box));
-        showScope(box, scopeKeys(box));
+        const param = new URLSearchParams(location.search).get('projects');
+        const cookie = document.cookie.split('; ').find(c => c.startsWith(SCOPE_COOKIE + '='))?.slice(SCOPE_COOKIE.length + 1) ?? '';
+        const keys = (param ?? decodeURIComponent(cookie)).split(',').filter(k => /^[a-f0-9]{12}$/.test(k));
+        if (param !== null) saveScope(keys);
+        showScope(box, keys);
     };
 
     /**
@@ -283,5 +302,5 @@ const Viz = (() => {
         link.href = url.pathname + url.search;
     };
 
-    return { T, Init, Query, LiveToggle, Open, OpenCmd, Close, Go, Theme, Lang, Scope, ScopeInit, SessionLink, SideDown, SideMove, SideUp, SideReset };
+    return { T, Init, Query, Open, OpenCmd, Close, Go, Theme, Lang, Scope, ScopeInit, SessionLink, SideDown, SideMove, SideUp, SideReset };
 })();

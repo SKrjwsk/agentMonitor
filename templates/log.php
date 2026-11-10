@@ -16,7 +16,12 @@ use Viz\Web\App;
 
 $pick = $view['p']['pick'];
 $session = $view['session'];
+// ścieżki względem wspólnego korzenia sesji (App::pathRoot), pokazanego raz nad listą
+$base = $view['pathRoot'] ?? $session->cwd;
 ?>
+<?php if ($base !== null): ?>
+    <div class="list-bar"><span class="muted path-root" title="<?= h($base) ?>"><?= th('paths relative to') ?> <code><?= h(App::shortPath($base, null)) ?>/</code></span></div>
+<?php endif ?>
 <ol class="timeline">
     <?php foreach ($view['events'] as $e): /** @var Event $e */ ?>
         <?php
@@ -31,9 +36,9 @@ $session = $view['session'];
                 <time title="<?= h($e->ts) ?>"><?= h(Clock::local($e->ts)) ?></time>
                 <i class="dot" title="<?= h(isset($session->agents[$e->agentId]) ? App::agentLabel($session->agents[$e->agentId]) : $e->agentId) ?>"></i>
                 <span class="tool"><?= h($e->tool === Event::TOOL_CONTEXT ? t('context') : $e->tool) ?></span>
-                <code class="summary" title="<?= h($e->summary) ?>"><?= h(App::shortText($e->summary, $session->cwd)) ?></code>
+                <code class="summary" title="<?= h($e->summary) ?>"><?= h(App::shortText($e->summary, $base)) ?></code>
                 <?php if ($e->denial !== null): ?>
-                    <span class="badge denied" title="<?= h((string) $e->error) ?>">⊘ <?= h(t($e->denial['by']) . ($e->denial['detail'] !== null ? ' · ' . $e->denial['detail'] : '')) ?></span>
+                    <span class="badge denied" title="<?= h(t('blocked') . ($e->error !== null ? ' · ' . $e->error : '')) ?>">⊘<?= h(t($e->denial['by']) . ($e->denial['detail'] !== null ? ' · ' . $e->denial['detail'] : '')) ?></span>
                 <?php elseif ($e->failed): ?><span class="badge err" title="<?= h((string) $e->error) ?>"><?= th('error') ?></span><?php endif ?>
                 <?php if (isset($view['problems'][$e->toolUseId]) && !$e->failed): ?>
                     <span class="badge problem" title="<?= h(implode("\n", array_map([Problems::class, 'reasonText'], $view['problems'][$e->toolUseId]))) ?>">⚠ <?= h(mb_strimwidth(Problems::reasonText($view['problems'][$e->toolUseId][0]), 0, 40, '…')) ?></span>

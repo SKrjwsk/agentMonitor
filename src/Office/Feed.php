@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Viz\Office;
 
 use Viz\Boundary;
+use Viz\Source\Processes;
 use Viz\Source\SessionIndex;
 use Viz\Source\TranscriptReader;
 use Viz\Summary\LiveSummary;
@@ -34,7 +35,7 @@ final class Feed
         $file = self::dir() . '/feed-' . substr(sha1($scope->value()), 0, 12) . '.json';
         $cached = is_file($file) ? json_decode((string) @file_get_contents($file), true) : null;
         if (is_array($cached) && ($cached['signature'] ?? '') === $signature && $now - (int) ($cached['at'] ?? 0) <= self::MAX_AGE && is_array($cached['data'] ?? null)) {
-            return $cached['data'];
+            return self::withProcesses($cached['data'], $scope, $now, $limits);
         }
         $reader = new TranscriptReader();
         $data = LiveState::merge(
@@ -43,6 +44,14 @@ final class Feed
             $limits,
         );
         self::save($file, ['signature' => $signature, 'at' => $now, 'data' => $data]);
+
+        return self::withProcesses($data, $scope, $now, $limits);
+    }
+
+    /** Klucz `processes` dochodzi poza pamięcią podręczną feedu: procesy zmieniają się szybciej niż sesje i mają własną (`Processes::cached`). */
+    private static function withProcesses(array $data, Scope $scope, int $now, Boundary $limits): array
+    {
+        $data['processes'] = ProcessView::build(Processes::cached($now), $scope, $limits);
 
         return $data;
     }

@@ -28,6 +28,10 @@ $who = static function (string $id) use ($agents, $view): string {
 
     return '<span class="who ext" title="' . h($id) . '">' . h(mb_strimwidth($id, 0, 32, '…')) . '</span>';
 };
+// limit wierszy jak w listach plików (App::rowLimit); lista jest chronologiczna, więc zostają najnowsze, starsze za „pokaż wszystkie”
+$total = count($view['messages']);
+$messages = array_slice($view['messages'], max(0, $total - $view['rowLimit']));
+$day = null;
 ?>
 <div class="list-bar">
     <?php foreach (['' => t('all'), 'user' => t('from user'), 'agents' => t('between agents')] as $mk => $label): ?>
@@ -38,17 +42,32 @@ $who = static function (string $id) use ($agents, $view): string {
 <?php if ($view['messages'] === []): ?>
     <p class="empty"><?= $p['src'] === 'hook' ? th('Messages are available only from the transcript source.') : th('No messages in this scope.') ?></p>
 <?php else: ?>
+    <?php if (count($messages) < $total): ?>
+        <p class="muted list-more"><?= th('shown {n} of {total} ·', ['n' => count($messages), 'total' => $total]) ?>
+            <a href="/?<?= h(App::query($view, ['limit' => 'all'])) ?>"><?= th('show all') ?></a></p>
+    <?php endif ?>
     <ol class="messages">
-        <?php foreach ($view['messages'] as $m): ?>
-            <?php $long = mb_strlen($m['text']) > 300 || substr_count($m['text'], "\n") > 4 ?>
+        <?php foreach ($messages as $m): ?>
+            <?php
+            $long = mb_strlen($m['text']) > 300 || substr_count($m['text'], "\n") > 4;
+            // data tylko przy pierwszej wiadomości dnia
+            $mDay = Clock::local($m['ts'], 'd.m');
+            $newDay = $mDay !== $day;
+            $day = $mDay;
+            $ti = $m['kind'] === 'user' ? ($turnAt[$m['ts'] . "\n" . $m['text']] ?? null) : null;
+            $tt = $ti !== null ? ($view['turnTokens'][$ti] ?? null) : null;
+            ?>
             <li viz-msg-kind="<?= h($m['kind']) ?>">
                 <div class="msg-head">
-                    <time title="<?= h($m['ts']) ?>"><?= h(Clock::local($m['ts'], 'd.m H:i:s')) ?></time>
+                    <time title="<?= h(Clock::local($m['ts'], 'Y-m-d H:i:s')) ?>"><?= h(Clock::local($m['ts'], $newDay ? 'd.m H:i:s' : 'H:i:s')) ?></time>
                     <?= $m['from'] === 'user' ? '<span class="who user">' . th('user') . '</span>' : $who($m['from']) ?>
                     <span class="arrow">→</span>
                     <?= $who($m['to']) ?>
                     <span class="badge"><?= h($kinds[$m['kind']] ?? $m['kind']) ?></span>
                     <?php if ($m['cut']): ?><span class="badge" title="<?= th('subagent replies are cut — they usually quote file contents') ?>"><?= th('truncated') ?></span><?php endif ?>
+                    <?php if ($tt !== null): ?>
+                        <span class="muted msg-tokens" title="<?= h(t('turn {n}', ['n' => $ti + 1]) . ' · ' . App::tokenText($tt)['long'] . "\n" . t('tokens of all agents until the next prompt · output with ≥ = lower bound ({n} responses saved without final usage) · new context = cache write · cache read = the same context read again on every call', ['n' => $tt['outputPartial']])) ?><?= $tt['models'] !== [] ? h(' · ' . t('models') . ': ' . implode(', ', array_map(static fn ($k, $n): string => "$k ×$n", array_keys($tt['models']), $tt['models']))) : '' ?>"><?= th('turn {n}', ['n' => $ti + 1]) ?> · <?= h(App::tokenText($tt)['short']) ?></span>
+                    <?php endif ?>
                 </div>
                 <?php if ($long): ?>
                     <details class="msg-text">
@@ -57,13 +76,6 @@ $who = static function (string $id) use ($agents, $view): string {
                     </details>
                 <?php else: ?>
                     <div class="msg-text"><?= nl2br(h($m['text'])) ?></div>
-                <?php endif ?>
-                <?php $ti = $m['kind'] === 'user' ? ($turnAt[$m['ts'] . "\n" . $m['text']] ?? null) : null ?>
-                <?php if ($ti !== null && isset($view['turnTokens'][$ti])): ?>
-                    <?php $tt = $view['turnTokens'][$ti] ?>
-                    <div class="msg-tokens muted" title="<?= h(t('tokens of all agents until the next prompt · output with ≥ = lower bound ({n} responses saved without final usage) · new context = cache write · cache read = the same context read again on every call', ['n' => $tt['outputPartial']])) ?><?= $tt['models'] !== [] ? h(' · ' . t('models') . ': ' . implode(', ', array_map(static fn ($k, $n): string => "$k ×$n", array_keys($tt['models']), $tt['models']))) : '' ?>">
-                        <?= th('turn {n}', ['n' => $ti + 1]) ?> · <?= h(App::tokenText($tt)['long']) ?>
-                    </div>
                 <?php endif ?>
             </li>
         <?php endforeach ?>

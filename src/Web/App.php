@@ -8,6 +8,7 @@ use Viz\Boundary;
 use Viz\Clock;
 use Viz\Export\Csv;
 use Viz\Export\SessionExport;
+use Viz\Judge\Patterns;
 use Viz\Judge\SessionJudge;
 use Viz\Office\Feed;
 use Viz\Office\LiveState;
@@ -16,6 +17,8 @@ use Viz\Model\Event;
 use Viz\Model\Session;
 use Viz\Model\Touch;
 use Viz\Path;
+use Viz\Permissions\Approvals;
+use Viz\Permissions\Settings;
 use Viz\Problems;
 use Viz\Signals;
 use Viz\Source\HookLog;
@@ -30,7 +33,6 @@ use Viz\Summary\SummaryStore;
 /** Kontroler: tylko GET, parametry walidowane białą listą, żaden parametr nie jest ścieżką. */
 final class App
 {
-    private const LIVE_WINDOW = 120;
 
     /** `s=all` — zakres „wszystkie sesje”: te same zakładki co sesja, dane z agregatów var/summary. */
     public const ALL = 'all';
@@ -104,10 +106,9 @@ final class App
             return;
         }
         match ($path) {
-            '/' => $this->page($query),
+            '/' => $query === [] ? $this->redirect(ScopeViews::last($_COOKIE)) : $this->page($query),
             '/session' => $this->fragment($query),
             '/version' => $this->version($query),
-            '/graph.json' => $this->graph($query),
             '/summary' => $this->summaryRedirect($query),
             '/export.csv' => $this->csv($query),
             '/judge.json' => $this->judgeStatus($query),
@@ -223,7 +224,9 @@ final class App
             'pick' => $str('file'),
             'pcmd' => $str('cmd'),
             'sort' => in_array($str('sort'), ['path', 'sessions'], true) ? $str('sort') : '',
-        ] + array_intersect_key(array_map('strval', array_filter($q, 'is_string')), array_flip(['days', 'recent', 'find', 'exclude', 'project', 'scope', 'limit'])), static fn (string $v): bool => $v !== '');
+            // stary filtr projektu → zakres projektów (Scope)
+            Scope::PARAM => $str('project'),
+        ] + array_intersect_key(array_map('strval', array_filter($q, 'is_string')), array_flip(['days', 'recent', 'find', 'exclude', 'scope', 'limit'])), static fn (string $v): bool => $v !== '');
         header('Location: /?' . http_build_query($target), true, 302);
     }
 
@@ -240,29 +243,34 @@ final class App
             return;
         }
         $p = $view['p'];
+        if ($p['view'] === 'log') {
+            // Log „all” to strony najnowszych wywołań, nie cała lista — CSV tylko z sesji
+            $this->notFound();
+            return;
+        }
         $period = $p['recent'] !== '' ? $p['recent'] : ($p['days'] > 0 ? $p['days'] . 'd' : 'all');
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="agentmonitor-' . $p['view'] . '-' . Clock::local(Clock::nowUtc(), 'Ymd-His') . '-' . $period . '.csv"');
         header('Cache-Control: no-store');
         $out = fopen('php://output', 'w');
-        if ($p['view'] === 'boundary') {
-            fputcsv($out, ['time', 'kind', 'stopped_by', 'tool', 'call', 'paths_outside', 'session', 'project'], ',', '"', '');
-            foreach ($view['boundary'] as $b) {
-                fputcsv($out, [
-                    Clock::local($b['ts'], 'Y-m-d H:i:s'), $b['kind'], self::csvSafe((string) ($b['by'] ?? '')), self::csvSafe((string) $b['tool']), self::csvSafe($b['summary']),
-                    self::csvSafe(implode('; ', array_map(static fn (array $t): string => $t['op'] . ' ' . $t['path'], $b['paths']))),
-                    self::csvSafe($b['title'] !== '' ? $b['title'] : (string) $b['session_id']), self::csvSafe(basename($b['cwd'])),
-                ], ',', '"', '');
-            }
-            fclose($out);
-            return;
-        }
         if ($p['view'] === 'blocked') {
             fputcsv($out, ['time', 'blocked_by', 'rule', 'tool', 'call', 'session', 'project'], ',', '"', '');
             foreach ($view['blocked'] as $b) {
                 fputcsv($out, [
                     Clock::local($b['ts'], 'Y-m-d H:i:s'), $b['by'], self::csvSafe((string) ($b['detail'] ?? '')), self::csvSafe((string) $b['tool']),
                     self::csvSafe($b['summary']), self::csvSafe($b['title'] !== '' ? $b['title'] : (string) $b['session_id']), self::csvSafe(basename($b['cwd'])),
+                ], ',', '"', '');
+            }
+            fclose($out);
+            return;
+        }
+        if ($p['view'] === 'approvals') {
+            fputcsv($out, ['time', 'how', 'shape', 'causes', 'tool', 'call', 'session', 'project'], ',', '"', '');
+            foreach ($view['approvals'] as $r) {
+                fputcsv($out, [
+                    Clock::local($r['ts'], 'Y-m-d H:i:s'), implode(' ', $r['how']), self::csvSafe($r['shape']),
+                    self::csvSafe(implode('; ', array_map(static fn (array $c): string => $c['kind'] . (($c['rule'] ?? null) !== null ? ' ' . $c['rule'] : ''), $r['causes']))),
+                    self::csvSafe($r['tool']), self::csvSafe($r['summary']), self::csvSafe($r['title'] !== '' ? $r['title'] : $r['session_id']), self::csvSafe(basename($r['cwd'])),
                 ], ',', '"', '');
             }
             fclose($out);
@@ -297,7 +305,7 @@ final class App
 
     /**
      * CSV zakładki jednej sesji. Messages: odpowiedzi subagentów bez treści (cytują pliki — reguła „bez treści plików”);
-     * Timeline / Graph / Log: wszystkie wywołania w zakresie filtrów.
+     * Log: wszystkie wywołania w zakresie filtrów.
      */
     private function sessionCsv(array $view): void
     {
@@ -306,7 +314,7 @@ final class App
         $session = $view['session'];
         $agent = static fn (string $id): string => isset($session->agents[$id]) ? self::agentLabel($session->agents[$id], true) : $id;
         $status = static fn (Event $e): string => $e->denial !== null ? 'blocked' : (!$e->failed ? 'ok' : ($e->executed() ? 'exit≠0' : 'tool error'));
-        $tab = in_array($p['view'], ['read', 'changed', 'commands', 'blocked', 'boundary', 'messages'], true) ? $p['view'] : 'calls';
+        $tab = in_array($p['view'], ['read', 'changed', 'commands', 'blocked', 'messages'], true) ? $p['view'] : 'calls';
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="agentmonitor-' . substr($view['sid'], 0, 8) . '-' . $tab . '-' . Clock::local(Clock::nowUtc(), 'Ymd-His') . '.csv"');
         header('Cache-Control: no-store');
@@ -324,12 +332,6 @@ final class App
             $row(['time', 'agent', 'blocked_by', 'rule', 'tool', 'call']);
             foreach ($view['blocked'] as $b) {
                 $row([Clock::local($b['ts'], 'Y-m-d H:i:s'), $agent((string) $b['agent']), $b['by'], (string) ($b['detail'] ?? ''), $b['tool'], $b['summary']]);
-            }
-        } elseif ($tab === 'boundary') {
-            $row(['time', 'agent', 'kind', 'stopped_by', 'tool', 'call', 'paths_outside']);
-            foreach ($view['boundary'] as $b) {
-                $row([Clock::local($b['ts'], 'Y-m-d H:i:s'), $agent((string) $b['agent']), $b['kind'], (string) ($b['by'] ?? ''), $b['tool'], $b['summary'],
-                    implode('; ', array_map(static fn (array $t): string => $t['op'] . ' ' . $t['path'], $b['paths']))]);
             }
         } elseif ($tab === 'messages') {
             $row(['time', 'from', 'to', 'kind', 'text']);
@@ -388,7 +390,7 @@ final class App
         $archive = $store->all();
         $source = $p['recent'] !== '' ? LiveSummary::aggregates(LiveSummary::WINDOWS[$p['recent']]) : $archive;
         // sort „sessions” zostawia wszystkie pliki (także tylko szukane/listowane); kolejność ustala FileTable::sort
-        $ranking = Ranking::build($source, $p['days'], $p['project'], 'sessions', $p['scope'] === 'project' && $p['project'] !== '');
+        $ranking = Ranking::build($source, $p['days'], $p['projects'], 'sessions', $p['scope'] === 'project' && !$p['projects']->all());
         $excludes = array_values(array_filter(array_map('trim', explode(',', $p['exclude'])), static fn (string $x): bool => $x !== ''));
         $files = [];
         foreach ($ranking['files'] as $f) {
@@ -407,7 +409,7 @@ final class App
         $read = array_values(array_filter($files, static fn (array $f): bool => array_intersect_key($f['ops'], array_flip($readOps)) !== []));
         $changed = array_values(array_filter($files, static fn (array $f): bool => $f['mods'] > 0));
 
-        $commands = CommandRanking::build($source, $p['days'], $p['project'], match ($p['sort']) { 'path' => 'program', 'sessions' => 'sessions', default => 'count' });
+        $commands = CommandRanking::build($source, $p['days'], $p['projects'], match ($p['sort']) { 'path' => 'program', 'sessions' => 'sessions', 'time' => 'time', default => 'count' });
         $commands = array_values(array_filter($commands, static function (array $c) use ($p, $excludes): bool {
             if ($p['find'] !== '' && mb_stripos($c['program'] . ' ' . implode(' ', array_keys($c['subs'])) . ' ' . $c['role'], $p['find']) === false) {
                 return false;
@@ -440,12 +442,12 @@ final class App
         }
         usort($blocked, static fn (array $a, array $b): int => strcmp($b['ts'], $a['ts']));
 
-        // naruszenia granicy ze wszystkich sesji w zakresie; `boundary` = filtr rodzaju
-        $boundary = [];
+        // pytania o zgodę ze wszystkich sesji w zakresie (agregaty od `PARSER` 18), najnowsze na górze
+        $approvals = [];
         foreach ($ranking['sessions'] as $sess) {
-            foreach ((array) ($sess['boundary'] ?? []) as $b) {
-                $hay = $b['tool'] . ' ' . $b['summary'] . ' ' . implode(' ', array_column($b['paths'], 'path'));
-                if (($cutoff !== '' && $b['ts'] < $cutoff) || ($p['boundary'] !== '' && $b['kind'] !== $p['boundary']) || ($p['find'] !== '' && mb_stripos($hay, $p['find']) === false)) {
+            foreach ((array) ($sess['approvals'] ?? []) as $r) {
+                $hay = $r['tool'] . ' ' . $r['summary'] . ' ' . $r['shape'] . ' ' . implode(' ', array_map(static fn (array $c): string => $c['kind'] . ' ' . ($c['rule'] ?? '') . ' ' . ($c['detail'] ?? ''), $r['causes']));
+                if (($cutoff !== '' && $r['ts'] < $cutoff) || ($p['find'] !== '' && mb_stripos($hay, $p['find']) === false)) {
                     continue;
                 }
                 foreach ($excludes as $x) {
@@ -453,10 +455,10 @@ final class App
                         continue 2;
                     }
                 }
-                $boundary[] = $b + ['session_id' => (string) $sess['session_id'], 'title' => (string) ($sess['title'] ?? ''), 'cwd' => (string) ($sess['cwd'] ?? ''), 'id' => null];
+                $approvals[] = $r + ['session_id' => (string) $sess['session_id'], 'title' => (string) ($sess['title'] ?? ''), 'cwd' => (string) ($sess['cwd'] ?? '')];
             }
         }
-        usort($boundary, static fn (array $a, array $b): int => strcmp($b['ts'], $a['ts']));
+        usort($approvals, static fn (array $a, array $b): int => strcmp($b['ts'], $a['ts']));
 
         $sessionsById = [];
         foreach ($ranking['sessions'] as $sess) {
@@ -475,19 +477,76 @@ final class App
             'changed' => FileTable::sort($changed, $p['sort'] !== '' ? $p['sort'] : 'count', 'mods'),
             'commands' => $commands,
             'blocked' => $blocked,
-            'boundary' => $boundary,
-            'boundaryOn' => Boundary::fromEnv()->enabled(),
-            'counts' => ['read' => count($read), 'changed' => count($changed), 'commands' => count($commands), 'blocked' => count($blocked), 'boundary' => count($boundary)],
-            'rowLimit' => $p['limit'] ? PHP_INT_MAX : self::ALL_ROWS,
+            'approvals' => $approvals,
+            'approvalsTop' => Approvals::top($approvals),
+            // Log z transkryptów (agregaty nie mają pojedynczych wywołań) — liczony tylko na swojej zakładce, bez licznika
+            'log' => $p['view'] === 'log' ? self::allLog($ranking['sessions'], $p, $excludes) : [],
+            'logPage' => self::ALL_ROWS,
+            'counts' => ['read' => count($read), 'changed' => count($changed), 'commands' => count($commands), 'blocked' => count($blocked), 'approvals' => count($approvals)],
+            'rowLimit' => self::rowLimit($p),
             'sessionsById' => $sessionsById,
-            'projects' => $ranking['projects'],
             'archived' => count($archive),
             'withTranscript' => count(array_filter($archive, static fn (array $s): bool => TranscriptReader::locate((string) $s['session_id']) !== null)),
             'refreshed' => $refreshed,
-            'live' => $p['recent'] !== '' && $p['live'] !== false,
-            'active' => false,
+            'live' => $p['recent'] !== '',
             'version' => $p['recent'] !== '' ? LiveSummary::version(LiveSummary::WINDOWS[$p['recent']]) : '-',
         ];
+    }
+
+    /**
+     * Log zakresu „all”: najnowsze wywołania narzędzi (`ALL_ROWS`, starsze stronami przez `before`) z sesji, które mają jeszcze transkrypt.
+     * Sesje od ostatnio aktywnej; czytanie kończy się, gdy następna sesja skończyła się przed najstarszym wywołaniem pełnej strony —
+     * zwykle kilka transkryptów. Bez „pokaż wszystkie”: całość to parsowanie każdego transkryptu w jednym żądaniu, a `php -S` obsługuje jedno naraz.
+     *
+     * @param list<array<string, mixed>> $sessions agregaty sesji w zakresie (okres, projekt)
+     * @param list<string> $excludes
+     * @return list<array{event: Event, session_id: string, title: string, cwd: string}> od najnowszego
+     */
+    private static function allLog(array $sessions, array $p, array $excludes): array
+    {
+        $from = match (true) {
+            $p['recent'] !== '' => gmdate('Y-m-d\TH:i:s', time() - LiveSummary::WINDOWS[$p['recent']]),
+            $p['days'] > 0 => gmdate('Y-m-d\TH:i:s', time() - $p['days'] * 86400),
+            default => '',
+        };
+        $before = $p['before'];
+        usort($sessions, static fn (array $a, array $b): int => strcmp((string) ($b['last'] ?? ''), (string) ($a['last'] ?? '')));
+        $reader = new TranscriptReader();
+        $rows = [];
+        foreach ($sessions as $s) {
+            $sid = (string) $s['session_id'];
+            $last = (string) ($s['last'] ?? '');
+            if (count($rows) >= self::ALL_ROWS && $last < $rows[self::ALL_ROWS - 1]['event']->ts) {
+                break;
+            }
+            if ($last === '' || ($before !== '' && (string) ($s['first'] ?? '') >= $before)) {
+                continue;
+            }
+            $path = TranscriptReader::locate($sid);
+            if ($path === null) {
+                continue;
+            }
+            $meta = ['session_id' => $sid, 'title' => (string) ($s['title'] ?? ''), 'cwd' => (string) ($s['cwd'] ?? '')];
+            foreach ($reader->read($path)->events as $e) {
+                if ($e->tool === Event::TOOL_CONTEXT || ($from !== '' && $e->ts < $from) || ($before !== '' && $e->ts >= $before)) {
+                    continue;
+                }
+                $hay = $e->tool . ' ' . $e->summary;
+                if ($p['find'] !== '' && mb_stripos($hay, $p['find']) === false) {
+                    continue;
+                }
+                foreach ($excludes as $x) {
+                    if (mb_stripos($hay, $x) !== false) {
+                        continue 2;
+                    }
+                }
+                $rows[] = ['event' => $e] + $meta;
+            }
+            usort($rows, static fn (array $a, array $b): int => strcmp($b['event']->ts, $a['event']->ts));
+            $rows = array_slice($rows, 0, self::ALL_ROWS);
+        }
+
+        return $rows;
     }
 
     /** Osie strony startowej (Signals::KINDS) w kolejności wyświetlania; w każdej osobno: co możesz zmienić ty, a co agent. */
@@ -515,25 +574,61 @@ final class App
         $cutoff = $days > 0 ? gmdate('Y-m-d\TH:i:s', time() - $days * 86400) : '';
         $store = new SummaryStore();
         $store->refresh();
-        $projects = [];
         $items = [];
         $sessions = [];
         $info = [];
         $usd = 0.0;
+        $slow = [];
+        $waits = ['count' => 0, 'ms' => 0, 'top' => []];
+        $toolTime = [];
+        $equipment = ['mcp' => [], 'skills' => [], 'subagents' => []];
+        $resultFiles = 0;
+        $resultBytes = 0;
+        $resultTop = [];
         foreach ($store->all() as $s) {
             $cwd = (string) ($s['cwd'] ?? '');
             $key = self::fileHash($cwd);
-            $projects[$key] ??= ['label' => basename($cwd) ?: '?', 'cwd' => $cwd, 'sessions' => 0];
-            $projects[$key]['sessions']++;
-            if (($p['project'] !== '' && $key !== $p['project']) || ($cutoff !== '' && (string) ($s['last'] ?? '') < $cutoff)) {
+            if (!$p['projects']->includes($cwd) || ($cutoff !== '' && (string) ($s['last'] ?? '') < $cutoff)) {
                 continue;
             }
             $sid = (string) $s['session_id'];
             $sessions[$sid] = ['id' => $sid, 'title' => (string) ($s['title'] ?? ''), 'cwd' => $cwd, 'last' => (string) ($s['last'] ?? ''),
-                'usd' => (float) ($s['tokens']['total']['usd'] ?? 0), 'high' => 0, 'warn' => 0, 'kinds' => []];
+                'usd' => (float) ($s['tokens']['total']['usd'] ?? 0), 'key' => $key];
             $usd += $sessions[$sid]['usd'];
             foreach ((array) ($s['signals']['info'] ?? []) as $k => $v) {
                 $info[$k] = ($info[$k] ?? 0) + $v;
+            }
+            // czas narzędzi, wyposażenie i rozmiary wyników (agregaty od `PARSER` 15; starsze nie mają pól)
+            foreach ((array) ($s['slow'] ?? []) as $c) {
+                if ($cutoff === '' || $c['ts'] >= $cutoff) {
+                    $slow[] = $c + ['session_id' => $sid, 'title' => $sessions[$sid]['title']];
+                }
+            }
+            // wywołania od progu „zgoda?”: liczba i suma z całej sesji, lista najdłuższych z okresu
+            $waits['count'] += (int) ($s['waits']['count'] ?? 0);
+            $waits['ms'] += (int) ($s['waits']['ms'] ?? 0);
+            foreach ((array) ($s['waits']['top'] ?? []) as $c) {
+                if ($cutoff === '' || $c['ts'] >= $cutoff) {
+                    $waits['top'][] = $c + ['session_id' => $sid, 'title' => $sessions[$sid]['title']];
+                }
+            }
+            // czas per narzędzie: suma całej sesji (agregat nie dzieli go na okresy — jak koszt sesji)
+            foreach ((array) ($s['tool_time'] ?? []) as $tool => $t) {
+                $r = $toolTime[$tool] ?? ['tool' => (string) $tool, 'count' => 0, 'ms' => 0, 'max' => 0];
+                $toolTime[$tool] = ['count' => $r['count'] + $t['count'], 'ms' => $r['ms'] + $t['ms'], 'max' => max($r['max'], $t['max'])] + $r;
+            }
+            foreach ((array) ($s['equipment'] ?? []) as $kind => $names) {
+                foreach ((array) $names as $name => $row) {
+                    $e = $equipment[$kind][$name] ?? ['name' => (string) $name, 'count' => 0, 'last' => '', 'sessions' => 0];
+                    $equipment[$kind][$name] = ['count' => $e['count'] + $row['count'], 'last' => max($e['last'], (string) $row['last']), 'sessions' => $e['sessions'] + 1] + $e;
+                }
+            }
+            if (is_array($s['results'] ?? null)) {
+                $resultFiles += (int) $s['results']['files'];
+                $resultBytes += (int) $s['results']['bytes'];
+                foreach ($s['results']['top'] as $r) {
+                    $resultTop[] = $r + ['session_id' => $sid, 'title' => $sessions[$sid]['title']];
+                }
             }
             foreach ((array) ($s['signals']['items'] ?? []) as $it) {
                 if (!isset(Signals::KINDS[$it['kind']]) || ($cutoff !== '' && $it['ts'] < $cutoff)) {
@@ -541,13 +636,8 @@ final class App
                 }
                 [$axis, $actor, $sev] = Signals::KINDS[$it['kind']];
                 $items[] = $it + ['session_id' => $sid, 'title' => $sessions[$sid]['title'], 'cwd' => $cwd, 'axis' => $axis, 'actor' => $actor, 'sev' => $sev];
-                if ($sev !== 'info' && $axis !== 'cost') {
-                    $sessions[$sid][$sev]++;
-                    $sessions[$sid]['kinds'][$it['kind']] = ($sessions[$sid]['kinds'][$it['kind']] ?? 0) + 1;
-                }
             }
         }
-        uasort($projects, static fn (array $a, array $b): int => $b['sessions'] <=> $a['sessions']);
         // najpierw `high`, potem kwoty malejąco (rodzaje w $), reszta od najnowszych
         usort($items, static fn (array $a, array $b): int => [$a['sev'] === 'high' ? 0 : 1, -self::signalUsd($a), $b['ts']]
             <=> [$b['sev'] === 'high' ? 0 : 1, -self::signalUsd($b), $a['ts']]);
@@ -579,22 +669,94 @@ final class App
                 'top' => array_slice(array_values($alarms), 0, 4),
             ];
         }
-        $flagged = array_filter($sessions, static fn (array $s): bool => $s['high'] + $s['warn'] > 0);
-        usort($flagged, static fn (array $a, array $b): int => [$b['high'], $b['warn'], $b['usd']] <=> [$a['high'], $a['warn'], $a['usd']]);
         $turns = $kindGroup('expensive-turn');
 
+        // wykresy: koszt w czasie (sesja w chwili ostatniej aktywności), koszt wg projektu, sygnały wg rodzaju
+        $hourly = $days === 1;
+        $byTime = [];
+        $byProject = [];
+        foreach ($sessions as $sess) {
+            if ($sess['last'] !== '') {
+                $bucket = Clock::local($sess['last'], $hourly ? 'Y-m-d H' : 'Y-m-d');
+                $byTime[$bucket] = ($byTime[$bucket] ?? ['usd' => 0.0, 'n' => 0]);
+                $byTime[$bucket]['usd'] += $sess['usd'];
+                $byTime[$bucket]['n']++;
+            }
+            $byProject[$sess['key']] ??= ['key' => $sess['key'], 'label' => basename($sess['cwd']) ?: '?', 'cwd' => $sess['cwd'], 'usd' => 0.0, 'n' => 0];
+            $byProject[$sess['key']]['usd'] += $sess['usd'];
+            $byProject[$sess['key']]['n']++;
+        }
+        usort($byProject, static fn (array $a, array $b): int => $b['usd'] <=> $a['usd']);
+        // projekty o tej samej nazwie katalogu (różne ścieżki) dostają nadrzędny katalog w nazwie
+        $labelCount = array_count_values(array_column($byProject, 'label'));
+        foreach ($byProject as &$bp) {
+            if ($labelCount[$bp['label']] > 1) {
+                $bp['label'] = basename(dirname($bp['cwd'])) . '/' . $bp['label'];
+            }
+        }
+        unset($bp);
+        $kindCounts = [];
+        foreach ($items as $it) {
+            if ($it['sev'] !== 'info') {
+                $kindCounts[$it['kind']] ??= ['kind' => $it['kind'], 'n' => 0, 'sev' => $it['sev'], 'sessions' => []];
+                $kindCounts[$it['kind']]['n']++;
+                $kindCounts[$it['kind']]['sessions'][$it['session_id']] = true;
+            }
+        }
+        usort($kindCounts, static fn (array $a, array $b): int => [$a['sev'] === 'high' ? 0 : 1, $b['n']] <=> [$b['sev'] === 'high' ? 0 : 1, $a['n']]);
+        usort($slow, static fn (array $a, array $b): int => $b['ms'] <=> $a['ms']);
+        usort($toolTime, static fn (array $a, array $b): int => $b['ms'] <=> $a['ms']);
+        usort($waits['top'], static fn (array $a, array $b): int => $b['ms'] <=> $a['ms']);
+        usort($resultTop, static fn (array $a, array $b): int => $b['bytes'] <=> $a['bytes']);
+        foreach ($equipment as &$names) {
+            uasort($names, static fn (array $a, array $b): int => [$b['count'], $b['last']] <=> [$a['count'], $a['last']]);
+        }
+        unset($names);
+
         return [
+            'slow' => array_slice($slow, 0, 8),
+            'toolTime' => array_slice($toolTime, 0, 10),
+            'waits' => ['top' => array_slice($waits['top'], 0, 5)] + $waits,
+            'equipment' => $equipment,
+            'results' => ['files' => $resultFiles, 'bytes' => $resultBytes, 'top' => array_slice($resultTop, 0, 8)],
             'p' => $p,
+            'series' => self::timeSeries($byTime, $hourly, $days),
+            'byProject' => $byProject,
+            'kindCounts' => array_map(static fn (array $k): array => ['sessions' => count($k['sessions'])] + $k, $kindCounts),
             'days' => $days,
-            'projects' => $projects,
             'axes' => $axes,
             'turns' => ['top' => array_slice($turns['items'], 0, 8)] + $turns,
             'info' => $info,
             'usd' => $usd,
             'sessionCount' => count($sessions),
-            'flagged' => array_slice($flagged, 0, 15),
-            'flaggedCount' => count($flagged),
+            'patterns' => Patterns::build(Patterns::load()),
         ];
+    }
+
+    /**
+     * Oś czasu wykresu kosztu: ostatnie 24 godziny (godziny) albo ostatnie dni okresu; bez okresu — od pierwszej do ostatniej sesji (maks. 90 dni).
+     * Puste przedziały mają koszt 0, żeby kolumny stały w równych odstępach.
+     *
+     * @param array<string, array{usd: float, n: int}> $byTime klucz = `Y-m-d` albo `Y-m-d H` w czasie lokalnym
+     * @return array{hourly: bool, rows: list<array{key: string, label: string, usd: float, n: int}>}
+     */
+    private static function timeSeries(array $byTime, bool $hourly, int $days): array
+    {
+        $now = new \DateTimeImmutable('now', Clock::zone());
+        $count = match (true) {
+            $hourly => 24,
+            $days > 0 => $days,
+            $byTime === [] => 1,
+            default => min(90, 1 + (int) ((new \DateTimeImmutable(min(array_keys($byTime)), Clock::zone()))->diff($now)->days)),
+        };
+        $rows = [];
+        for ($i = $count - 1; $i >= 0; $i--) {
+            $t = $now->modify("-$i " . ($hourly ? 'hours' : 'days'));
+            $key = $t->format($hourly ? 'Y-m-d H' : 'Y-m-d');
+            $rows[] = ['key' => $key, 'label' => $t->format($hourly ? 'H:00' : 'd.m'), 'usd' => $byTime[$key]['usd'] ?? 0.0, 'n' => $byTime[$key]['n'] ?? 0];
+        }
+
+        return ['hourly' => $hourly, 'rows' => $rows];
     }
 
     /** Kwota sygnału do sortowania; rodzaje spoza Signals::USD_KINDS = 0. */
@@ -610,32 +772,15 @@ final class App
         $q = array_merge($q, match ($it['kind']) {
             'expensive-turn' => ['view' => 'commands', 'sort' => 'cost'],
             'expensive-result' => ['view' => 'commands', 'sort' => 'cost', 'pev' => (string) $it['ev']],
-            'huge-context' => ['view' => 'timeline', 'turn' => ''],
+            'huge-context' => ['view' => 'log', 'turn' => ''],
             'protected-path', 'auto-mode', 'report-blocked', 'hook-text' => ['view' => 'blocked', 'pev' => (string) $it['ev']],
-            'outside-executed', 'unknown-paths', 'outside-stopped' => ['view' => 'boundary', 'pev' => (string) $it['ev'],
-                'boundary' => ['outside-executed' => Boundary::OUTSIDE, 'unknown-paths' => Boundary::SUSPICIOUS, 'outside-stopped' => Boundary::STOPPED][$it['kind']]],
+            'outside-executed', 'unknown-paths', 'outside-stopped' => ['view' => 'log', 'pev' => (string) $it['ev']],
             'subagent-failed' => ['view' => 'commands', 'status' => 'failed', 'pev' => (string) $it['ev']],
             'error-rate' => ['view' => 'commands', 'status' => 'failed', 'turn' => ''],
             default => ['view' => 'messages'],
         });
 
         return '/?' . http_build_query(array_filter($q, static fn (string $v): bool => $v !== ''));
-    }
-
-    private function graph(array $q): void
-    {
-        $view = $this->view($q);
-        header('Content-Type: application/json; charset=utf-8');
-        header('Cache-Control: no-store');
-        if ($view === null || $view['missing'] || $view['allSessions']) {
-            echo '{"nodes":[],"links":[],"hidden":0}';
-            return;
-        }
-        $p = $view['p'];
-        echo json_encode(
-            Graph::build($view['session'], $view['agentEvents'], $view['agentColors'], $p['all'], $p['dirs'], $p['origin'] !== '' ? $p['origin'] : null),
-            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP,
-        );
     }
 
     /** Widok przeglądowy (`ScopeViews`): strona z lewym panelem; dane pobiera przeglądarka z trasy JSON widoku. */
@@ -646,6 +791,9 @@ final class App
         $overview = null;
         $scope = Scope::fromRequest($q, $_COOKIE);
         $sidebarTokens = SummaryStore::tokenTotals(array_column($sessions, 'id'));
+        // zapamiętany widok, do którego prowadzi „Live preview” w lewym panelu i goły `/`
+        header('Set-Cookie: ' . ScopeViews::COOKIE . '=' . $scopeView['path'] . '; Path=/; Max-Age=31536000; SameSite=Lax');
+        $_COOKIE[ScopeViews::COOKIE] = $scopeView['path'];
         header('Content-Type: text/html; charset=utf-8');
         require dirname(__DIR__, 2) . '/templates/layout.php';
     }
@@ -662,13 +810,18 @@ final class App
     }
 
 
+    private function redirect(string $to): void
+    {
+        header('Location: ' . $to, true, 303);
+    }
+
     private function notFound(): void
     {
         http_response_code(404);
         echo '404';
     }
 
-    /** @return array{s: string, src: string, agent: string, pick: string, live: ?bool, follow: bool, st: int, se: int} */
+    /** @return array{s: string, src: string, agent: string, pick: string, st: int, se: int} */
     private function params(array $q): array
     {
         $str = static fn (string $k): string => is_string($q[$k] ?? null) ? $q[$k] : '';
@@ -678,8 +831,6 @@ final class App
             'src' => in_array($str('src'), ['transcript', 'hook'], true) ? $str('src') : 'transcript',
             'agent' => preg_match('/^(main|[a-f0-9]{1,40})$/', $str('agent')) ? $str('agent') : '',
             'pick' => preg_match('/^[a-f0-9]{12}$/', $str('pick')) ? $str('pick') : '',
-            'live' => $str('live') === '' ? null : $str('live') === '1',
-            'follow' => $str('follow') === '1',
             'turn' => max(0, (int) $str('turn')),
             'pcmd' => preg_match('/^[\w.+\-\[\]]{1,64}$/u', $str('pcmd')) ? $str('pcmd') : '',
             // wywołanie pokazane w panelu szczegółów (id tool_use albo uuid załącznika)
@@ -687,38 +838,40 @@ final class App
             'scope' => $str('scope') === 'project' ? 'project' : '',
             'problems' => $str('problems') === '1',
             'status' => in_array($str('status'), self::STATUSES, true) ? $str('status') : '',
-            'boundary' => in_array($str('boundary'), Boundary::KINDS, true) ? $str('boundary') : '',
             'view' => self::viewName($str('view')),
             'sort' => in_array($str('sort'), FileTable::SORTS, true) ? $str('sort') : '',
             'more' => $str('more') === '1',
             'group' => $str('group') === '1',
             'mk' => in_array($str('mk'), ['user', 'agents'], true) ? $str('mk') : '',
-            'rows' => in_array($str('rows'), ['dirs', 'commands'], true) ? $str('rows') : 'files',
             'sx' => max(0, (int) $str('sx')),
             'dumped' => SessionExport::validDumpName($str('dumped')) ? $str('dumped') : '',
             // ocena sesji już trwała, nowej nie uruchomiono (POST /judge)
             'busy' => $str('busy') === '1',
             'sy' => max(0, (int) $str('sy')),
             'origin' => in_array($str('origin'), ['context', 'self'], true) ? $str('origin') : '',
-            'all' => $str('all') === '1',
-            'dirs' => $str('dirs') !== '0',
             'st' => max(0, (int) $str('st')),
             'se' => max(0, (int) $str('se')),
-            // zakres „all”: okres, projekt, szukanie, wykluczenia, wszystkie wiersze
+            // Overview i zakres „all”: projekty z lewego panelu (ciasteczko `viz-scope`, parametr `projects` ma pierwszeństwo)
+            'projects' => Scope::fromRequest($q, $_COOKIE),
+            // zakres „all”: okres, szukanie, wykluczenia, wszystkie wiersze
             'days' => $str('recent') === '' && in_array($str('days'), ['1', '7', '14', '30'], true) ? (int) $str('days') : 0,
             'recent' => isset(LiveSummary::WINDOWS[$str('recent')]) ? $str('recent') : '',
             'find' => mb_substr(trim($str('find')), 0, 200),
             'exclude' => mb_substr(trim($str('exclude')), 0, 500),
-            'project' => preg_match('/^[a-f0-9]{12}$/', $str('project')) ? $str('project') : '',
             'limit' => $str('limit') === 'all',
+            // zakres „all”, zakładka Log: strona wywołań starszych niż ta chwila (link „starsze”)
+            'before' => preg_match('/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d{1,6})?Z?$/', $str('before')) ? $str('before') : '',
         ];
     }
 
     /** Widoki-pytania + widoki dodatkowe; stare `logs` (sprzed podziału na pytania) = `log`. */
-    public const VIEWS = ['read', 'changed', 'commands', 'blocked', 'boundary', 'messages', 'timeline', 'graph', 'flow', 'log', 'judge'];
+    public const VIEWS = ['read', 'changed', 'commands', 'blocked', 'approvals', 'messages', 'flow', 'log', 'judge'];
 
-    /** Zakładki dostępne w zakresie „all” — agregaty nie mają pojedynczych wywołań, wiadomości ani czasu. */
-    public const ALL_VIEWS = ['read', 'changed', 'commands', 'blocked', 'boundary'];
+    /**
+     * Zakładki dostępne w zakresie „all”. Bez Messages (rozmowy różnych sesji przemieszane w czasie nic nie mówią, a agregaty ich nie mają),
+     * Flow (diagram sesji głównej i jej subagentów — przekrój wszystkich sesji to widoki przeglądowe Oś pracy / Agenci) i Assessment (ocena jednej sesji).
+     */
+    public const ALL_VIEWS = ['read', 'changed', 'commands', 'blocked', 'approvals', 'log'];
 
     /**
      * Status wywołania: wykonane (także Bash z kodem wyjścia ≠ 0), zablokowane (hook, reguła deny, tryb auto, user — `Event::denial`)
@@ -741,18 +894,7 @@ final class App
         if ($p['s'] === self::ALL) {
             return self::ALL;
         }
-        if (!$p['follow']) {
-            return $p['s'] !== '' ? $p['s'] : null;
-        }
-        if ($p['src'] === 'hook') {
-            $files = glob(HookLog::dir() . '/*.jsonl') ?: [];
-            usort($files, static fn (string $a, string $b): int => filemtime($b) <=> filemtime($a));
-            $id = isset($files[0]) ? basename($files[0], '.jsonl') : '';
-
-            return HookLog::validSessionId($id) ? $id : null;
-        }
-
-        return SessionIndex::recent(1)[0]['id'] ?? null;
+        return $p['s'] !== '' ? $p['s'] : null;
     }
 
     private function sourcePath(string $src, string $sid): ?string
@@ -820,52 +962,45 @@ final class App
                     'id' => $e->toolUseId, 'session_id' => null, 'title' => '', 'cwd' => (string) $session->cwd];
             }
         }
+        // zakładka Zgody: pytania o zgodę (hook, odrzucenie przez usera, długie czekanie) z przyczyną z ustawień i komendy
+        $approvalSettings = Settings::forSession($session->cwd);
+        $approvals = Approvals::rows($events, HookLog::state($sid), $approvalSettings, $session->cwd, time(), $session->modes);
         $statusCounts = ['executed' => 0, 'blocked' => 0, 'failed' => 0];
         foreach ($events as $e) {
             if ($e->tool !== Event::TOOL_CONTEXT) {
                 $statusCounts[self::status($e)]++;
             }
         }
-        // granica pracy agentów (`.env`): rodzaj per wywołanie — znaczniki w Commands, zakładka Boundary (bez filtra statusu), filtr `boundary`
+        // granica pracy agentów (`.env`): rodzaj per wywołanie — znaczniki w Commands
         $limits = Boundary::fromEnv();
         $crossed = [];
-        $boundaryRows = [];
-        $boundaryCounts = array_fill_keys(Boundary::KINDS, 0);
         foreach ($events as $e) {
             $kind = $limits->classify($e);
             if ($kind === null) {
                 continue;
             }
             $crossed[$e->toolUseId] = $kind;
-            $boundaryCounts[$kind]++;
-            if ($p['boundary'] === '' || $p['boundary'] === $kind) {
-                $boundaryRows[] = ['ts' => $e->ts, 'agent' => $e->agentId, 'tool' => $e->tool, 'summary' => $e->summary, 'kind' => $kind,
-                    'by' => $kind === Boundary::STOPPED ? Boundary::stoppedBy($e) : null,
-                    'paths' => array_map(static fn (Touch $t): array => ['path' => $t->path, 'op' => $t->op], $limits->outside($e)),
-                    'id' => $e->toolUseId, 'session_id' => null, 'title' => '', 'cwd' => (string) $session->cwd];
-            }
         }
         if ($p['status'] !== '') {
             $events = array_values(array_filter($events, static fn (Event $e): bool => self::status($e) === $p['status']));
-        }
-        if ($p['boundary'] !== '') {
-            $events = array_values(array_filter($events, static fn (Event $e): bool => ($crossed[$e->toolUseId] ?? null) === $p['boundary']));
         }
         $stats = Stats::of($events);
         $shown = $p['origin'] === ''
             ? $events
             : array_values(array_filter($events, static fn (Event $e): bool => ($e->tool === Event::TOOL_CONTEXT) === ($p['origin'] === 'context')));
         // przy blokadach i błędach tabela pokazuje pliki, do których agent próbował sięgnąć
-        $tried = in_array($p['status'], ['blocked', 'failed'], true) || $p['boundary'] === Boundary::STOPPED;
+        $tried = in_array($p['status'], ['blocked', 'failed'], true);
         $files = FileTable::build($shown, $problems, $tried);
         $readOps = $p['more'] ? [Touch::READ, Touch::CONTEXT, Touch::SEARCH, Touch::LIST, Touch::EXEC] : [Touch::READ, Touch::CONTEXT];
         $read = array_values(array_filter($files, static fn (array $f): bool => array_intersect_key($f['ops'], array_flip($readOps)) !== []));
         $changed = array_values(array_filter($files, static fn (array $f): bool => $f['mods'] > 0));
-        $bash = $tried || $p['boundary'] !== ''
+        // widoki Read / Changed jednej sesji: płaska lista wywołań, najnowsze na górze (jak Log)
+        $readCalls = array_reverse(FileTable::calls($shown, $readOps, $problems, $tried));
+        $changedCalls = array_reverse(FileTable::calls($shown, [Touch::EDIT, Touch::WRITE], $problems, $tried));
+        $bash = $tried
             ? array_values(array_filter($shown, static fn (Event $e): bool => $e->tool !== Event::TOOL_CONTEXT))
             : array_values(array_filter($shown, static fn (Event $e): bool => $e->commands !== [] || $e->tool === 'Bash'));
         $messages = self::messages($session, $agentFilter, $turn > 0 ? $turns[$turn - 1]['ts'] : null, $turn > 0 ? ($turns[$turn]['ts'] ?? null) : null);
-        $mtime = $p['src'] === 'hook' ? (int) filemtime($path) : SessionIndex::mtime($path);
         $transcript = TranscriptReader::locate($sid);
         // tokeny w zakresie tury (albo całej sesji) per agent — niezależne od filtrów agenta i statusu
         $tokFrom = $turn > 0 ? $turns[$turn - 1]['ts'] : null;
@@ -880,9 +1015,23 @@ final class App
         $expensive = array_values(array_filter($session->events, static fn (Event $e): bool => ($e->carry['usd'] ?? 0) > 0
             && ($tokFrom === null || $e->ts >= $tokFrom) && ($tokTo === null || $e->ts < $tokTo)));
         usort($expensive, static fn (Event $a, Event $b): int => $b->carry['usd'] <=> $a->carry['usd']);
+        if ($p['sort'] === 'time') {
+            usort($bash, static fn (Event $a, Event $b): int => (SummaryStore::durationMs($b) ?? -1) <=> (SummaryStore::durationMs($a) ?? -1));
+        }
         if ($p['sort'] === 'cost') {
             usort($bash, static fn (Event $a, Event $b): int => ($b->carry['usd'] ?? 0) <=> ($a->carry['usd'] ?? 0));
         }
+        $logCount = self::logCount($shown, $p['origin']);
+        // wspólny korzeń ścieżek całej sesji (bez filtrów, żeby nie skakał między zakładkami) — files-calls.php, log.php
+        $ownPaths = [];
+        foreach ($session->events as $e) {
+            if ($e->tool !== Event::TOOL_CONTEXT) {
+                foreach ($e->touches as $t) {
+                    $ownPaths[] = $t->path;
+                }
+            }
+        }
+        $pathRoot = self::pathRoot($ownPaths, $session->cwd);
 
         return [
             'allSessions' => false,
@@ -902,7 +1051,8 @@ final class App
             ],
             // zakładka Flow: cała sesja w kształcie wiersza feedu (flow.js); filtry agenta i tury jej nie dotyczą
             'flow' => $p['view'] === 'flow' ? LiveState::session($session, time(), Boundary::fromEnv(), true) : null,
-            'timeline' => $p['view'] === 'timeline' ? (new Timeline())->build($session, $events, array_flip(array_keys($session->agents)), $p['rows'], $p['origin'], $problems, $turn > 0 ? $turns[$turn - 1]['ts'] : null) : null,
+            // zakładka Flow: pliki instrukcji wczytane do kontekstu (hook InstructionsLoaded; same ścieżki, bez treści)
+            'flowContext' => $p['view'] === 'flow' ? HookLog::instructions($session->id) : [],
             'turns' => $turns,
             'turn' => $turn,
             // zużycie tokenów per tura (wszyscy agenci, subagenci po czasie) — niezależne od filtrów agenta i statusu
@@ -922,20 +1072,28 @@ final class App
             'stats' => $stats,
             'read' => FileTable::sort($read, $p['sort'] !== '' ? $p['sort'] : 'count', 'reads'),
             'changed' => FileTable::sort($changed, $p['sort'] !== '' ? $p['sort'] : 'path', 'mods'),
+            'readCalls' => $readCalls,
+            'changedCalls' => $changedCalls,
             'counts' => [
-                'read' => count($read),
-                'changed' => count($changed),
+                'read' => count($readCalls),
+                'changed' => count($changedCalls),
                 'commands' => count($bash),
                 'blocked' => count($blockedRows),
-                'boundary' => count($boundaryRows),
+                'approvals' => count($approvals),
                 'messages' => count($messages),
+                'log' => $logCount['n'],
             ],
+            // Log pokazuje też pliki wczytane przez Claude Code — podpowiedź licznika zakładki (tabs.php)
+            'logContext' => $logCount['context'],
+            'pathRoot' => $pathRoot,
             'blocked' => array_reverse($blockedRows),
-            'boundary' => array_reverse($boundaryRows),
-            'boundaryCounts' => $boundaryCounts,
+            'approvals' => $approvals,
+            'approvalsTop' => Approvals::top($approvals),
+            'approvalSettings' => $approvalSettings,
+            // tryb uprawnień sesji z transkryptu (zmiany przy wiadomościach usera) — linia nad tabelą Zgód
+            'approvalModes' => $session->modes,
             'crossed' => $crossed,
-            'boundaryOn' => $limits->enabled(),
-            'rowLimit' => PHP_INT_MAX,
+            'rowLimit' => self::rowLimit($p),
             'bash' => $p['pcmd'] === '' ? $bash : array_values(array_filter($bash, static function (Event $e) use ($p): bool {
                 foreach ($e->commands as $c) {
                     if ($c->program === $p['pcmd']) {
@@ -951,8 +1109,7 @@ final class App
                 'agents' => array_values(array_filter($messages, static fn (array $m): bool => $m['from'] !== 'user')),
                 default => $messages,
             },
-            'live' => $p['live'] ?? (time() - $mtime < self::LIVE_WINDOW),
-            'active' => time() - $mtime < self::LIVE_WINDOW,
+            'live' => true,
             'version' => $sid . ':' . $this->sourceVersion($p['src'], $sid),
             'hookAvailable' => is_file(HookLog::path($sid)),
             'transcriptAvailable' => $transcript !== null,
@@ -1048,34 +1205,90 @@ final class App
         return $home !== '' ? str_replace($home . '/', '~/', $text) : $text;
     }
 
+    /** Wiersze list sesji i zakresu „all” (pliki, wiadomości): `limit=all` = wszystkie, inaczej `ALL_ROWS` i link „pokaż wszystkie”. */
+    public static function rowLimit(array $p): int
+    {
+        return $p['limit'] ? PHP_INT_MAX : self::ALL_ROWS;
+    }
+
+    /**
+     * Wspólny korzeń ścieżek sesji, względem którego listy skracają ścieżki (pokazany raz w pasku listy): najgłębszy katalog
+     * z co najmniej połową unikalnych ścieżek, który jest katalogiem sesji albo korzeniem repozytorium (ma `.git`); bez takiego —
+     * najgłębszy katalog wspólny dla wszystkich ścieżek. Katalog domowy i wyżej się nie liczą (skraca je `~`). Null = brak.
+     *
+     * @param iterable<string> $paths
+     */
+    public static function pathRoot(iterable $paths, ?string $cwd): ?string
+    {
+        $unique = [];
+        foreach ($paths as $path) {
+            if (str_starts_with($path, '/')) {
+                $unique[$path] = true;
+            }
+        }
+        $n = count($unique);
+        if ($n === 0) {
+            return null;
+        }
+        $home = Path::home();
+        $minDepth = $home !== '' ? substr_count($home, '/') + 1 : 2;
+        $counts = [];
+        foreach (array_keys($unique) as $path) {
+            for ($dir = dirname((string) $path); substr_count($dir, '/') >= $minDepth; $dir = dirname($dir)) {
+                $counts[$dir] = ($counts[$dir] ?? 0) + 1;
+            }
+        }
+        uksort($counts, static fn (string $a, string $b): int => strlen($b) <=> strlen($a));
+        foreach ($counts as $dir => $c) {
+            if (2 * $c >= $n && ($dir === $cwd || file_exists($dir . '/.git'))) {
+                return (string) $dir;
+            }
+        }
+        foreach ($counts as $dir => $c) {
+            if ($c === $n) {
+                return (string) $dir;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Licznik zakładki Log: wywołania narzędzi (to samo, co „wszystkie wywołania” w selekcie statusu) i osobno pliki wczytane
+     * przez Claude Code (`context`), które Log też pokazuje. Przy filtrze pochodzenia „context” licznikiem są te pliki.
+     *
+     * @param list<Event> $events
+     * @return array{n: int, context: int}
+     */
+    public static function logCount(array $events, string $origin): array
+    {
+        $context = count(array_filter($events, static fn (Event $e): bool => $e->tool === Event::TOOL_CONTEXT));
+
+        return ['n' => $origin === 'context' ? $context : count($events) - $context, 'context' => $context];
+    }
+
     public static function query(array $view, array $override = []): string
     {
         $p = $view['p'];
         $q = array_filter([
-            's' => $p['follow'] ? '' : $view['sid'],
+            's' => $view['sid'],
             'src' => $p['src'] === 'transcript' ? '' : $p['src'],
             'agent' => $view['agentFilter'] ?? '',
-            'follow' => $p['follow'] ? '1' : '',
             'turn' => $p['turn'] > 0 ? (string) $p['turn'] : '',
             'scope' => $p['scope'],
             'problems' => $p['problems'] ? '1' : '',
             'status' => $p['status'],
-            'boundary' => $p['boundary'],
             'view' => $p['view'] === 'read' ? '' : $p['view'],
             'sort' => $p['sort'],
             'more' => $p['more'] ? '1' : '',
             'group' => $p['group'] ? '1' : '',
             'mk' => $p['mk'],
             'pcmd' => $p['pcmd'],
-            'rows' => $p['rows'] === 'files' ? '' : $p['rows'],
             'origin' => $p['origin'],
-            'all' => $p['all'] ? '1' : '',
-            'dirs' => $p['dirs'] ? '' : '0',
             'days' => $p['days'] > 0 ? (string) $p['days'] : '',
             'recent' => $p['recent'],
             'find' => $p['find'],
             'exclude' => $p['exclude'],
-            'project' => $p['project'],
             'limit' => $p['limit'] ? 'all' : '',
         ], static fn (string $v): bool => $v !== '');
 
@@ -1106,6 +1319,20 @@ final class App
             $usd >= 10 => number_format($usd, 1),
             default => number_format($usd, 2),
         };
+    }
+
+    /** 850 ms · 4.2 s · 3 min 05 s · 1 h 12 min — czas trwania wywołania (`SummaryStore::durationMs`). */
+    public static function duration(int $ms): string
+    {
+        if ($ms < 1000) {
+            return $ms . ' ms';
+        }
+        if ($ms < 59950) {
+            return round($ms / 1000, 1) . ' s';
+        }
+        $s = (int) round($ms / 1000);
+
+        return $s < 3600 ? sprintf('%d min %02d s', intdiv($s, 60), $s % 60) : sprintf('%d h %02d min', intdiv($s, 3600), intdiv($s % 3600, 60));
     }
 
     /**

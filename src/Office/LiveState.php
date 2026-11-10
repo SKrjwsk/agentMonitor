@@ -10,6 +10,7 @@ use Viz\Model\Event;
 use Viz\Model\Session;
 use Viz\Model\Touch;
 use Viz\Signals;
+use Viz\Source\HookLog;
 use Viz\Web\App;
 
 /**
@@ -26,6 +27,9 @@ use Viz\Web\App;
  * Granica (`boundary`, null = bez konfiguracji `AGENT_ALLOWED_*`): wywołania w oknie, które `Boundary` klasyfikuje:
  * `outside` (wykonane poza), `trying` (poza granicą, jeszcze trwa — zwykle czeka na zgodę), `stopped` (zatrzymane), `unknown` (Bash bez ustalonych ścieżek).
  * Z transkryptu nie da się odróżnić prośby o zgodę od długiej komendy — przeglądarka pisze „zgoda?” po `PERMISSION_GUESS` s trwania wywołania.
+ * Z hookiem (`HookLog::state`) prośba jest zdarzeniem: stan `waiting-permission`, w wywołaniu `permission` = chwila prośby; sesja, w której
+ * hook zgody choć raz zadziałał (`permissionHook`), nie dostaje już zgadywania. Koniec sesji z `SessionEnd` = stan `ended` sesji głównej.
+ * `Stop` / `SubagentStart` / `SubagentStop` dają dokładne „czeka na Ciebie” i start / koniec subagenta (`done` od `start` do `last`) — opis przy `OfficeState`.
  */
 final class LiveState
 {
@@ -45,13 +49,23 @@ final class LiveState
 
     /**
      * Sesja do tablicy albo null, gdy nikt w niej nie był aktywny w oknie. `$whole` = cała sesja bez okna i bez limitu wywołań
-     * (zakładka Flow w szczegółach sesji) — wtedy null tylko bez sesji głównej.
+     * (zakładka Flow w szczegółach sesji) — wtedy null tylko bez sesji głównej. `$hooks` = zdarzenia stanu z hooka; null = z `HookLog::state`.
+     * `$compactions` = kompaktowania z hooka (`HookLog::compactions`); null = z pliku sesji.
      *
+     * @param ?list<array{ts: string, event: string, agent: string, detail: ?string}> $hooks
+     * @param ?list<array{ts: string, agent: string, phase: string, trigger: ?string}> $compactions
      * @return ?array<string, mixed>
      */
-    public static function session(Session $session, int $now, ?Boundary $limits = null, bool $whole = false): ?array
+    public static function session(Session $session, int $now, ?Boundary $limits = null, bool $whole = false, ?array $hooks = null, ?array $compactions = null): ?array
     {
-        ['main' => $main, 'subs' => $subs] = OfficeState::rows($session, $now, $limits);
+        $hooks ??= HookLog::state($session->id);
+        $asks = [];
+        foreach ($hooks as $h) {
+            if (OfficeState::isPermission($h)) {
+                $asks[$h['agent']][] = self::time($h['ts']);
+            }
+        }
+        ['main' => $main, 'subs' => $subs] = OfficeState::rows($session, $now, $limits, $hooks);
         $from = $whole ? 0 : $now - self::WINDOW;
         $subs = array_values(array_filter($subs, static fn (array $a): bool => self::time($a['last']) >= $from));
         if ($main === null || (self::time($main['last']) < $from && $subs === [])) {
@@ -116,6 +130,10 @@ final class LiveState
                 'waitingFor' => $row['waitingFor'],
                 'interrupted' => $row['interrupted'],
                 'stuck' => $row['stuck'],
+                // z hooka: prośba o zgodę `{ts, tool}`, typ błędu API, powód końca sesji
+                'permission' => $row['permission'],
+                'stuckType' => $row['stuckType'],
+                'ended' => $row['ended'],
                 'blocked' => $row['blocked'],
                 'burn' => $row['burn'],
                 'spent' => $row['spent'],
@@ -126,7 +144,7 @@ final class LiveState
                 'context' => $tokens,
                 'contextMax' => max($tokens, self::contextWindow($row['model'])),
                 'reportBlocked' => $row['kind'] === 'sub' ? self::reportBlocked($byAgent[$row['id']] ?? [], $from) : null,
-                'calls' => self::calls($byAgent[$row['id']] ?? [], $from, $limits, $session->cwd, $whole ? PHP_INT_MAX : self::CALL_LIMIT),
+                'calls' => self::calls($byAgent[$row['id']] ?? [], $from, $limits, $session->cwd, $whole ? PHP_INT_MAX : self::CALL_LIMIT, $asks[$row['id']] ?? [], $now),
                 // dla biura 3D: `gone` = poza biurem według jego progów (OfficeState), głowa, archiwum ~/.claude, naruszenie granicy z 2 min
                 'gone' => $row['gone'],
                 'start' => $row['start'],
@@ -146,6 +164,8 @@ final class LiveState
             'last' => max(array_column($agents, 'last')),
             'spent' => round(array_sum(array_column($agents, 'spent')), 4),
             'counts' => $counts(''),
+            // hook zgody działa w tej sesji: wywołanie bez zdarzenia prośby to długa komenda, nie „zgoda?”
+            'permissionHook' => $asks !== [],
             'agents' => $agents,
             'boundary' => $limits?->enabled() ? self::boundary($limits, $session, $from) : null,
             'map' => $limits?->enabled() ? self::map($limits, $session, $from) : null,
@@ -154,7 +174,36 @@ final class LiveState
             'prompts' => self::prompts($session, $from),
             'waits' => self::waits($session, $from),
             'sends' => self::sends($session, $from),
+            'compactions' => self::compactions($compactions ?? HookLog::compactions($session->id), $from),
         ];
+    }
+
+    /**
+     * Kompaktowania kontekstu sesji głównej w oknie (oś pracy: kreska na torze): jedno na parę `PreCompact` → `PostCompact`,
+     * w chwili `PreCompact`; samo `PostCompact` (początek pary poza końcówką pliku) — w swojej chwili. `trigger` = manual / auto / null.
+     *
+     * @param list<array{ts: string, agent: string, phase: string, trigger: ?string}> $events
+     * @return list<array{ts: string, trigger: ?string}>
+     */
+    private static function compactions(array $events, int $from): array
+    {
+        $out = [];
+        $open = false;
+        foreach ($events as $c) {
+            if ($c['agent'] !== Agent::MAIN) {
+                continue;
+            }
+            if ($c['phase'] === 'post' && $open) {
+                $open = false;
+                continue;
+            }
+            $open = $c['phase'] === 'pre';
+            if (self::time($c['ts']) >= $from) {
+                $out[] = ['ts' => $c['ts'], 'trigger' => $c['trigger']];
+            }
+        }
+
+        return $out;
     }
 
     /**
@@ -234,12 +283,15 @@ final class LiveState
      * Wywołania narzędzi agenta zakończone albo trwające w oknie, najnowsze `$limit` (zwykle `CALL_LIMIT`). `status` (od najważniejszego):
      * `blocked` (blokada Claude Code), `outside` / `trying` / `stopped` (granica), `failed` (nie wykonało się albo kod ≠ 0), `unknown` (Bash bez ścieżek), `ok`.
      * `tokens` / `usd` = koszt wyniku w kontekście z `Event::carry` (zapis + dalsze odczyty; null = brak szacunku albo model spoza cennika).
+     * `permission` = pierwsza prośba o zgodę z hooka (`$asks`, czasy unix) między startem a końcem wywołania (trwające — do `$now`), null = brak.
      *
      * @param list<Event> $events
-     * @return list<array{id: string, ts: string, end: ?string, tool: string, text: string, path: bool, status: string, tokens: ?int, usd: ?float}>
+     * @param list<int> $asks
+     * @return list<array{id: string, ts: string, end: ?string, tool: string, text: string, path: bool, status: string, tokens: ?int, usd: ?float, permission: ?string}>
      */
-    private static function calls(array $events, int $from, ?Boundary $limits, ?string $cwd, int $limit): array
+    private static function calls(array $events, int $from, ?Boundary $limits, ?string $cwd, int $limit, array $asks = [], int $now = PHP_INT_MAX): array
     {
+        sort($asks);
         $out = [];
         foreach ($events as $e) {
             // trwające wywołanie sprzed okna pominięte: zwykle przerwane (bez wyniku w transkrypcie na zawsze)
@@ -250,6 +302,8 @@ final class LiveState
             // przy naruszeniu granicy cel = pierwsza ścieżka poza granicą (wywołanie bywa poza przez drugą z kilku ścieżek)
             $touch = in_array($kind, [Boundary::OUTSIDE, Boundary::STOPPED], true) ? ($limits->outside($e)[0] ?? null) : ($e->touches[0] ?? null);
             $target = OfficeState::target($touch !== null ? App::shortPath($touch->path, $cwd) : null, $e->summary);
+            [$start, $stop] = [self::time($e->ts), $e->endTs !== null ? self::time($e->endTs) : $now];
+            $ask = array_values(array_filter($asks, static fn (int $t): bool => $t >= $start && $t <= $stop))[0] ?? null;
             $out[] = [
                 'id' => $e->toolUseId,
                 'ts' => $e->ts,
@@ -267,6 +321,7 @@ final class LiveState
                 },
                 'tokens' => $e->carry['tokens'] ?? null,
                 'usd' => isset($e->carry['usd']) ? round($e->carry['usd'], 4) : null,
+                'permission' => $ask !== null ? gmdate('Y-m-d\TH:i:s\Z', $ask) : null,
             ];
         }
 
