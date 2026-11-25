@@ -1,0 +1,324 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Viz;
+
+use Viz\Model\Agent;
+use Viz\Model\Event;
+use Viz\Model\Session;
+
+/**
+ * Signals for the "Overview" start page: what in a session needs attention, on the axes context / communication / boundaries and split into
+ * what the user can change and what the agent can (KINDS).
+ * Thresholds calibrated on the user's sessions of 2026-10-24 (106 sessions, 1583 turns) — milestones.llm.md M17.
+ * Repeated reads and user corrections are deliberately omitted: in the data they are mostly noise. Bash blind spots count only as
+ * `unknown-paths` on the boundaries axis (Boundary), with weight `info`: this is parser diagnostics, not an alarm, so it does not raise the axis status.
+ */
+final class Signals
+{
+    /** A turn more expensive than this (API price list) — 24 of 1583 turns. */
+    public const TURN_USD = 5.0;
+    /** A tool result more expensive than this (write + reads on later calls) — 11 sessions. */
+    public const RESULT_USD = 0.5;
+    /** Agent context larger than this — every call reads it anew. */
+    public const CONTEXT_TOKENS = 400_000;
+    /** Share of tool errors (without blocks and Bash with code ≠ 0) — 90% of sessions have < 2.3%. */
+    public const ERROR_RATE = 0.03;
+    public const ERROR_MIN_CALLS = 20;
+    /** Consecutive limit messages in this window are one event (Claude Code retries). */
+    private const LIMIT_WINDOW = 1800;
+    /** A pause longer than the cache lifetime (5 min), after which the agent wrote the context anew. */
+    public const COLD_GAP = 300;
+    public const COLD_TOKENS = 50_000;
+    /** Cache rebuild more expensive than this — 7 days to 2026-10-24: 47 rebuilds > 50k, $66. */
+    public const COLD_USD = 0.5;
+    /** A short turn (≤ this many model calls) in a large context — 7 days: 502 turns > 150k, $94. */
+    public const QUICK_CALLS = 3;
+    public const QUICK_CONTEXT = 150_000;
+    public const QUICK_USD = 0.5;
+    /** Returning to a session after such a pause with such a context — 7 days: 12 multi-day sessions = 47% of cost. */
+    public const STALE_GAP = 3 * 3600;
+    public const STALE_CONTEXT = 100_000;
+
+    /**
+     * Kind → [axis, who can change it, weight]. Start page axes: `context`, `communication`, `boundaries`;
+     * `cost` = list of the most expensive turns, `env` = disruptions outside the influence of the user and the agent.
+     * Who: `you` (user: prompts, session hygiene, hook configuration), `agent`, '' = nobody.
+     * Weight: `high` = check right away, `warn` = needs attention, `info` = for tuning, does not change the status.
+     */
+    public const KINDS = [
+        'expensive-turn' => ['cost', '', 'warn'],
+        'cold-cache' => ['context', 'you', 'warn'],
+        'quick-question' => ['context', 'you', 'warn'],
+        'stale-session' => ['context', 'you', 'warn'],
+        'huge-context' => ['context', 'you', 'warn'],
+        'expensive-result' => ['context', 'agent', 'warn'],
+        'error-rate' => ['context', 'agent', 'warn'],
+        'interrupt' => ['communication', 'you', 'warn'],
+        'report-blocked' => ['communication', 'agent', 'warn'],
+        'subagent-failed' => ['communication', 'agent', 'warn'],
+        'hook-text' => ['boundaries', 'you', 'info'],
+        'protected-path' => ['boundaries', 'agent', 'high'],
+        'auto-mode' => ['boundaries', 'agent', 'high'],
+        // agent work boundary from `.env` (Boundary)
+        'outside-executed' => ['boundaries', 'agent', 'high'],
+        'unknown-paths' => ['boundaries', 'agent', 'info'],
+        'outside-stopped' => ['boundaries', 'agent', 'info'],
+        'limit' => ['env', '', 'warn'],
+        'api-error' => ['env', '', 'warn'],
+    ];
+
+    /** Kinds whose `value` is an amount in $ (API price list) — summed and sorted on the start page. */
+    public const USD_KINDS = ['expensive-turn', 'expensive-result', 'cold-cache', 'quick-question', 'stale-session'];
+
+    /** Tools whose content is an agent message — a hook block = the report or command did not arrive. */
+    private const MESSAGE_TOOLS = ['Agent', 'Task', 'SubagentHandback', 'SendMessage'];
+
+    /**
+     * @param ?string $cutoff ISO UTC — only signals from this moment; null = whole session
+     * @return array{items: list<array{kind: string, ts: string, agent: string, turn: int, ev: ?string, value: float, text: string, detail: string}>, info: array<string, int|float>}
+     *         `info` = counters without alarm: deny rule blocks, user rejections, hook pattern in the command text, retries after an error, compactions
+     */
+    public static function of(Session $session, ?string $cutoff = null, ?Boundary $boundary = null): array
+    {
+        $boundary ??= Boundary::fromEnv();
+        $turns = array_values(array_filter($session->prompts, static fn (array $p): bool => $p['kind'] === 'prompt'));
+        $turnOf = static function (string $ts) use ($turns): int {
+            $n = 0;
+            foreach ($turns as $p) {
+                if ($p['ts'] > $ts) {
+                    break;
+                }
+                $n++;
+            }
+
+            return $n;
+        };
+        $items = [];
+        $add = static function (string $kind, string $ts, string $agent, float $value, string $text, string $detail = '', ?string $ev = null) use (&$items, $turnOf, $cutoff): void {
+            if ($cutoff === null || $ts >= $cutoff) {
+                $items[] = ['kind' => $kind, 'ts' => $ts, 'agent' => $agent, 'turn' => $turnOf($ts), 'ev' => $ev, 'value' => $value, 'text' => mb_strimwidth($text, 0, 300, '…'), 'detail' => $detail];
+            }
+        };
+
+        foreach ($turns as $i => $p) {
+            $t = $session->tokens('', $p['ts'], $turns[$i + 1]['ts'] ?? null);
+            if ($t['usd'] > self::TURN_USD) {
+                arsort($t['cost']);
+                $top = array_key_first($t['cost']);
+                $add('expensive-turn', $p['ts'], 'main', $t['usd'], $p['text'], round(100 * $t['cost'][$top] / $t['usd']) . '% ' . ['read' => 'cache read', 'write' => 'new context', 'output' => 'output', 'input' => 'uncached input'][$top] . ' · ' . $t['calls'] . ' model calls');
+            }
+        }
+        $maxCtx = [];
+        foreach ($session->usage as $u) {
+            if ($u['tokens'] > ($maxCtx[$u['agent']]['tokens'] ?? self::CONTEXT_TOKENS)) {
+                $maxCtx[$u['agent']] = $u;
+            }
+        }
+        foreach ($maxCtx as $agent => $u) {
+            $add('huge-context', $u['ts'], (string) $agent, (float) $u['tokens'], 'context of ' . ($agent === 'main' ? 'the main session' : 'a subagent') . ' reached ' . round($u['tokens'] / 1000) . 'k tokens', 'every later call reads it again');
+        }
+
+        // context hygiene on the user's side: pauses (expired cache), returns to an old session, short questions in a large context
+        $main = array_values(array_filter($session->usage, static fn (array $u): bool => $u['agent'] === Agent::MAIN));
+        $coldTurns = [];
+        $returns = [];
+        $prev = null;
+        foreach ($main as $u) {
+            $gap = $prev === null ? 0 : strtotime($u['ts']) - strtotime($prev['ts']);
+            $turn = $turnOf($u['ts']);
+            $atStart = $prev !== null && $turnOf($prev['ts']) !== $turn;
+            $write = (float) ($u['cost']['write'] ?? 0);
+            if ($gap > self::COLD_GAP && $u['cacheWrite'] > self::COLD_TOKENS && $write >= self::COLD_USD) {
+                $coldTurns[$turn] = $atStart;
+                $add('cold-cache', $u['ts'], 'main', $write, $turn > 0 ? $turns[$turn - 1]['text'] : $session->title,
+                    ($atStart ? 'your prompt came ' . self::duration($gap) . ' after the last answer' : 'a ' . self::duration($gap) . ' pause inside the turn — a permission prompt, a usage limit, a long tool call or a background task')
+                    . ' · ' . round($u['cacheWrite'] / 1000) . 'k context written to the cache again');
+            }
+            // a return that starts with /compact or /clear is exactly good hygiene
+            if ($atStart && $gap > self::STALE_GAP && $u['tokens'] > self::STALE_CONTEXT && !preg_match('~^/(compact|clear)\b~', $turns[$turn - 1]['text'])) {
+                $returns[] = [$turn, $gap, $u['tokens']];
+            }
+            $prev = $u;
+        }
+        // value = cost of dragging the old context from the return to the next return (or the session end):
+        // cache write on return + the part of cache reads attributable to the pre-pause context (estimate)
+        foreach ($returns as $k => [$turn, $gap, $ctx]) {
+            $from = $turns[$turn - 1]['ts'];
+            $to = isset($returns[$k + 1]) ? $turns[$returns[$k + 1][0] - 1]['ts'] : null;
+            $carried = 0.0;
+            $calls = 0;
+            foreach ($main as $u) {
+                if ($u['ts'] < $from || ($to !== null && $u['ts'] >= $to) || $u['cost'] === null) {
+                    continue;
+                }
+                $carried += $calls === 0 ? $u['cost']['write'] : 0;
+                $carried += $u['cacheRead'] > 0 ? $u['cost']['read'] * min($ctx, $u['cacheRead']) / $u['cacheRead'] : 0;
+                $calls++;
+            }
+            $add('stale-session', $from, 'main', $carried, $turns[$turn - 1]['text'],
+                'back after ' . self::duration($gap) . ' to a ' . round($ctx / 1000) . 'k context, carried through ' . $calls . ' model calls');
+        }
+        foreach ($turns as $i => $p) {
+            if (($coldTurns[$i + 1] ?? false) === true) {
+                continue;
+            }
+            $t = $session->tokens('', $p['ts'], $turns[$i + 1]['ts'] ?? null);
+            $first = null;
+            foreach ($main as $u) {
+                if ($u['ts'] >= $p['ts']) {
+                    $first = $u;
+                    break;
+                }
+            }
+            if ($first !== null && $t['calls'] <= self::QUICK_CALLS && $t['usd'] >= self::QUICK_USD && $first['tokens'] > self::QUICK_CONTEXT) {
+                $add('quick-question', $p['ts'], 'main', $t['usd'], $p['text'], 'a ' . $t['calls'] . '-call answer on top of a ' . round($first['tokens'] / 1000) . 'k context');
+            }
+        }
+
+        $info = ['deny_rule' => 0, 'user_rejected' => 0, 'hook_text' => 0, 'retry_after_error' => 0, 'compactions' => 0, 'tool_errors' => 0, 'calls' => 0];
+        $events = $session->events;
+        $calls = 0;
+        $toolErrors = 0;
+        $lastError = '';
+        $inScope = [];
+        foreach ($events as $i => $e) {
+            if ($e->tool === Event::TOOL_CONTEXT || ($cutoff !== null && $e->ts < $cutoff)) {
+                continue;
+            }
+            $calls++;
+            $inScope[$e->toolUseId] = true;
+            if (($e->carry['usd'] ?? 0) > self::RESULT_USD) {
+                $add('expensive-result', $e->ts, $e->agentId, (float) $e->carry['usd'], ($e->tool !== 'Bash' ? $e->tool . ' ' : '') . $e->summary,
+                    '+' . round($e->carry['tokens'] / 1000) . 'k tokens × ' . $e->carry['calls'] . ' later calls', $e->toolUseId);
+            }
+            if ($e->failed && $e->denial === null && !$e->executed()) {
+                $toolErrors++;
+                $lastError = $e->ts;
+                if (in_array($e->tool, ['Agent', 'Task'], true)) {
+                    $add('subagent-failed', $e->ts, $e->agentId, 1, $e->summary, (string) $e->error, $e->toolUseId);
+                }
+            }
+            $crossed = $boundary->classify($e);
+            if ($crossed !== null) {
+                $paths = implode(' · ', array_map(static fn ($t): string => $t->op . ' ' . $t->path, array_slice($boundary->outside($e), 0, 3)));
+                $add(['outside' => 'outside-executed', 'suspicious' => 'unknown-paths', 'stopped' => 'outside-stopped'][$crossed], $e->ts, $e->agentId, 1,
+                    ($e->tool !== 'Bash' ? $e->tool . ' ' : '') . $e->summary,
+                    match ($crossed) {
+                        Boundary::OUTSIDE => $paths,
+                        Boundary::STOPPED => $paths . ' · stopped by ' . Boundary::stoppedBy($e),
+                        default => 'paths not resolved: ' . implode(' · ', array_slice([...$e->unresolved, ...$e->unknown], 0, 2)),
+                    }, $e->toolUseId);
+            }
+            if ($e->denial === null) {
+                continue;
+            }
+            $by = $e->denial['by'];
+            if ($by === 'hook') {
+                // rule pattern in quotes ("denied by rule matching '…'"); a path with this pattern = access attempt
+                $rule = preg_match("/'([^']+)'/", (string) $e->denial['detail'], $m) ? $m[1] : '';
+                $touches = $rule !== '' && array_filter($e->touches, static fn ($t): bool => stripos($t->path, $rule) !== false) !== [];
+                $again = self::nextCall($events, $i)?->denial !== null;
+                if (in_array($e->tool, self::MESSAGE_TOOLS, true)) {
+                    $add('report-blocked', $e->ts, $e->agentId, 1, $e->tool . ': ' . $e->summary, 'hook ' . (string) $e->denial['detail'], $e->toolUseId);
+                } elseif ($touches) {
+                    $add('protected-path', $e->ts, $e->agentId, $again ? 2 : 1, ($e->tool !== 'Bash' ? $e->tool . ' ' : '') . $e->summary,
+                        (string) $e->denial['detail'] . ($again ? ' · blocked again right after' : ''), $e->toolUseId);
+                } elseif ($crossed !== Boundary::STOPPED) {
+                    // pattern only in text (comment, name, message) — usually a false alarm that costs the agent a retry
+                    $info['hook_text']++;
+                    $add('hook-text', $e->ts, $e->agentId, 1, ($e->tool !== 'Bash' ? $e->tool . ' ' : '') . $e->summary, 'hook ' . (string) $e->denial['detail'], $e->toolUseId);
+                }
+            } elseif (in_array($by, ['auto mode', 'safety check'], true)) {
+                $add('auto-mode', $e->ts, $e->agentId, 1, ($e->tool !== 'Bash' ? $e->tool . ' ' : '') . $e->summary, $by . ($e->denial['detail'] !== null ? ': ' . $e->denial['detail'] : ''), $e->toolUseId);
+            } elseif ($by === 'deny rule') {
+                $info['deny_rule']++;
+            } elseif ($by === 'user') {
+                $info['user_rejected']++;
+            }
+        }
+        if ($calls >= self::ERROR_MIN_CALLS && $toolErrors / $calls > self::ERROR_RATE) {
+            $add('error-rate', $lastError, 'main', $toolErrors / $calls, round(100 * $toolErrors / $calls, 1) . '% of tool calls failed (' . $toolErrors . ' of ' . $calls . ')', 'file not found, edit conflicts, refused permissions…');
+        }
+        $info['tool_errors'] = $toolErrors;
+        $info['calls'] = $calls;
+        foreach (Problems::tag($events) as $id => $reasons) {
+            $info['retry_after_error'] += isset($inScope[$id]) && in_array('retry after error', $reasons, true) ? 1 : 0;
+        }
+        $info['compactions'] = count(array_filter($session->prompts, static fn (array $p): bool => $p['kind'] === 'compact' && ($cutoff === null || $p['ts'] >= $cutoff)));
+
+        $lastLimit = [];
+        foreach ($session->incidents as $x) {
+            if ($x['kind'] === 'limit') {
+                $prev = $lastLimit[$x['agent']] ?? null;
+                $lastLimit[$x['agent']] = $x['ts'];
+                if ($prev !== null && strtotime($x['ts']) - strtotime($prev) < self::LIMIT_WINDOW) {
+                    continue;
+                }
+            }
+            // interruption: we show the prompt the agent was carrying out — the user can correct its content
+            $turn = $turnOf($x['ts']);
+            $x['kind'] === 'interrupt' && $turn > 0
+                ? $add('interrupt', $x['ts'], $x['agent'], 1, $turns[$turn - 1]['text'], $x['text'])
+                : $add($x['kind'], $x['ts'], $x['agent'], 1, $x['text']);
+        }
+        usort($items, static fn (array $a, array $b): int => strcmp($a['ts'], $b['ts']));
+
+        return ['items' => $items, 'info' => $info];
+    }
+
+    /**
+     * Translates the stored (English) text or signal detail into the current language — only at render time, the aggregate stays English.
+     * Unknown fragments (paths, commands, harness texts) stay unchanged.
+     */
+    public static function localize(string $text): string
+    {
+        $dur = static fn (string $d): string => preg_match('/^(\d+) (min|h|days)$/', $d, $m) ? t('{n} ' . $m[2], ['n' => $m[1]]) : $d;
+        $d = '(\d+ (?:min|h|days))';
+        $rules = [
+            '/(\d+)% (cache read|new context|output|uncached input) · (\d+) model calls/' => static fn (array $m): string => t('{p}% {part} · {n} model calls', ['p' => $m[1], 'part' => t($m[2]), 'n' => $m[3]]),
+            '/^context of the main session reached (\d+)k tokens$/' => static fn (array $m): string => t('context of the main session reached {k}k tokens', ['k' => $m[1]]),
+            '/^context of a subagent reached (\d+)k tokens$/' => static fn (array $m): string => t('context of a subagent reached {k}k tokens', ['k' => $m[1]]),
+            '/^every later call reads it again$/' => static fn (): string => t('every later call reads it again'),
+            '/^your prompt came ' . $d . ' after the last answer/' => static fn (array $m): string => t('your prompt came {d} after the last answer', ['d' => $dur($m[1])]),
+            '/^a ' . $d . ' pause inside the turn — a permission prompt, a usage limit, a long tool call or a background task/' => static fn (array $m): string => t('a {d} pause inside the turn — a permission prompt, a usage limit, a long tool call or a background task', ['d' => $dur($m[1])]),
+            '/(\d+)k context written to the cache again$/' => static fn (array $m): string => t('{k}k context written to the cache again', ['k' => $m[1]]),
+            '/^back after ' . $d . ' to a (\d+)k context, carried through (\d+) model calls$/' => static fn (array $m): string => t('back after {d} to a {k}k context, carried through {n} model calls', ['d' => $dur($m[1]), 'k' => $m[2], 'n' => $m[3]]),
+            '/^a (\d+)-call answer on top of a (\d+)k context$/' => static fn (array $m): string => t('a {n}-call answer on top of a {k}k context', ['n' => $m[1], 'k' => $m[2]]),
+            '/^\+(\d+)k tokens × (\d+) later calls$/' => static fn (array $m): string => t('+{k}k tokens × {n} later calls', ['k' => $m[1], 'n' => $m[2]]),
+            '/ · stopped by (.+)$/' => static fn (array $m): string => ' · ' . t('stopped by {by}', ['by' => $m[1]]),
+            '/^paths not resolved: /' => static fn (): string => t('paths not resolved:') . ' ',
+            '/ · blocked again right after$/' => static fn (): string => ' · ' . t('blocked again right after'),
+            '/^([\d.]+)% of tool calls failed \((\d+) of (\d+)\)$/' => static fn (array $m): string => t('{p}% of tool calls failed ({a} of {b})', ['p' => $m[1], 'a' => $m[2], 'b' => $m[3]]),
+            '/^file not found, edit conflicts, refused permissions…$/' => static fn (): string => t('file not found, edit conflicts, refused permissions…'),
+        ];
+        foreach ($rules as $re => $fn) {
+            $text = (string) preg_replace_callback($re, $fn, $text);
+        }
+
+        return $text;
+    }
+
+    /** „12 min”, „3 h”, „2 days”. */
+    public static function duration(int $seconds): string
+    {
+        return match (true) {
+            $seconds < 3600 => round($seconds / 60) . ' min',
+            $seconds < 2 * 86400 => round($seconds / 3600) . ' h',
+            default => round($seconds / 86400) . ' days',
+        };
+    }
+
+    /** The next call of the same agent. */
+    private static function nextCall(array $events, int $i): ?Event
+    {
+        for ($j = $i + 1, $n = count($events); $j < $n; $j++) {
+            if ($events[$j]->agentId === $events[$i]->agentId && $events[$j]->tool !== Event::TOOL_CONTEXT) {
+                return $events[$j];
+            }
+        }
+
+        return null;
+    }
+}

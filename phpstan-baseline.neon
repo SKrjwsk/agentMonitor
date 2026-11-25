@@ -1,0 +1,175 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$array \(list\<string\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 2
+			path: src/Boundary.php
+
+		-
+			message: '#^Offset ''cost'' does not exist on array\{calls\: int, subagentCalls\: int, outputPartial\: int, output\: int, cacheWrite\: int, cacheRead\: int, input\: int, models\: array\<string, int\>\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Export/Metrics.php
+
+		-
+			message: '#^Offset ''unpriced'' does not exist on array\{calls\: int, subagentCalls\: int, outputPartial\: int, output\: int, cacheWrite\: int, cacheRead\: int, input\: int, models\: array\<string, int\>\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Export/Metrics.php
+
+		-
+			message: '#^Offset ''usd'' does not exist on array\{calls\: int, subagentCalls\: int, outputPartial\: int, output\: int, cacheWrite\: int, cacheRead\: int, input\: int, models\: array\<string, int\>\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Export/Metrics.php
+
+		-
+			message: '#^Call to function is_int\(\) with string will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: src/Extract/BashTouches.php
+
+		-
+			message: '#^Offset 2 on array\{non\-falsy\-string, '''', non\-falsy\-string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Extract/BashTouches.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between ''\$''\|numeric\-string and '''' will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Extract/BashTouches.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between non\-empty\-array and null will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Extract/BashTouches.php
+
+		-
+			message: '#^Call to function in_array\(\) with arguments string, array\{\} and true will always evaluate to false\.$#'
+			identifier: function.impossibleType
+			count: 1
+			path: src/Office/LiveState.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<array\<string, mixed\>\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: src/Office/LiveState.php
+
+		-
+			message: '#^Method Viz\\Office\\OfficeState\:\:boundary\(\) never returns array\{kind\: string, path\: string, ts\: string\} so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/Office/OfficeState.php
+
+		-
+			message: '#^Method Viz\\Office\\OfficeState\:\:boundary\(\) should return array\{kind\: string, path\: string, ts\: string\}\|null but returns array\{kind\: ''outside''\|''stopped''\|''trying'', target\: array, ts\: string\}\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Office/OfficeState.php
+
+		-
+			message: '#^Offset ''by'' on array\{by\: string, detail\: string\|null\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Office/OfficeState.php
+
+		-
+			message: '#^Variable \$lastResponse on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.variable
+			count: 1
+			path: src/Office/OfficeState.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between non\-empty\-list\<non\-falsy\-string\> and array\{\} will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Source/SessionIndex.php
+
+		-
+			message: '#^Offset ''customTitle'' on array\{title\: string, cwd\: string\|null, toolUses\: int, incidents\: list, prompts\: list\}\|array\{title\: string, cwd\: string\|null, toolUses\: int, usage\: mixed, messages\: \(array\|float\|int\), incidents\: list, prompts\: list\} on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Source/TranscriptReader.php
+
+		-
+			message: '#^Offset ''incidents'' does not exist on array\{title\: string, cwd\: string\|null, toolUses\: int\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Source/TranscriptReader.php
+
+		-
+			message: '#^Offset ''messages'' does not exist on array\{title\: string, cwd\: string\|null, toolUses\: int\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Source/TranscriptReader.php
+
+		-
+			message: '#^Offset ''mode'' on array\{ts\: string, mode\: ''acceptEdits''\|''auto''\|''bypassPermissions''\|''default''\|''dontAsk''\|''plan''\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Source/TranscriptReader.php
+
+		-
+			message: '#^Offset ''modes'' does not exist on array\{title\: string, cwd\: string\|null, toolUses\: int, incidents\: list, prompts\: list\}\|array\{title\: string, cwd\: string\|null, toolUses\: int, usage\: mixed, messages\: \(array\|float\|int\), incidents\: list, prompts\: list\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Source/TranscriptReader.php
+
+		-
+			message: '#^Offset ''prompts'' does not exist on array\{title\: string, cwd\: string\|null, toolUses\: int, incidents\: list\}\|array\{title\: string, cwd\: string\|null, toolUses\: int, usage\: mixed, messages\: \(array\|float\|int\), incidents\: list\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Source/TranscriptReader.php
+
+		-
+			message: '#^Offset ''usage'' does not exist on array\{title\: string, cwd\: string\|null, toolUses\: int\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Source/TranscriptReader.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between '''' and '''' will always evaluate to false\.$#'
+			identifier: notIdentical.alwaysFalse
+			count: 1
+			path: src/Source/TranscriptReader.php
+
+		-
+			message: '#^Left side of \|\| is always false\.$#'
+			identifier: booleanOr.leftAlwaysFalse
+			count: 1
+			path: src/Stats.php
+
+		-
+			message: '#^Offset ''days'' does not exist on array\{s\: string, src\: string, agent\: string, pick\: string, st\: int, se\: int\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Web/App.php
+
+		-
+			message: '#^Offset ''projects'' does not exist on array\{s\: string, src\: string, agent\: string, pick\: string, st\: int, se\: int\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Web/App.php
+
+		-
+			message: '#^Offset ''recent'' does not exist on array\{s\: string, src\: string, agent\: string, pick\: string, st\: int, se\: int\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Web/App.php
+
+		-
+			message: '#^Offset ''turn'' does not exist on array\{s\: string, src\: string, agent\: string, pick\: string, st\: int, se\: int\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/Web/App.php
+
+		-
+			message: '#^Offset ''live'' on array\{live\: array\{path\: ''/lanes'', name\: ''lanes'', icon\: ''≡'', label\: ''Work axis'', title\: ''agent lanes of all…'', template\: ''lanes\.php'', data\: ''/feed\.json'', menu\: ''live''\}\}\|array\{live\: array\{path\: string, name\: ''lanes'', icon\: ''◉'', label\: ''Live preview'', title\: ''what agents are…'', template\: ''lanes\.php'', data\: ''/feed\.json'', menu\: ''live''\}\} in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Web/ScopeViews.php

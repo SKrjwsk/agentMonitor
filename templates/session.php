@@ -1,0 +1,94 @@
+<?php
+/**
+ * Fragment swapped on live refresh (Hx, outerHTML).
+ *
+ * Attribute signature:
+ * < viz-session viz-view viz-version viz-version-url viz-pick? viz-pev? viz-pcmd? viz-all? viz-scope-reload? viz-live? viz-st viz-se hx-get hx-vals-query="() => Viz.Query(this)">
+ *     # viz-all = "all sessions" scope (s=all): details panel for a file (pick) or program (pcmd)
+ *     # viz-scope-reload = page computed from the project scope (Scope) — changing the choice in the left panel reloads it (Viz.Scope)
+ *     # viz-view = tab; in a session remembered in localStorage (`viz-view`) for session links in the left panel (Viz.SessionLink)
+ *     < input onchange="Viz.LiveToggle(this)">
+ *     < select onchange="Viz.Go(this)">          # agent / turn / origin filters; option value = URL built by the server
+ *     < viz-pane="list">                         # list of the current view (read / changed / commands / blocked / approvals / messages / log; in viz-all log = log-all.php)
+ *         < viz-file="<hash>" onclick="Viz.Open(this, event)" viz-picked?>
+ *         < viz-ev="<toolUseId>" onclick="Viz.Open(this, event)" viz-picked?>
+ *         < viz-cmd="<program>" onclick="Viz.OpenCmd(this, event)" viz-picked?>   # viz-all only
+ *     < viz-pane="drawer">                       # details panel, only when there is pick or pev
+ *         < button onclick="Viz.Close(this)">
+ *     < s-init run="(el) => Viz.Init(el)">
+ *
+ * @var array $view
+ */
+
+use Viz\Clock;
+use Viz\Web\App;
+
+if ($view['missing']) {
+    ?>
+    <section viz-session>
+        <p class="empty"><?= th('No data from source “{src}” for session {sid}.', ['src' => $view['p']['src'], 'sid' => $view['sid']]) ?>
+            <?php if ($view['hookAvailable']): ?><a href="/?<?= h(App::query($view, ['src' => 'hook'])) ?>"><?= th('Show hook data') ?></a><?php endif ?>
+        </p>
+    </section>
+    <?php
+    return;
+}
+
+$p = $view['p'];
+$all = $view['allSessions'];
+$cwd = $all ? null : $view['session']->cwd;
+$opLabels = App::OP_LABELS;
+// details panel: file or call (session), file or program (all sessions)
+$drawer = $all
+    ? in_array($p['view'], ['read', 'changed', 'commands'], true) && ($p['pick'] !== '' || $p['pcmd'] !== '')
+    : in_array($p['view'], ['read', 'changed', 'commands', 'blocked', 'approvals', 'log'], true) && ($p['pick'] !== '' || $p['pev'] !== '');
+$tab = static fn (string $v): string => '/?' . App::query($view, ['view' => $v === 'read' ? '' : $v, 'sort' => '', 'pcmd' => '', 'pev' => '', 'pick' => '']);
+// labels translated by tabs.php (th)
+$tabs = ['read' => 'Files read', 'changed' => 'Files changed', 'commands' => 'Commands', 'blocked' => 'Blocked', 'approvals' => 'Approvals', 'messages' => 'Messages', 'flow' => 'Flow', 'log' => 'Log', 'judge' => 'Assessment'];
+?>
+<section viz-session
+         viz-view="<?= h($p['view']) ?>"
+         viz-version="<?= h($view['version']) ?>"
+         viz-version-url="/version?<?= h(App::query($view)) ?>"
+         <?= $p['pick'] !== '' ? 'viz-pick="' . h($p['pick']) . '"' : '' ?>
+         <?= $p['pev'] !== '' ? 'viz-pev="' . h($p['pev']) . '"' : '' ?>
+         <?= $p['pcmd'] !== '' ? 'viz-pcmd="' . h($p['pcmd']) . '"' : '' ?>
+         <?= $all ? 'viz-all viz-scope-reload' : '' ?>
+         <?= $view['live'] ? 'viz-live' : '' ?>
+         viz-st="<?= h($p['st']) ?>" viz-se="<?= h($p['se']) ?>"
+         viz-sx="<?= h($p['sx']) ?>" viz-sy="<?= h($p['sy']) ?>"
+         hx-get="/session?<?= h(App::query($view) . ($p['before'] !== '' ? '&before=' . rawurlencode($p['before']) : '')) ?>" hx-target="this" hx-swap="outerHTML"
+         hx-vals-query="() => Viz.Query(this)">
+    <header class="head">
+        <?php if ($all): ?>
+            <?php require __DIR__ . '/head-all.php' ?>
+        <?php else: ?>
+            <?php require __DIR__ . '/head-session.php' ?>
+        <?php endif ?>
+    </header>
+
+    <?php if ($all && !in_array($p['view'], App::ALL_VIEWS, true)): ?>
+        <p class="empty"><?= th('This view needs single calls, messages and times — open one session from the list.') ?></p>
+    <?php elseif ($p['view'] === 'flow'): ?>
+        <?php require __DIR__ . '/flow.php' ?>
+    <?php elseif ($p['view'] === 'judge'): ?>
+        <?php require __DIR__ . '/judge.php' ?>
+    <?php else: ?>
+        <div class="body" <?= $drawer ? 'viz-drawer' : '' ?>>
+            <div class="list" viz-pane="list">
+                <?php match ($p['view']) {
+                    'commands' => require __DIR__ . '/commands.php',
+                    'blocked' => require __DIR__ . '/blocked.php',
+                    'approvals' => require __DIR__ . '/approvals.php',
+                    'messages' => require __DIR__ . '/messages.php',
+                    'log' => require __DIR__ . ($all ? '/log-all.php' : '/log.php'),
+                    default => require __DIR__ . '/files.php',
+                } ?>
+            </div>
+            <?php if ($drawer): ?>
+                <?php require __DIR__ . ($all ? '/drawer-all.php' : '/drawer.php') ?>
+            <?php endif ?>
+        </div>
+    <?php endif ?>
+    <s-init run="(el) => Viz.Init(el)"></s-init>
+</section>

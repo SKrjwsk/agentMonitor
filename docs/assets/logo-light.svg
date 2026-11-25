@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="12 14 104 100" width="104" height="100" role="img" aria-label="agentMonitor logo">
+  <path d="M72 14 V114" fill="none" stroke="#57606a" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/>
+  <g fill="none" stroke-width="4.5" stroke-linecap="round">
+    <path d="M32 36 H58" stroke="#1a7f37"/>
+    <path d="M32 64 H60" stroke="#1a7f37"/>
+    <path d="M32 92 H100" stroke="#cf222e"/>
+  </g>
+  <circle cx="32" cy="36" r="8.5" fill="#1a7f37"/>
+  <circle cx="32" cy="64" r="8.5" fill="#1a7f37"/>
+  <circle cx="32" cy="92" r="8.5" fill="#cf222e"/>
+  <circle cx="102" cy="92" r="7" fill="#ffffff" stroke="#cf222e" stroke-width="3"/>
+</svg>

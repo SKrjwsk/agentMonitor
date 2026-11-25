@@ -1,0 +1,14 @@
+var/
+.env
+.playwright-mcp/
+
+# AI tool and session artefacts
+.claude/settings.local.json
+.claude/worktrees/
+.claude/scheduled_tasks.lock
+playwright-report/
+test-results/
+*.log
+.DS_Store
+node_modules/
+/vendor/

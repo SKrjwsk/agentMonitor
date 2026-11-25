@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agentMonitor</title>
+<meta name="description" content="A local audit tool for Claude Code sessions: see what an agent read, changed and ran, where it crossed a permission boundary, and which rule or hook to fix.">
+<link rel="icon" href="assets/logo-light.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg: #ffffff; --panel: #f6f8fa; --text: #1f2328; --muted: #59636e; --line: #d1d9e0;
+    --accent: #0969da; --good: #1a7f37; --bad: #cf222e; --warn: #9a6700; --code: #eff1f3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1117; --panel: #151b23; --text: #e6edf3; --muted: #9198a1; --line: #30363d;
+      --accent: #4493f8; --good: #3fb950; --bad: #f85149; --warn: #d29922; --code: #1d2530;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  a { color: var(--accent); }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 16px; }
+  header { padding: 56px 0 32px; }
+  .logo { height: 72px; width: auto; display: block; margin-bottom: 20px; }
+  .logo-dark { display: none; }
+  @media (prefers-color-scheme: dark) { .logo-light { display: none; } .logo-dark { display: block; } }
+  h1 { font-size: 2.4rem; line-height: 1.15; margin: 0 0 12px; }
+  .tagline { font-size: 1.2rem; margin: 0 0 24px; max-width: 46rem; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-block; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--line); text-decoration: none; color: var(--text); background: var(--panel); font-weight: 600; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  section { padding: 28px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 1.5rem; margin: 0 0 12px; }
+  p { margin: 0 0 14px; }
+  .muted { color: var(--muted); }
+  figure { margin: 20px 0 0; }
+  figure img { width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; display: block; }
+  figcaption { color: var(--muted); font-size: .9rem; margin-top: 8px; }
+  .cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 16px; }
+  .case { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+  .case h3 { margin: 0 0 6px; font-size: 1.05rem; }
+  .case p { margin: 0; color: var(--muted); font-size: .95rem; }
+  pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9rem; }
+  pre { background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; margin: 0 0 14px; }
+  :not(pre) > code { background: var(--code); padding: 1px 5px; border-radius: 4px; }
+  ul { padding-left: 20px; margin: 0 0 14px; }
+  li { margin-bottom: 6px; }
+  .note { border-left: 3px solid var(--warn); padding: 4px 0 4px 14px; }
+  footer { padding: 28px 0 56px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+  @media (max-width: 560px) { h1 { font-size: 1.9rem; } header { padding-top: 36px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img class="logo logo-light" src="assets/logo-light.svg" alt="agentMonitor logo">
+    <img class="logo logo-dark" src="assets/logo-dark.svg" alt="">
+    <h1>agentMonitor</h1>
+    <p class="tagline"><strong>A local audit tool for Claude Code sessions: see what an agent read, changed and ran, where it crossed a permission boundary, and which rule or hook to fix.</strong> It writes only to its own <code>var/</code> folder (the demo uses a temporary one).</p>
+    <div class="buttons">
+      <a class="btn primary" href="#try">Try it in a minute</a>
+      <a class="btn" href="https://github.com/SKrjwsk/agentMonitor">GitHub</a>
+      <a class="btn" href="https://github.com/SKrjwsk/agentMonitor/blob/master/docs/usage.md">Usage and reference</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Why</h2>
+    <p>You let a Claude Code agent work for an hour. Afterwards you cannot say which files it opened, whether it left the folder you gave it, why it kept asking for approval, or why it made the same mistake as last week. The transcript has the answers, but it is a JSONL file that can reach tens of MB, and Claude Code deletes it after 30 days by default (<code>cleanupPeriodDays</code>).</p>
+    <p>agentMonitor turns every call into an answer: files read and changed, commands run, calls that left your boundary, and the rule or hook behind each approval prompt and block. Totals outlive the transcripts.</p>
+    <figure>
+      <img src="assets/screenshot-overview.png" alt="Overview: cost, signals by axis, boundary check" width="1360" height="820">
+      <figcaption>Overview on synthetic sessions: the Boundaries axis is red because calls reached outside the work folder.</figcaption>
+    </figure>
+  </section>
+
+  <section id="try">
+    <h2>Try it</h2>
+    <pre>git clone https://github.com/SKrjwsk/agentMonitor.git
+cd agentMonitor
+php bin/demo.php</pre>
+    <p>Open <code>http://127.0.0.1:8095/</code>. The demo writes three made-up sessions into a temporary folder and serves a copy of the app on them; nothing in <code>~/.claude</code> or in the repository is touched, and the session judge is switched off there. Needs PHP 8.4 or newer, macOS or Linux, and no other dependencies.</p>
+    <p>For your own sessions:</p>
+    <pre>php -S 127.0.0.1:8090 -t public public/index.php</pre>
+    <p class="muted">It reads <code>~/.claude/projects/</code> and never writes there (the optional judge's own Claude Code run keeps a transcript there).</p>
+    <figure>
+      <img src="assets/screenshot-session.png" alt="A session: the call that left the work folder is marked outside" width="1360" height="820">
+      <figcaption>A session's Commands tab: the call that left the work folder is marked <em>outside</em>.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>Everyday use cases</h2>
+    <div class="cases">
+      <div class="case"><h3>Did the agent stay in its folder?</h3><p>Set the folders it may work in. Every call outside them is listed as executed, suspicious or stopped, with the command that did it.</p></div>
+      <div class="case"><h3>Why does it keep asking me?</h3><p>The Approvals tab shows each permission prompt and the reason: an <code>ask</code> rule from your settings, a protected path or a command shape.</p></div>
+      <div class="case"><h3>Same mistake again and again</h3><p>On request, a session judge writes findings with one owner each: your prompt, <code>CLAUDE.md</code>, a rules file, a hook or the permissions. Recurring problems group them by the file to fix.</p></div>
+      <div class="case"><h3>What did last month cost?</h3><p>Per-session totals stay after Claude Code deletes the transcript. Cost is computed at API list prices: a yardstick, not your bill.</p></div>
+    </div>
+    <figure>
+      <img src="assets/screenshot-recurring.png" alt="Recurring problems grouped by the place to fix" width="1360" height="820">
+      <figcaption>Recurring problems in assessments, grouped by the place to fix, next to the boundary signals.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/screenshot-judgment.png" alt="The Assessment tab: verdict, key moments and problems with the fix and its owner" width="1360" height="820">
+      <figcaption>The Assessment tab: verdict, key moments and each problem with its fix and owner.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <figure>
+      <img src="assets/how-it-works.svg" alt="Claude Code writes transcripts; agentMonitor reads them, checks them against your boundary and shows the result locally; it writes only to var/. The judge is the one optional path that leaves the machine." width="960" height="360">
+    </figure>
+    <ul>
+      <li><strong>Read-only parsing</strong> of Claude Code transcripts, including the files named inside Bash commands.</li>
+      <li><strong>Boundary and permissions from your own settings</strong>: <code>AGENT_ALLOWED_RW</code> and <code>AGENT_ALLOWED_R</code>, and the <code>permissions</code> key of your Claude Code settings.</li>
+      <li><strong>Own storage</strong> in <code>var/</code>, cleared by <code>bin/reset.php</code>.</li>
+    </ul>
+    <p>To browse a transcript and reconstruct what was in the context window, <a href="https://github.com/matt1398/claude-devtools">claude-devtools</a> goes further. agentMonitor is built for auditing what the agent did against the limits you set.</p>
+  </section>
+
+  <section>
+    <h2>Security</h2>
+    <p>agentMonitor makes no network requests of its own, with one optional exception.</p>
+    <p class="note">The session judge starts <code>claude -p</code> on a dump of the session (commands, paths and your prompts, no file contents) only when you press its button. Claude Code sends that to the Anthropic API under your account. The judge has <code>Read</code>, <code>Grep</code> and <code>Glob</code> without a path restriction, so any file it decides to read is sent too.</p>
+    <p>The server rejects any request that is not from the loopback address; only <code>GET</code>, <code>POST /export</code> and <code>POST /judge</code> are accepted. <a href="https://github.com/SKrjwsk/agentMonitor/blob/master/docs/security.md">Security notes</a>.</p>
+  </section>
+
+  <section>
+    <h2>Limitations</h2>
+    <ul>
+      <li>The transcript format is internal and undocumented; it was checked on Claude Code 2.1.300.</li>
+      <li>The 3D Office view and the OS-log verification are experimental and have not been checked against real sessions.</li>
+      <li>Files read indirectly by programs are only flagged as "indirect".</li>
+    </ul>
+  </section>
+
+  <footer>
+    MIT licensed · <a href="https://github.com/SKrjwsk/agentMonitor">github.com/SKrjwsk/agentMonitor</a>
+  </footer>
+</div>
+</body>
+</html>
